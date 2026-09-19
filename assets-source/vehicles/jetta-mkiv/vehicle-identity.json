@@ -1,0 +1,15 @@
+{
+  "asset": "jetta-mkiv-glb-with-owner-front-overlay",
+  "status": "provisional from owner and public-domain factory references; the Mk IV body shell is factory-line based, with the owner body kit limited to the front fascia in Build 008",
+  "canonicalIdentity": {
+    "body": "black four-door Mk IV sedan",
+    "continuityFeatures": ["black four-door Mk IV sedan", "factory door/rocker/rear-quarter body lines", "vertical outer tail lamps", "silver mirror caps", "sunroof", "lowered stance", "thin paired multi-spoke wheels", "rectangular twin-projector lamp housings", "deep front-only body-kit intake", "9855 MD plates"]
+  },
+  "unverified": ["engine", "trim badge", "wheel diameter", "body-kit manufacturer", "exhaust arrangement", "paint code", "interior specification"],
+  "runtime": {
+    "sharedVehicleFunction": "RebornVehicle.objects",
+    "coordinateUnits": "metres",
+    "axlesZ": [-1.29, 1.23],
+    "frontAndRearConfigurations": ["street", "rally", "reborn"]
+  }
+}
