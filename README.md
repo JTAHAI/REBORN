@@ -2,6 +2,10 @@
 
 Browser-first WebGL2 driving-game reconstruction of a customized 1999½ Mk IV sedan.
 
+## Play online
+
+The live game is available at [reborn.tahai.net](https://reborn.tahai.net).
+
 ## Run
 
 ```powershell
