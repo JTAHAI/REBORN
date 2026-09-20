@@ -139,7 +139,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
  </div>
  <div class="control-help"><p><b>KEYBOARD</b> W or Up accelerates · S or Down brakes/reverses · A/D or Left/Right steers · Space drifts · Shift boosts<br>T transforms · E pulses · C changes camera · R recovers · Esc pauses and resumes</p><p><b>CONTROLLER</b> Left stick steers · RT throttles · LT brakes/reverses<br>A drifts · B boosts · Y transforms · X pulses · Start pauses</p><p><b>TOUCH / LANDSCAPE</b> Left stick steers; right buttons control gas, brake, drift, and boost.<br>Third person is default. Tap CAM for wide third-person or driver view.</p></div>
  <p class="build-info" id="renderer-info"></p>
- <div class="modal-buttons"><button id="resume" class="primary">BACK TO THE ROAD <span>→</span></button><button id="recover" class="secondary">RECOVER CAR</button><button id="garage" class="quiet">RETURN TO GARAGE</button></div>
+ <div class="modal-buttons"><button id="resume" class="primary">BACK TO THE ROAD <span>→</span></button><button id="recover" class="secondary">RECOVER CAR</button><button id="garage" class="quiet">RETURN TO GARAGE</button><button id="reset-progress" class="quiet">RESET PROGRESS</button></div>
  </div>
 </div>
 <div id="result" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden><div class="modal result-modal"><div class="eyebrow" id="result-label">RUN COMPLETE</div><h2 id="result-title">Still got it.</h2><p id="result-copy"></p><p id="result-echo" class="story-echo"></p><div id="result-stats"></div><div class="modal-buttons"><button id="result-next" class="primary" hidden>NEXT CHAPTER <span>→</span></button><button id="retry" class="primary">GO AGAIN <span>→</span></button><button id="result-garage" class="secondary">BACK TO GARAGE</button></div></div></div>
@@ -1880,7 +1880,7 @@ function garage(){director.stop();state='menu';input.clear();sim.reset('free');s
 function pause(){
  if(state==='result'||state==='story')return;
  if(state==='pause')return resume();
- pausedFromMenu=state==='menu';focusBefore=document.activeElement;state='pause';input.clear();showState();applySettings();$('resume').textContent=pausedFromMenu?'BACK TO GARAGE':'BACK TO THE ROAD';$('recover').hidden=pausedFromMenu;$('garage').hidden=pausedFromMenu;
+ pausedFromMenu=state==='menu';focusBefore=document.activeElement;state='pause';input.clear();showState();applySettings();$('resume').textContent=pausedFromMenu?'BACK TO GARAGE':'BACK TO THE ROAD';$('recover').hidden=pausedFromMenu;$('garage').hidden=pausedFromMenu;$('reset-progress').textContent='RESET PROGRESS';
  const panel=$('pause');panel.scrollTop=0;
  const firstFocusable=panel.querySelector('input,select,button:not([disabled])');
  if(firstFocusable)firstFocusable.focus();
@@ -1893,7 +1893,7 @@ function action(name){
  if(name==='transform')sim.transform();else if(name==='pulse')sim.pulse();else if(name==='recover')sim.recover();else if(name==='camera'){cameraStyle=(cameraStyle+1)%3;cameraEye=null;cameraTarget=null;updateCameraChoice();notify(cameraNames[cameraStyle]);}
 }
 for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{selected=b.dataset.mode;for(const card of document.querySelectorAll('[data-mode]')){const active=card===b;card.classList.toggle('selected',active);card.setAttribute('aria-pressed',String(active));}});
-$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);
+$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=touch;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();garage();}else{btn.textContent='CONFIRM RESET?';}});
 $('inspect-car').addEventListener('click',()=>{state='inspect';input.clear();inspectAngle=-2.34;inspectHeight=.20;inspectDistance=5.8;inspectDragged=false;inspectTarget=[0,.84,0];inspectFocus='front';updateInspect();showState();});
 $('inspect-close').addEventListener('click',garage);
 for(const b of document.querySelectorAll('[data-inspect]'))b.addEventListener('click',()=>{for(let i=0;i<3&&sim.car.mode!==b.dataset.inspect;i++)C.changeMode(sim.car);updateInspect();});
