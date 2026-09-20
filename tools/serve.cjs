@@ -8,7 +8,11 @@ const root = path.resolve(__dirname, '..');
 const port = Number(process.env.PORT || 4173);
 const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.glb':'model/gltf-binary'};
 http.createServer((req, res) => {
-  const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  let pathname;
+  try {
+    pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  } catch (e) { res.writeHead(400); return res.end('Bad Request'); }
+  if (pathname.includes('\0')) { res.writeHead(400); return res.end('Bad Request'); }
   const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
   const filename = path.resolve(root, relative);
   if (!filename.startsWith(root + path.sep) && filename !== root) { res.writeHead(403); return res.end('Forbidden'); }
