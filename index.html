@@ -8,7 +8,7 @@
 <title>99½ REBORN — Legends Never Die — they EVOLVE.</title>
 <style>
 :root{--ink:#142529;--paper:#edf0dd;--muted:#bac6b8;--accent:#eebe7e;--mint:#8bdec9;--panel:rgba(18,35,39,.86);font-family:'Bahnschrift','DIN Alternate','Arial',sans-serif;color:var(--paper);background:#233b3e;color-scheme:dark;font-synthesis:none}
-*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;color:inherit;border:0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--mint);outline-offset:5px}button:disabled{opacity:.4;cursor:default}[hidden]{display:none!important}button{touch-action:manipulation}#world,#weather-fx{position:absolute;inset:0;width:100%;height:100%;display:block}#weather-fx{pointer-events:none;z-index:2}.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 58% 44%,transparent 32%,rgba(9,24,28,.25) 100%);z-index:1}.screen{position:absolute;inset:0;z-index:3;padding:clamp(18px,3.4vw,52px);padding-top:max(clamp(18px,2.6vw,38px),env(safe-area-inset-top));padding-bottom:max(22px,env(safe-area-inset-bottom));pointer-events:none}.screen button{pointer-events:auto}#intro{background:linear-gradient(90deg,rgba(12,27,31,.82),rgba(14,30,33,.35) 37%,transparent 66%),linear-gradient(0deg,rgba(12,25,29,.95),transparent 50%)}.topline,.hud-top{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;line-height:1}.brand b{font-size:31px;letter-spacing:-3px;font-style:italic}.brand span{font-size:11px;letter-spacing:3px;font-weight:700;border-left:1px solid #ffffff45;padding-left:13px}.buildtag{font-size:9px;letter-spacing:1.7px;display:flex;align-items:center;gap:8px}.buildtag i,#drive-mode i{background:var(--mint);width:5px;height:5px;border-radius:50%;box-shadow:0 0 8px #89dfbe66}.buildtag span{opacity:.5}.quiet{padding:9px 0;background:transparent;font-size:10px;letter-spacing:1.2px;line-height:1.5;color:var(--paper)}.quiet:hover{color:var(--accent)}.sound-toggle{display:flex;gap:12px;align-items:center}.sound-toggle span{font-size:16px}.intro-copy{position:absolute;top:14.5%;left:clamp(18px,3.4vw,52px)}
+*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}button,input,select{font:inherit}button{cursor:pointer;color:inherit;border:0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--mint);outline-offset:5px}button:disabled{opacity:.4;cursor:default}[hidden]{display:none!important}button{touch-action:manipulation}#world,#weather-fx{position:absolute;inset:0;width:100%;height:100%;display:block}#weather-fx{pointer-events:none;z-index:2}.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 58% 44%,transparent 32%,rgba(9,24,28,.25) 100%);z-index:1}.screen{position:absolute;inset:0;z-index:3;padding:clamp(18px,3.4vw,52px);padding-top:max(clamp(18px,2.6vw,38px),env(safe-area-inset-top));padding-bottom:max(22px,env(safe-area-inset-bottom));pointer-events:none}.screen button{pointer-events:auto}#minimap{pointer-events:auto;cursor:zoom-in}#intro{background:linear-gradient(90deg,rgba(12,27,31,.82),rgba(14,30,33,.35) 37%,transparent 66%),linear-gradient(0deg,rgba(12,25,29,.95),transparent 50%)}.topline,.hud-top{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;line-height:1}.brand b{font-size:31px;letter-spacing:-3px;font-style:italic}.brand span{font-size:11px;letter-spacing:3px;font-weight:700;border-left:1px solid #ffffff45;padding-left:13px}.buildtag{font-size:9px;letter-spacing:1.7px;display:flex;align-items:center;gap:8px}.buildtag i,#drive-mode i{background:var(--mint);width:5px;height:5px;border-radius:50%;box-shadow:0 0 8px #89dfbe66}.buildtag span{opacity:.5}.quiet{padding:9px 0;background:transparent;font-size:10px;letter-spacing:1.2px;line-height:1.5;color:var(--paper)}.quiet:hover{color:var(--accent)}.sound-toggle{display:flex;gap:12px;align-items:center}.sound-toggle span{font-size:16px}.intro-copy{position:absolute;top:14.5%;left:clamp(18px,3.4vw,52px)}
 @media(max-height:569px) and (min-width:1264px){
   .intro-copy{top:10%}
   .launch-panel{bottom:120px}
@@ -55,6 +55,8 @@ body[data-state=inspect] #weather-fx,body[data-state=menu] #weather-fx,body[data
 body.touch #touch-controls{display:block}body.touch .touch-left{position:absolute;left:max(20px,env(safe-area-inset-left));bottom:max(20px,env(safe-area-inset-bottom));display:block}body.touch .touch-right{position:absolute;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));display:grid;grid-template-columns:58px 62px 86px;grid-template-rows:58px 70px;gap:8px;align-items:stretch}.drive-stick{width:142px;height:142px;border:1px solid #bed0be8a;border-radius:50%;background:radial-gradient(circle at 40% 35%,#416066b8,#142a2fce 64%,#091a20bb);box-shadow:inset 0 0 0 11px #b6d7cc10,0 3px 18px #06171cbf;touch-action:none;user-select:none;pointer-events:auto}.drive-stick:before,.drive-stick:after{content:'';position:absolute;background:#b7d3ca32}.drive-stick:before{width:1px;height:112px;left:70px;top:15px}.drive-stick:after{height:1px;width:112px;top:70px;left:15px}.drive-stick i{position:absolute;width:54px;height:54px;left:44px;top:44px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#e8efd8,#a7b5a7 34%,#45646a 37%,#1d3840 75%);border:1px solid #e9f1de9c;box-shadow:0 2px 10px #031318b8;transform:translate(0,0);will-change:transform}.drive-stick span{position:absolute;inset:auto 0 13px;text-align:center;font-size:7px;letter-spacing:1.6px;color:#dbe7d9;pointer-events:none}.drive-stick.active{border-color:#e9c988;box-shadow:inset 0 0 0 11px #e9c98818,0 0 18px #e9c98855}.touch.action{min-width:0;min-height:0;width:auto;height:auto;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:12px;line-height:1;letter-spacing:.7px;background:#153137de;border:1px solid #b5d0c275;color:#edf1d9;box-shadow:0 3px 14px #06171cb8;touch-action:none;user-select:none;-webkit-user-select:none;pointer-events:auto!important}.touch.action small{font-size:6px;letter-spacing:.65px;margin-top:4px}.touch.action.held{background:#d5c193;color:#102d33;border-color:#f4ddaa}.touch.action.gas{grid-column:3;grid-row:1 / span 2;width:86px;height:136px;border-radius:46% 46% 50% 50%;font-size:23px;background:#2d594fdf;border-color:#9edbc786}.touch.action.gas small{font-size:8px}.touch.action.brake{grid-column:2;grid-row:2}.touch.action.drift{grid-column:1;grid-row:2;font-size:7px}.touch.action.boost{grid-column:2;grid-row:1;background:#6a542ecc;color:#ffe4ac;border-color:#d9bd86bb;font-size:7px}.touch.action.pulse{grid-column:1;grid-row:1;color:var(--mint);font-size:7px}.touch.action.camera{display:none}.touch.transform{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:174px;min-width:142px;min-height:34px;border-radius:18px;color:var(--accent);font-size:8px;background:#142d32d9;border:1px solid #b4ceb474;pointer-events:auto!important}.touch.transform>span{font-size:8px;letter-spacing:1.2px;margin-left:8px}.touch.throttle{display:none!important}body.touch .map-wrap{display:none}body.touch .instrument{top:68px;right:max(19px,env(safe-area-inset-right));bottom:auto;width:116px}body.touch .speedline>strong{font-size:45px}body.touch .meter-label{font-size:5px}body.touch .health-label{margin-top:6px}
 @media (pointer:coarse) and (orientation:portrait){body.touch #rotate-device{display:flex;position:fixed;z-index:200;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:#0c1d24f7;color:#edf0dd;text-align:center;padding:32px;font-weight:700;letter-spacing:1.4px;font-size:13px}#rotate-device i{width:74px;height:110px;border:3px solid var(--accent);border-radius:12px;display:block;transform:rotate(90deg);position:relative;box-shadow:0 0 28px #eebe7e33}#rotate-device i:after{content:'↻';position:absolute;inset:21px 0 auto;font-size:34px;color:var(--accent);font-style:normal}#rotate-device small{font-size:9px;line-height:1.6;letter-spacing:1px;color:#aec2b5}}
 @media (pointer:coarse) and (orientation:landscape) and (max-height:540px){body.touch .touch-left{left:max(16px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom))}.drive-stick{width:118px;height:118px}.drive-stick:before{height:94px;left:58px;top:12px}.drive-stick:after{width:94px;top:58px;left:12px}.drive-stick i{width:46px;height:46px;left:36px;top:36px}.drive-stick span{bottom:10px;font-size:6px}.touch.transform{left:max(16px,env(safe-area-inset-left));bottom:142px;min-width:118px;min-height:29px;font-size:7px}body.touch .touch-right{right:max(16px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));grid-template-columns:50px 54px 76px;grid-template-rows:50px 58px;gap:6px}.touch.action.gas{width:76px;height:114px;font-size:20px}.touch.action{font-size:10px}.touch.action small{font-size:5px}.touch.action.drift,.touch.action.boost,.touch.action.pulse{font-size:6px}body.touch .instrument{top:56px;right:max(15px,env(safe-area-inset-right));width:104px}.camera-toggle{display:none}}
+.map-modal{width:min(960px,94vw);padding:22px;background:#0d1d2a;border-color:#81b9d766}.map-modal header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.map-modal h2{font-size:24px;margin:0;letter-spacing:.3px}.map-modal p{font-size:10px;letter-spacing:1px;color:#b4cad2;margin:5px 0 0}.map-modal canvas{display:block;width:100%;max-height:70vh;aspect-ratio:16/9;background:#132b31;border:1px solid #80acc070}.map-modal .map-key{font-size:9px;color:#9ccce6;letter-spacing:1.4px}
+@media(max-width:650px){.map-modal{width:100%;min-height:100%;padding:18px}.map-modal canvas{max-height:76vh;aspect-ratio:1/1}.map-modal h2{font-size:20px}.map-modal p{font-size:8px}.map-modal .secondary{padding:10px;font-size:8px}}
 </style>
 </head>
 <body data-standalone="true">
@@ -80,16 +82,16 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
  </div>
  <div class="car-caption"><span>THE ORIGINAL</span><strong>1999½ <i>MK IV</i></strong><p>Black paint. Silver mirrors. Unfinished business.</p><div><b>STREET</b><span>→</span> RALLY <span>→</span> REBORN</div></div>
  <div class="launch-panel">
-  <div class="section-label">CHOOSE YOUR DRIVE <button id="story-open" class="quiet">STORY / CHAPTER 01 ↗</button><span id="best-menu">BLACKWATER COUNTY</span></div>
+ <div class="section-label">CHOOSE YOUR DRIVE <button id="story-open" class="quiet">STORY / CHAPTER 01 ↗</button><span id="best-menu">NORTH BERWICK, MAINE</span></div>
   <div class="mode-picker" role="group" aria-label="Driving activity">
-   <button class="mode-card selected" data-mode="free" aria-pressed="true"><span>01 / NO CLOCK</span><strong>Free drive <i>↗</i></strong><small>Your car. Your road.</small></button>
+   <button class="mode-card selected" data-mode="free" aria-pressed="true"><span>01 / NO CLOCK</span><strong>Free drive <i>↗</i></strong><small id="free-drive-caption">Your car. North Berwick roads.</small></button>
    <button class="mode-card" data-mode="run" aria-pressed="false"><span>02 / TIME ATTACK</span><strong>Harbor run <i>↗</i></strong><small>Nine gates. One clean run.</small></button>
    <button class="mode-card" data-mode="pursuit" aria-pressed="false"><span>03 / PURSUIT</span><strong>Lose the tail <i>↗</i></strong><small>Break sight. Disappear.</small></button>
    <button class="mode-card" data-mode="arena" aria-pressed="false"><span>04 / VEHICLE COMBAT</span><strong>Breaker yard <i>↗</i></strong><small>Armor up. Clear the yard.</small></button>
   </div>
   <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span>BLACKWATER COUNTY <i>/</i> NORTHERN NEW ENGLAND</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 008 <i>/</i> EVOLUTION / LIVING LIGHT</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DATA: MAINE GEOLIBRARY / MAINE ESCB</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 008 <i>/</i> EVOLUTION / LIVING LIGHT</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <header class="hud-top"><div class="brand"><b>99½</b><span>REBORN</span></div><div id="drive-mode"><i></i><b>STREET</b><span>FWD</span></div><div class="hud-right"><span id="heat" aria-label="Police heat"></span><button id="camera-button" class="square camera-toggle" data-action="camera" aria-label="Change camera view">CAM<br><b>3P</b></button><button id="pause-button" class="square" aria-label="Pause game">Ⅱ</button></div></header>
@@ -97,7 +99,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
  <div id="waypoint" hidden aria-hidden="true"><b>◇</b><span>240 m</span></div>
  <aside id="radio" aria-label="Story radio subtitles" role="status" aria-live="polite" hidden><div id="radio-speaker">MOTORWORKS</div><p id="radio-text"></p></aside>
  <div id="toast" role="status" aria-live="polite"></div>
- <div class="map-wrap"><canvas id="minimap" width="340" height="340" aria-label="Road map and next objective"></canvas><div><span>BLACKWATER</span><span id="surface">ASPHALT</span></div></div>
+ <div class="map-wrap"><canvas id="minimap" width="340" height="340" aria-label="Road map and next objective"></canvas><div><span id="map-label">NORTH BERWICK</span><span id="surface">ASPHALT</span></div></div>
  <div class="instrument"><div class="speedline"><strong id="speed">000</strong><span id="gear">N<b>MPH</b></span></div><div class="meter-label"><span>ENERGY</span><b id="energy-value">100</b></div><div class="meter"><i id="energy-bar"></i></div><div class="meter-label health-label"><span>BODY</span><b id="health-value">100%</b></div><div class="meter body-meter"><i id="health-bar"></i></div></div>
  <div class="desktop-keys"><span><kbd>T</kbd> TRANSFORM</span><span><kbd>E</kbd> PULSE</span><span><kbd>SPACE</kbd> DRIFT</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>C</kbd> CAMERA</span></div>
  <div id="touch-controls" aria-label="Landscape touch driving controls">
@@ -131,17 +133,18 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
 <div id="pause" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="pause-title" hidden>
  <div class="modal"><div class="eyebrow">99½ REBORN / PIT STOP</div><h2 id="pause-title">Take a breath.</h2><p class="modal-sub">Your Jetta will be right here.</p>
  <div class="settings">
-  <label><span>Auto-throttle <small>Recommended for touch controls</small></span><input id="auto-setting" type="checkbox"></label>
+  <label><span>Manual throttle <small>Up/W or stick up is required to drive</small></span><input id="auto-setting" type="checkbox" disabled></label>
   <label><span>Engine & effects</span><input id="sound-setting" type="checkbox" checked></label>
   <label><span>Weather & light</span><select id="weather-setting"><option value="clear">Golden hour</option><option value="rain">Midnight rain</option><option value="night">After dark</option></select></label>
   <label><span>Rendering</span><select id="quality-setting"><option value="auto">Adaptive</option><option value="high">High</option><option value="low">Battery saver</option></select></label>
   <label><span>Reduced motion <small>Less camera movement and no speed particles</small></span><input id="motion-setting" type="checkbox"></label>
  </div>
- <div class="control-help"><p><b>KEYBOARD</b> W or Up accelerates · S or Down brakes/reverses · A/D or Left/Right steers · Space drifts · Shift boosts<br>T transforms · E pulses · C changes camera · R recovers · Esc pauses and resumes</p><p><b>CONTROLLER</b> Left stick steers · RT throttles · LT brakes/reverses<br>A drifts · B boosts · Y transforms · X pulses · Start pauses</p><p><b>TOUCH / LANDSCAPE</b> Left stick steers; right buttons control gas, brake, drift, and boost.<br>Third person is default. Tap CAM for wide third-person or driver view.</p></div>
+ <div class="control-help"><p><b>KEYBOARD</b> W or Up accelerates · S or Down brakes/reverses · A/D or Left/Right steers · Space drifts · Shift boosts<br>T transforms · E pulses · C changes camera · M opens the map · R recovers · Esc pauses and resumes</p><p><b>CONTROLLER</b> Left stick steers · RT throttles · LT brakes/reverses<br>A drifts · B boosts · Y transforms · X pulses · Start pauses</p><p><b>TOUCH / LANDSCAPE</b> The left stick is a four-way arrow pad: up accelerates, down brakes/reverses, left/right steer. Right buttons add drift and boost. Tap the minimap to pause and expand it.<br>Third person is default. Tap CAM for wide third-person or driver view.</p></div>
  <p class="build-info" id="renderer-info"></p>
  <div class="modal-buttons"><button id="resume" class="primary">BACK TO THE ROAD <span>→</span></button><button id="recover" class="secondary">RECOVER CAR</button><button id="garage" class="quiet">RETURN TO GARAGE</button><button id="reset-progress" class="quiet">RESET PROGRESS</button></div>
  </div>
 </div>
+<div id="map-overlay" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><div class="modal map-modal"><header><div><div class="eyebrow">ROAD MAP / PAUSED</div><h2 id="map-title">North Berwick Free Drive</h2><p id="map-subtitle">Your position is centered on the map.</p></div><button id="map-resume" class="secondary">BACK TO DRIVE <span class="map-key">M</span></button></header><canvas id="expanded-map" width="1200" height="760" aria-label="Expanded road map"></canvas></div></div>
 <div id="result" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden><div class="modal result-modal"><div class="eyebrow" id="result-label">RUN COMPLETE</div><h2 id="result-title">Still got it.</h2><p id="result-copy"></p><p id="result-echo" class="story-echo"></p><div id="result-stats"></div><div class="modal-buttons"><button id="result-next" class="primary" hidden>NEXT CHAPTER <span>→</span></button><button id="retry" class="primary">GO AGAIN <span>→</span></button><button id="result-garage" class="secondary">BACK TO GARAGE</button></div></div></div>
 <div id="fatal" class="modal-wrap" role="alert" hidden><div class="modal"><h2>Ignition interrupted.</h2><p id="fatal-message"></p><button class="primary" onclick="location.reload()">RETRY</button></div></div>
 <noscript><div class="modal-wrap"><div class="modal"><h2>Turn the ignition on.</h2><p>This driving game needs JavaScript. Enable it to play.</p></div></div></noscript>
@@ -236,6 +239,51 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
     for (const [x,z,type] of [[100,150,'energy'],[-100,-45,'energy'],[300,-60,'energy'],[230,240,'repair'],[-300,-210,'repair'],[-426,-340,'energy'],[-476,330,'energy'],[-366,400,'repair']]) world.pickups.push({x,z,type,cooldown:0});
     return world;
   }
+  function simplifyRoadLine(points, tolerance = 4) {
+    if (!Array.isArray(points) || points.length < 3) return points || [];
+    const threshold = tolerance * tolerance, keep = new Uint8Array(points.length); keep[0] = keep[points.length - 1] = 1;
+    const reduce = (first, last) => {
+      const a = points[first], b = points[last], dx = b[0] - a[0], dz = b[1] - a[1], denominator = dx * dx + dz * dz;
+      let best = threshold, index = -1;
+      for (let i = first + 1; i < last; i++) {
+        const p = points[i], t = denominator ? clamp(((p[0] - a[0]) * dx + (p[1] - a[1]) * dz) / denominator, 0, 1) : 0;
+        const ex = p[0] - (a[0] + dx * t), ez = p[1] - (a[1] + dz * t), distance = ex * ex + ez * ez;
+        if (distance > best) { best = distance; index = i; }
+      }
+      if (index > -1) { keep[index] = 1; reduce(first, index); reduce(index, last); }
+    };
+    reduce(0, points.length - 1);
+    return points.filter((_, index) => keep[index]);
+  }
+  // Static data generated from public Maine GIS sources; no map service is called at runtime.
+  function createNorthBerwickWorld(source, seed = 995) {
+    if (!source?.boundsLocal || !Array.isArray(source.roads)) throw new Error('North Berwick world data is incomplete.');
+    const random = rng(seed + 41), bounds = source.boundsLocal, spawn = source.defaultSpawn || {};
+    const world = {
+      northBerwick: true, noTraffic: true, mapName: 'NORTH BERWICK, ME', roads: [], buildings: [], trees: [], props: [], pickups: [], hash: new SpatialHash(), seed,
+      bounds: { minX: bounds.minX + 14, maxX: bounds.maxX - 14, minZ: bounds.minZ + 14, maxZ: bounds.maxZ - 14 },
+      garage: { x: spawn.x || 0, z: spawn.z || 0 }, arena: { x: 0, z: 0, w: 0, d: 0 },
+      spawn: { x: spawn.x || 0, z: spawn.z || 0, yaw: Math.PI }, nodes: []
+    };
+    for (const feature of source.roads) for (const line of feature.lines || []) {
+      const points = simplifyRoadLine(line), width = clamp(Number(feature.widthM) || 6.1, 4.5, 13);
+      for (let i = 1; i < points.length; i++) {
+        const [x1, z1] = points[i - 1], [x2, z2] = points[i];
+        if (Math.hypot(x2 - x1, z2 - z1) > .5) world.roads.push({ x1, z1, x2, z2, width, surface: feature.class === 'Unpaved' ? 'gravel' : 'asphalt', name: feature.name || 'North Berwick road' });
+      }
+    }
+    // One recovery node is sufficient for the no-traffic Free Drive world.
+    world.nodes.push({ id: 0, x: world.spawn.x, z: world.spawn.z, neighbors: [] });
+    for (const building of source.buildings || []) {
+      const points = (building.polygons || []).flat(2).filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(p[1]));
+      if (!points.length) continue;
+      const xs = points.map(p => p[0]), zs = points.map(p => p[1]), minX = Math.min(...xs), maxX = Math.max(...xs), minZ = Math.min(...zs), maxZ = Math.max(...zs);
+      const w = Math.max(3, maxX - minX), d = Math.max(3, maxZ - minZ), area = w * d;
+      const solid = { x: (minX + maxX) / 2, z: (minZ + maxZ) / 2, w, d, h: clamp(Number(building.heightM) || 5.2, 3.2, 13), style: area > 420 ? 'warehouse' : area > 170 ? 'mill' : 'town', color: Math.floor(random() * 4) };
+      world.buildings.push(solid); world.hash.insert(solid);
+    }
+    return world;
+  }
   function roadAt(world, x, z, margin = 0) {
     for (const r of world.roads) {
       const dx = r.x2-r.x1, dz = r.z2-r.z1, t = clamp(((x-r.x1)*dx+(z-r.z1)*dz)/(dx*dx+dz*dz),0,1);
@@ -246,10 +294,11 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
   function surfaceAt(world, x, z) {
     const a = world.arena;
     if (Math.abs(x-a.x) < a.w/2 && Math.abs(z-a.z) < a.d/2) return 'concrete';
-    if (x > 112 && x < 168 && z > 290 && z < 337) return 'concrete';
+    if (!world.northBerwick && x > 112 && x < 168 && z > 290 && z < 337) return 'concrete';
     return roadAt(world,x,z)?.surface || 'grass';
   }
-  function regionAt(x,z) {
+  function regionAt(x,z,world) {
+    if (world?.northBerwick) return world.mapName;
     if (x < -330 && z > 210) return 'BREAKER YARD';
     if (z < -395 || (x < -330 && z < -260)) return 'NORTHWOODS';
     if (x > 220) return 'BLACKWATER HARBOR';
@@ -337,9 +386,9 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
     constructor(seed=995){this.world=createWorld(seed);this.random=rng(seed+8);this.car=createCar();this.time=0;this.mode='free';this.events=[];this.effects=[];this.agents=[];this.mission=null;this.reset('free');}
     emit(type,data={}){this.events.push({type,...data});if(this.events.length>60)this.events.shift();}
     reset(mode='free'){
-      this.mode=['free','run','pursuit','arena'].includes(mode)?mode:'free'; this.car=createCar();this.time=0;this.effects=[];this.agents=[];this.events=[];this.heat=0;this.escape=0;this.pulseCount=0;this.nearMisses=0;this.kills=0;
+      this.mode=['free','run','pursuit','arena'].includes(mode)?mode:'free'; this.car=createCar(this.world.spawn.x,this.world.spawn.z,this.world.spawn.yaw);this.time=0;this.effects=[];this.agents=[];this.events=[];this.heat=0;this.escape=0;this.pulseCount=0;this.nearMisses=0;this.kills=0;
       for(const p of this.world.pickups)p.cooldown=0;
-      for(let i=0;i<12;i++)this.spawnAgent('traffic',i);
+      if(!this.world.noTraffic)for(let i=0;i<12;i++)this.spawnAgent('traffic',i);
       this.mission={status:'active',time:0,checkpoint:0,limit:this.mode==='run'?150:0};
       if(this.mode==='pursuit'){this.heat=3;for(let i=0;i<3;i++)this.spawnAgent('police',i);}
       if(this.mode==='arena'){
@@ -455,7 +504,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
       sound:typeof s.sound==='boolean'?s.sound:true,autoThrottle:typeof s.autoThrottle==='boolean'?s.autoThrottle:false,
       weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,roadAt,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,validateSave};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,validateSave};
 });
 
 </script>
@@ -635,6 +684,24 @@ const geometries={
 function object(mesh,x,y,z,sx,sy,sz,color,ry=0,rx=0,rz=0,parent=null){const mat=transform(x,y,z,sx,sy,sz,ry,rx,rz);const m=parent?mul(parent,mat):mat;return {mesh,m,color:rgb(color),x:m[12],y:m[13],z:m[14],radius:Math.max(sx,sy,sz)*.9};}
 function buildWorld(world){
  const out=[];const add=(...a)=>{const o=object(...a);out.push(o);return o;};
+ if(world.northBerwick){
+  // The municipality is intentionally a road-and-footprint world: its exact public
+  // centerlines are retained while terrain and building heights remain lightweight.
+  const b=world.bounds,cx=(b.minX+b.maxX)/2,cz=(b.minZ+b.maxZ)/2;
+  add('box',cx,-.62,cz,b.maxX-b.minX+80,1,b.maxZ-b.minZ+80,'#4a604c');
+  for(const r of world.roads){
+   const dx=r.x2-r.x1,dz=r.z2-r.z1,len=Math.hypot(dx,dz),a=Math.atan2(dx,dz),x=(r.x1+r.x2)/2,z=(r.z1+r.z2)/2;
+   add('box',x,.02,z,r.width+2.4,.13,len+.12,r.surface==='gravel'?'#aa9a78':'#747b70',a);
+   add('box',x,.095,z,r.width,.12,len+.10,r.surface==='gravel'?'#a18e69':'#344345',a);
+  }
+  const palettes={town:['#76847d','#697b77','#7f8273','#6f7c70'],mill:['#765a4e','#826452','#6a7167','#8e765d'],warehouse:['#737f77','#778786','#888274','#64736f']};
+  for(const building of world.buildings){
+   const col=palettes[building.style][building.color];
+   add('box',building.x,building.h/2,building.z,building.w,building.h,building.d,col);
+   add('box',building.x,building.h+.18,building.z,building.w+.5,.38,building.d+.5,'#46514c');
+  }
+  return out;
+ }
  for(let x=-475;x<365;x+=110)for(let z=-495;z<550;z+=110)add('box',x,-.6,z,110,1,110,'#4c6453');
  for(let x=410;x<815;x+=100)for(let z=-840;z<900;z+=120)add('box',x,-1.5,z,100,1,120,[.17,.36,.40,-1]);
  add('box',353,.8,0,6,2,1080,'#b4aa8d');
@@ -1638,8 +1705,13 @@ class PolishedRenderer extends R.Renderer{
  constructor(canvas,world){super(canvas,world);this.kind=this.gl?'WebGL2 / Coachwork + local reflections':'Canvas 3D compatibility';this.contextLost=false;V.useLegacy=!this.gl;
  if(this.gl){this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.contextLost=true;root.dispatchEvent(new Event('reborn-context-lost'));});this.canvas.addEventListener('webglcontextrestored',()=>{try{this.initGL();this.resize();this.contextLost=false;root.dispatchEvent(new Event('reborn-context-restored'));}catch(e){this.error=e.message;root.dispatchEvent(new Event('reborn-context-failed'));}});}
  }
+ setWorld(world){
+  this.world=world;this.static=R.buildWorld(world);this.decorated=false;
+  if(this.gl){this.initGL();this.resize();}
+  else {if(!world.northBerwick)this.static=decorate(world,this.static).concat(root.RebornArt.streetSigns(world));this.decorated=true;}
+ }
  initGL(){const gl=this.gl;this.floatTarget=!!gl.getExtension('EXT_color_buffer_float');gl.getExtension('OES_texture_float_linear');this.p=program(gl,SCENE_VS,SCENE_FS);this.probeProgram=program(gl,SCENE_VS,PROBE_FS);this.probeState=new Q.ProbeState();this.probeBuffers=[this.createProbe(1),this.createProbe(1)];this.probeSize=1;this.sky=program(gl,FULL_VS,SKY_FS);this.shadowProgram=program(gl,SHADOW_VS,SHADOW_FS);this.bloomProgram=program(gl,FULL_VS,BLOOM_FS);this.postProgram=program(gl,FULL_VS,POST_FS);
- if(!this.decorated){this.static=decorate(this.world,this.static).concat(root.RebornArt.streetSigns(this.world));this.studioObjects=root.RebornArt.studio();this.decorated=true;}
+ if(!this.decorated){this.static=this.world.northBerwick?this.static:decorate(this.world,this.static).concat(root.RebornArt.streetSigns(this.world));this.studioObjects=root.RebornArt.studio();this.decorated=true;}
  this.batches={};this.lamps=this.static.filter(o=>o.y>6&&o.y<8&&o.surface?.[0]===M.LAMP);
  for(const[name,g]of Object.entries(R.geometries)){
   const vao=gl.createVertexArray();gl.bindVertexArray(vao);const vertices=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vertices);gl.bufferData(gl.ARRAY_BUFFER,g.data,gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
@@ -1727,9 +1799,9 @@ R.Renderer=PolishedRenderer;R.Graphics={M,SCENE_VS,SCENE_FS,SKY_FS,POST_FS,PROBE
 (function(root){'use strict';
 class Input {
  constructor(onAction){
-  this.keys=new Set();this.holds=new Map();this.actions=onAction;this.padButtons=[];this.padConnected=false;this.reverseTime=0;this.steerTouch=0;this.stickPointer=null;this.blocked=false;
+  this.keys=new Set();this.holds=new Map();this.actions=onAction;this.padButtons=[];this.padConnected=false;this.reverseTime=0;this.steerTouch=0;this.driveTouch=0;this.stickPointer=null;this.blocked=false;
   const driveKeys=new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight']);
-  const actionKeys={KeyT:'transform',KeyE:'pulse',KeyR:'recover',KeyP:'pause',Escape:'pause',KeyC:'camera',KeyM:'sound'};
+  const actionKeys={KeyT:'transform',KeyE:'pulse',KeyR:'recover',KeyP:'pause',Escape:'pause',KeyC:'camera',KeyM:'map'};
   window.addEventListener('keydown',e=>{
    if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
    if(driveKeys.has(e.code)||actionKeys[e.code])e.preventDefault();
@@ -1747,18 +1819,18 @@ class Input {
    button.addEventListener('pointerup',release);button.addEventListener('pointercancel',release);button.addEventListener('lostpointercapture',release);
   }
   const stick=document.getElementById('drive-stick');if(stick){
-   const reset=e=>{if(e&&e.pointerId!==this.stickPointer)return;this.stickPointer=null;this.steerTouch=0;stick.classList.remove('active');stick.querySelector('i').style.transform='translate(0,0)';stick.setAttribute('aria-valuenow','0');};
-   const move=e=>{if(e.pointerId!==this.stickPointer)return;const r=stick.getBoundingClientRect(),limit=r.width*.255,dx=Math.max(-1,Math.min(1,(e.clientX-r.left-r.width*.5)/limit)),dy=Math.max(-1,Math.min(1,(e.clientY-r.top-r.height*.5)/limit));this.steerTouch=Math.abs(dx)<.06?0:dx;stick.querySelector('i').style.transform=`translate(${dx*limit}px,${dy*limit*.55}px)`;stick.setAttribute('aria-valuenow',String(Math.round(this.steerTouch*100)/100));};
+   const reset=e=>{if(e&&e.pointerId!==this.stickPointer)return;this.stickPointer=null;this.steerTouch=0;this.driveTouch=0;stick.classList.remove('active');stick.querySelector('i').style.transform='translate(0,0)';stick.setAttribute('aria-valuenow','0');};
+   const move=e=>{if(e.pointerId!==this.stickPointer)return;const r=stick.getBoundingClientRect(),limit=r.width*.255,dx=Math.max(-1,Math.min(1,(e.clientX-r.left-r.width*.5)/limit)),dy=Math.max(-1,Math.min(1,(e.clientY-r.top-r.height*.5)/limit));this.steerTouch=Math.abs(dx)<.18?0:Math.sign(dx);this.driveTouch=Math.abs(dy)<.18?0:Math.sign(dy);stick.querySelector('i').style.transform=`translate(${dx*limit}px,${dy*limit*.55}px)`;stick.setAttribute('aria-valuenow',String(Math.round(this.steerTouch*100)/100));};
    stick.addEventListener('pointerdown',e=>{if(this.blocked)return;e.preventDefault();this.stickPointer=e.pointerId;stick.classList.add('active');try{stick.setPointerCapture(e.pointerId);}catch(_e){}move(e);});stick.addEventListener('pointermove',move);for(const type of ['pointerup','pointercancel','lostpointercapture'])stick.addEventListener(type,reset);
   }
  }
- clear(){this.keys.clear();for(const s of this.holds.values())s.clear();this.reverseTime=0;this.steerTouch=0;this.stickPointer=null;const stick=document.getElementById('drive-stick');if(stick){stick.classList.remove('active');stick.querySelector('i').style.transform='translate(0,0)';stick.setAttribute('aria-valuenow','0');}document.querySelectorAll('.held').forEach(b=>b.classList.remove('held'));}
+ clear(){this.keys.clear();for(const s of this.holds.values())s.clear();this.reverseTime=0;this.steerTouch=0;this.driveTouch=0;this.stickPointer=null;const stick=document.getElementById('drive-stick');if(stick){stick.classList.remove('active');stick.querySelector('i').style.transform='translate(0,0)';stick.setAttribute('aria-valuenow','0');}document.querySelectorAll('.held').forEach(b=>b.classList.remove('held'));}
  down(code){return this.keys.has(code);}
  hold(action){return (this.holds.get(action)?.size||0)>0;}
  sample(car,dt,autoThrottle){
   let steer=(this.down('ArrowRight')||this.down('KeyD')?1:0)-(this.down('ArrowLeft')||this.down('KeyA')?1:0);if(Math.abs(this.steerTouch)>.01)steer=this.steerTouch;
-  let backward=this.down('ArrowDown')||this.down('KeyS')||this.hold('brake');
-  let throttle=this.down('ArrowUp')||this.down('KeyW')||this.hold('throttle')?1:autoThrottle?.78:0;
+  let backward=this.down('ArrowDown')||this.down('KeyS')||this.hold('brake')||this.driveTouch>0;
+  let throttle=this.down('ArrowUp')||this.down('KeyW')||this.hold('throttle')||this.driveTouch<0?1:0;
   let brake=backward?1:0,handbrake=this.down('Space')||this.hold('drift'),boost=this.down('ShiftLeft')||this.down('ShiftRight')||this.hold('boost');
   let pad=null;try{pad=Array.from(navigator.getGamepads?.()||[]).find(p=>p&&p.mapping==='standard');}catch(_e){}
   this.padConnected=!!pad;
@@ -1824,15 +1896,17 @@ const touch=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0;
 document.body.classList.toggle('touch',touch);
 let save,hadSave=false,storageAvailable=true;
 try{const raw=localStorage.getItem(STORAGE);hadSave=!!raw;save=C.validateSave(raw?JSON.parse(raw):null);}catch(_e){save=C.validateSave(null);storageAvailable=false;}
-if(!hadSave){save.settings.weather='rain';save.settings.autoThrottle=touch;save.settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;}
+if(!hadSave){save.settings.weather='rain';save.settings.autoThrottle=false;save.settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;}
 const settings=save.settings;let storyData=null;try{storyData=JSON.parse(localStorage.getItem(STORY_STORAGE)||'null');}catch(_e){}
+// Touch must always begin at rest: the stick supplies the same four directions as arrow keys.
+settings.autoThrottle=false;
 const director=new S.Director(storyData);let viewingChapter=S.nextIndex(director.progress);
 function persist(){try{localStorage.setItem(STORAGE,JSON.stringify(save));localStorage.setItem(STORY_STORAGE,JSON.stringify(director.progress));storageAvailable=true;}catch(_e){storageAvailable=false;}}
 let renderer;
 try{renderer=new RebornRenderer.Renderer($('world'),C.createWorld());}catch(e){$('loading').hidden=true;$('fatal').hidden=false;$('fatal-message').textContent=e.message;return;}
 window.addEventListener('reborn-vehicle-model-ready',()=>{if(renderer.gl){try{renderer.initGL();renderer.resize();}catch(e){renderer.error=e.message;}}});
 renderer.night=settings.weather==='clear'?0:1;renderer.rain=settings.weather==='rain'?1:0;
-const sim=new C.Simulation();sim.car.x=300;const audio=new RebornAudio();audio.enabled=settings.sound;
+const sim=new C.Simulation(),blackwaterWorld=sim.world;sim.car.x=300;let northBerwickWorld=null;const audio=new RebornAudio();audio.enabled=settings.sound;
 let state='menu',selected='free',pausedFromMenu=false,accumulator=0,lastFrame=0,clock=0,uiClock=0,toastUntil=0,cameraStyle=0,cameraYaw=0,cameraEye=null,cameraTarget=null,lastHealth=100,focusBefore=null,lastInput={};
 let fps=0,frameCounter=0,fpsClock=0,lowFpsSeconds=0,frameErrors=[];
 const input=new RebornInput(action);
@@ -1842,9 +1916,10 @@ let inspectAngle=-2.34,inspectHeight=.20,inspectDistance=5.8,inspectPointer=null
 const detailView=()=>inspectFocus==='wheels'||inspectFocus==='optics';
 function notify(text,duration=2.4){$('toast').textContent=text;$('toast').classList.add('visible');toastUntil=clock+duration;}
 function applySettings(){
+ settings.autoThrottle=false;
  if(renderer.qualityHint!==settings.quality){renderer.qualityHint=settings.quality;renderer.resize();}
- $('auto-setting').checked=settings.autoThrottle;$('sound-setting').checked=settings.sound;$('weather-setting').value=settings.weather;$('quality-setting').value=settings.quality;$('motion-setting').checked=settings.reducedMotion;
- document.body.classList.toggle('manual-touch',touch&&!settings.autoThrottle);
+ $('auto-setting').checked=false;$('auto-setting').disabled=true;$('sound-setting').checked=settings.sound;$('weather-setting').value=settings.weather;$('quality-setting').value=settings.quality;$('motion-setting').checked=settings.reducedMotion;
+ document.body.classList.remove('manual-touch');
  for(const b of document.querySelectorAll('.sound-toggle'))b.innerHTML=(settings.sound?'SOUND ON':'SOUND OFF')+' <span aria-hidden="true">◖))</span>';
  audio.setEnabled(settings.sound);
  const targetScale=settings.quality==='low'?.70:settings.quality==='high'?1:renderer.scale;
@@ -1855,7 +1930,7 @@ function showState(){
  $('intro').hidden=state!=='menu' && !(state==='pause'&&pausedFromMenu);
  $('hud').hidden=state==='menu'||state==='inspect'||state==='story'||(state==='pause'&&pausedFromMenu);
  $('inspection').hidden=state!=='inspect';$('story').hidden=state!=='story';
- $('pause').hidden=state!=='pause';$('result').hidden=state!=='result';
+ $('pause').hidden=state!=='pause';$('map-overlay').hidden=state!=='map';$('result').hidden=state!=='result';
  input.blocked=state!=='play';
  document.body.dataset.state=state;
  renderer.presentation=(state==='menu'||state==='inspect'||state==='story'||(state==='pause'&&pausedFromMenu))?'studio':'road';
@@ -1870,13 +1945,38 @@ async function tryFullscreen(){
 }
 let wakeLock=null;
 async function acquireWake(){if(!navigator.wakeLock||state!=='play')return;try{wakeLock=await navigator.wakeLock.request('screen');}catch(_e){}}
+function openMap(){
+ if(state!=='play')return;
+ state='map';input.clear();accumulator=0;drawExpandedMap();showState();$('map-resume').focus();
+}
+function closeMap(){
+ if(state!=='map')return;
+ state='play';input.clear();accumulator=0;showState();updateHUD();
+}
+function activateWorld(world){
+ if(sim.world===world)return;
+ sim.world=world;renderer.setWorld(world);cameraEye=null;cameraTarget=null;
+}
+async function loadNorthBerwick(){
+ try{
+  const response=await fetch('assets/worlds/north-berwick/world.json',{cache:'force-cache'});
+  if(!response.ok)throw new Error('world asset '+response.status);
+  northBerwickWorld=C.createNorthBerwickWorld(await response.json());
+  $('free-drive-caption').textContent='Your car. Your North Berwick roads.';
+ }catch(error){
+  // Free Drive still has the existing reconstruction if a partial static host omits the optional map.
+  $('free-drive-caption').textContent='Your car. Your road.';console.warn('North Berwick Free Drive unavailable:',error);
+ }
+}
 function start(mode=selected,chapterIndex=null){
- if(Number.isInteger(chapterIndex)){if(!director.begin(chapterIndex,sim))return;mode=sim.mode;}else{director.stop();sim.reset(mode);}selected=mode;state='play';accumulator=0;input.clear();cameraYaw=sim.car.yaw;cameraEye=null;cameraTarget=null;lastHealth=100;renderer.skids=[];renderer.particles=[];
+ if(Number.isInteger(chapterIndex)){activateWorld(blackwaterWorld);if(!director.begin(chapterIndex,sim))return;mode=sim.mode;}
+ else{director.stop();activateWorld(mode==='free'&&northBerwickWorld?northBerwickWorld:blackwaterWorld);sim.reset(mode);}
+ selected=mode;state='play';accumulator=0;input.clear();cameraYaw=sim.car.yaw;cameraEye=null;cameraTarget=null;lastHealth=100;renderer.skids=[];renderer.particles=[];
  showState();audio.enabled=settings.sound;audio.start();tryFullscreen();acquireWake();
  notify(mode==='arena'?'REBORN ARMED / E TO PULSE':mode==='pursuit'?'THREE UNITS / BREAK THEIR LINE OF SIGHT':mode==='run'?'HARBOR RUN / 150 SECONDS':'WELCOME BACK, JUSTIN.',3);
  updateHUD();
 }
-function garage(){director.stop();state='menu';input.clear();sim.reset('free');sim.car.x=300;cameraEye=null;cameraTarget=null;showState();updateStoryMenu();$('drive').focus();wakeLock?.release().catch(()=>{});wakeLock=null;}
+function garage(){director.stop();activateWorld(blackwaterWorld);state='menu';input.clear();sim.reset('free');sim.car.x=300;cameraEye=null;cameraTarget=null;showState();updateStoryMenu();$('drive').focus();wakeLock?.release().catch(()=>{});wakeLock=null;}
 function pause(){
  if(state==='result'||state==='story')return;
  if(state==='pause')return resume();
@@ -1888,12 +1988,13 @@ function pause(){
 function resume(){if(state!=='pause')return;state=pausedFromMenu?'menu':'play';input.clear();accumulator=0;showState();if(focusBefore?.focus)focusBefore.focus();if(state==='play'){audio.start();acquireWake();}}
 function action(name){
  if(name==='sound'){settings.sound=!settings.sound;applySettings();persist();return;}
- if(name==='pause'){if(state==='inspect'||state==='story'){garage();return;}pause();return;}
+ if(name==='map'){if(state==='map')closeMap();else openMap();return;}
+ if(name==='pause'){if(state==='map'){closeMap();return;}if(state==='inspect'||state==='story'){garage();return;}pause();return;}
  if(state!=='play')return;
  if(name==='transform')sim.transform();else if(name==='pulse')sim.pulse();else if(name==='recover')sim.recover();else if(name==='camera'){cameraStyle=(cameraStyle+1)%3;cameraEye=null;cameraTarget=null;updateCameraChoice();notify(cameraNames[cameraStyle]);}
 }
 for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{selected=b.dataset.mode;for(const card of document.querySelectorAll('[data-mode]')){const active=card===b;card.classList.toggle('selected',active);card.setAttribute('aria-pressed',String(active));}});
-$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=touch;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();garage();}else{btn.textContent='CONFIRM RESET?';}});
+$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();garage();}else{btn.textContent='CONFIRM RESET?';}});
 $('inspect-car').addEventListener('click',()=>{state='inspect';input.clear();inspectAngle=-2.34;inspectHeight=.20;inspectDistance=5.8;inspectDragged=false;inspectTarget=[0,.84,0];inspectFocus='front';updateInspect();showState();});
 $('inspect-close').addEventListener('click',garage);
 for(const b of document.querySelectorAll('[data-inspect]'))b.addEventListener('click',()=>{for(let i=0;i<3&&sim.car.mode!==b.dataset.inspect;i++)C.changeMode(sim.car);updateInspect();});
@@ -2011,6 +2112,18 @@ function updateCamera(dt){
  renderer.setCamera(cameraEye,cameraTarget);
 }
 const mapCtx=$('minimap').getContext('2d');
+function drawExpandedMap(){
+ const canvas=$('expanded-map'),ctx=canvas.getContext('2d'),world=sim.world,car=sim.car,w=canvas.width,h=canvas.height,pad=46,b=world.bounds;
+ const spanX=Math.max(1,b.maxX-b.minX),spanZ=Math.max(1,b.maxZ-b.minZ),scale=Math.min((w-pad*2)/spanX,(h-pad*2)/spanZ);
+ const p=(x,z)=>[pad+(x-b.minX)*scale,h-pad-(z-b.minZ)*scale];
+ ctx.fillStyle='#10252b';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#628077';ctx.lineWidth=1;ctx.strokeRect(pad,pad,w-pad*2,h-pad*2);
+ for(const building of world.buildings){const [x,z]=p(building.x-building.w/2,building.z+building.d/2);ctx.fillStyle='#425a55';ctx.fillRect(x,z,Math.max(.7,building.w*scale),Math.max(.7,building.d*scale));}
+ ctx.lineCap='round';
+ for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);ctx.strokeStyle=road.surface==='gravel'?'#b4a075':'#9fc2b2';ctx.stroke();}
+ const [x,z]=p(car.x,car.z);ctx.save();ctx.translate(x,z);ctx.rotate(-car.yaw);ctx.fillStyle='#f5dfaa';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(7,8);ctx.lineTo(0,4);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();ctx.restore();
+ ctx.fillStyle='#c2d9d0';ctx.font='600 16px Arial';ctx.fillText(world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',pad,28);ctx.font='12px Arial';ctx.fillStyle='#91aba3';ctx.fillText('YOU ARE HERE · M TO RETURN',pad,h-19);
+ $('map-title').textContent=world.northBerwick?'North Berwick Free Drive':'Blackwater County';$('map-subtitle').textContent=world.northBerwick?'Data-derived roads and footprint placement · you are here':'Activity map · you are here';
+}
 function drawMap(){
  const ctx=mapCtx,c=sim.car,s=340,scale=.74,origin={x:s/2,z:s/2};
  ctx.clearRect(0,0,s,s);ctx.save();ctx.beginPath();ctx.rect(0,0,s,s);ctx.clip();ctx.fillStyle='#183138';ctx.fillRect(0,0,s,s);
@@ -2030,9 +2143,9 @@ function updateHUD(){
  $('speed').textContent=String(mph).padStart(3,'0');$('gear').innerHTML=(c.forwardSpeed<-.5?'R':mph<1?'N':String(Math.min(6,Math.floor(mph/22)+1)))+'<b>MPH</b>';
  $('drive-mode').querySelector('b').textContent=mp.name;$('drive-mode').querySelector('span').textContent=mp.drive;$('drive-mode').querySelector('i').style.background=mp.color;
  $('health-value').textContent=Math.round(c.health)+'%';$('energy-value').textContent=Math.round(c.energy);$('energy-bar').style.width=c.energy+'%';$('health-bar').style.width=c.health+'%';$('health-bar').style.background=c.health<30?'#df866b':'var(--accent)';
- $('region').textContent=C.regionAt(c.x,c.z);$('surface').textContent=c.surface.toUpperCase();$('heat').textContent='◆'.repeat(sim.heat);$('heat').setAttribute('aria-label','Police heat '+sim.heat+' of 5');
+ $('region').textContent=C.regionAt(c.x,c.z,sim.world);$('map-label').textContent=sim.world.northBerwick?'NORTH BERWICK':'BLACKWATER';$('surface').textContent=c.surface.toUpperCase();$('heat').textContent='◆'.repeat(sim.heat);$('heat').setAttribute('aria-label','Police heat '+sim.heat+' of 5');
  $('pulse-ready').textContent=c.mode!=='reborn'?'REBORN ONLY':c.pulseCooldown>0?'RECHARGE '+c.pulseCooldown.toFixed(1):c.energy<30?'NEEDS 30 ENERGY':'READY / 30 ENERGY';
- let title='A second life.',detail=touch?'Explore Blackwater. Tap TRANSFORM to change the car.':'Explore Blackwater. T changes the car. E fires the Reborn pulse.',progress=0;
+ let title=sim.world.northBerwick?'North Berwick free drive.':'A second life.',detail=sim.world.northBerwick?(touch?'Use the left stick like arrow keys: up drives, down reverses, left/right steer.':'Explore your hometown roads. Up/W accelerates; Down/S brakes or reverses.'):(touch?'Explore Blackwater. Tap TRANSFORM to change the car.':'Explore Blackwater. T changes the car. E fires the Reborn pulse.'),progress=0;
  if(sim.mode==='run'){title='Harbor run. '+formatTime(Math.max(0,m.limit-m.time));detail='GATE '+Math.min(m.checkpoint+1,9)+' / 9 — '+(C.ROUTE[m.checkpoint]?.name||'HOME');progress=m.checkpoint/C.ROUTE.length;}
  else if(sim.mode==='pursuit'){title=sim.escape>0?'Losing the signal…':'Lose the tail.';detail='Break line of sight for 10 seconds. '+(sim.escape>0?sim.escape.toFixed(1)+' / 10.0 s':'Three patrol units are looking for you.');progress=sim.escape/10;}
  else if(sim.mode==='arena'){title='Clear the yard.';detail=sim.kills+' / 3 raiders down. Pulse within 70 m; walls block it. Stay clear of warning beams.';progress=sim.kills/3;}
@@ -2077,8 +2190,8 @@ function frame(timestamp){
 }
 // Read-only diagnostics are useful for regression tests and issue reports. No remote endpoint.
 window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,graphics:renderer.diagnostics?.()||{},story:director.snapshot(),inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
-$('input-caption').innerHTML=touch?'LANDSCAPE TOUCH · LEFT STICK / RIGHT ACTIONS<br><span>Third person default · tap CAM for driver view.</span>':'WASD / ARROWS · CONTROLLER READY<br><span>Third person default · C changes camera.</span>';
-applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();showState();$('loading').hidden=true;requestAnimationFrame(frame);
+$('input-caption').innerHTML=touch?'LANDSCAPE TOUCH · LEFT STICK = ARROW KEYS<br><span>Third person default · tap CAM for driver view.</span>':'WASD / ARROWS · CONTROLLER READY<br><span>Third person default · C changes camera.</span>';
+applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
 if(location.protocol.startsWith('http')&&window.isSecureContext&&'serviceWorker'in navigator&&!document.body.dataset.standalone){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
 })();
 

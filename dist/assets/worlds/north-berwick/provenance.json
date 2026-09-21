@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-09-21T17:37:51.843Z",
+  "town": "North Berwick, Maine",
+  "sources": [
+    {
+      "role": "municipal boundary",
+      "url": "https://gis.maine.gov/mapservices/rest/services/escb/escbContributorFeature/FeatureServer/23",
+      "publisher": "Maine ESCB"
+    },
+    {
+      "role": "roads",
+      "url": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_E911_Roads_Feature/FeatureServer/0",
+      "publisher": "Maine Emergency Services Communication Bureau / Maine GeoLibrary"
+    },
+    {
+      "role": "driveways",
+      "url": "https://gis.maine.gov/mapservices/rest/services/escb/escbContributorFeature/FeatureServer/16",
+      "publisher": "Maine ESCB"
+    },
+    {
+      "role": "building footprints",
+      "url": "https://gis.maine.gov/mapservices/rest/services/escb/escbContributorFeature/FeatureServer/25",
+      "publisher": "Maine ESCB"
+    },
+    {
+      "role": "terrain",
+      "url": "https://gis.maine.gov/image/rest/services/DEM/Maine_Elevation_DEM_Statewide/ImageServer",
+      "publisher": "Maine GeoLibrary"
+    },
+    {
+      "role": "orthophoto",
+      "url": "https://gis.maine.gov/image/rest/services/Regional/orthoRegional/ImageServer",
+      "publisher": "Maine GeoLibrary"
+    }
+  ],
+  "transformations": [
+    "All geographic vector geometry converted to a local meter coordinate system centered on North Berwick.",
+    "Residential address/location fields are not included in game output.",
+    "Building heights are heuristic and explicitly labeled as such.",
+    "Remote GIS services are build-time inputs only; generated game assets require no GIS/API calls at runtime."
+  ],
+  "counts": {
+    "roads": 330,
+    "driveways": 0,
+    "buildings": 1705
+  },
+  "terrain": null,
+  "orthophotoBytes": 0
+}
