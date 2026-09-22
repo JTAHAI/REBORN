@@ -27,6 +27,16 @@ for (const marker of ['else root.RebornCore = api', 'root.RebornRenderer={Render
   const C = context.RebornCore, R = context.RebornRenderer, V = context.RebornVehicle;
   const world = C.createNorthBerwickWorld(JSON.parse(fs.readFileSync(path.join(root, 'assets/worlds/north-berwick/world.json'), 'utf8')));
   const objects = R.buildWorld(world);
+  const site=id=>world.buildings.find(b=>b.landmarkId===id);
+  for(const [id,street] of [['cumberland-farms','Main Street'],['town-office-police','Main Street'],['aroma-joes','Main Street'],['fire-department','Market Street'],['north-berwick-crossing','Wells Street'],['post-office','Wells Street']]){
+    const b=site(id);assert.ok(b,`Missing site ${id}`);assert.equal(b.frontRoad,street);
+    assert.equal(world.buildings.filter(b=>b.landmarkId===id).length,1,`Duplicate site ${id}`);
+    assert.equal(b.frontYaw,b.yaw,'Authored frontage and collision frame must agree');
+  }
+  const cf=site('cumberland-farms'),hall=site('town-office-police'),fire=site('fire-department');
+  assert.ok(Math.cos(cf.frontYaw-hall.frontYaw)<-.95,'Cumberland and Town Hall must face opposite sides of Main Street');
+  assert.ok((fire.x-cf.x)*Math.sin(cf.frontYaw)+(fire.z-cf.z)*Math.cos(cf.frontYaw)<0,'Fire station must be behind Cumberland, across Market Street');
+  assert.ok(Math.hypot(cf.x-3953.9635,cf.z-4300.3031)<.1,'Cumberland must use its own mapped building, not nearest unrelated footprint');
   assert.ok(objects.length > 1000, 'Town must produce renderable scenery');
   assert.ok(objects.every(o => [...o.m, ...o.color, ...o.surface].every(Number.isFinite)), 'Town transforms and materials must be finite');
   assert.ok(objects.some(o => o.surface[0] === V.M.ROAD && Math.hypot(o.x - world.spawn.x, o.z - world.spawn.z) < 50), 'Road geometry must exist at the player spawn');
