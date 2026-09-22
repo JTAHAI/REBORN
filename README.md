@@ -20,7 +20,7 @@ The supplied material contained the verified Build 004 standalone but not its or
 
 ## North Berwick Free Drive
 
-Free Drive uses the locally bundled `assets/worlds/north-berwick/world.json` road network for North Berwick, Maine. The asset is generated from public Maine E911 road-centerline and Maine ESCB footprint data, with no runtime GIS/API calls. Visible attribution in the game reads: “North Berwick geographic data: Maine GeoLibrary / Maine ESCB.”
+Free Drive uses the locally bundled v2 `assets/worlds/north-berwick/world.json` for North Berwick, Maine. It includes named public Maine E911 road centerlines, Maine ESCB footprints, landmark anchors, and an OpenStreetMap-derived water/woods/farmland context, with no runtime GIS/API calls. The HUD reports the current named road; `M` (or a minimap tap) opens the named-road town map. Visible attribution includes: “North Berwick geographic data: Maine GeoLibrary / Maine ESCB” and “© OpenStreetMap contributors” for the additional context.
 
 See [`assets/worlds/north-berwick/CREDITS.md`](assets/worlds/north-berwick/CREDITS.md) and the retained [`provenance.json`](assets/worlds/north-berwick/provenance.json) for sources and transformations. Centerlines and footprint placement are data-derived; road widths and building heights are gameplay/visual heuristics.
 

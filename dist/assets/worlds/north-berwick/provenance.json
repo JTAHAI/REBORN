@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T17:37:51.843Z",
+  "generatedAt": "2026-09-22T08:20:36.273Z",
   "town": "North Berwick, Maine",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "publisher": "Maine ESCB"
     },
     {
-      "role": "roads",
+      "role": "roads and road names",
       "url": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_E911_Roads_Feature/FeatureServer/0",
       "publisher": "Maine Emergency Services Communication Bureau / Maine GeoLibrary"
     },
@@ -31,18 +31,46 @@
       "role": "orthophoto",
       "url": "https://gis.maine.gov/image/rest/services/Regional/orthoRegional/ImageServer",
       "publisher": "Maine GeoLibrary"
+    },
+    {
+      "role": "official street-map cross-check",
+      "url": "https://www.townofnorthberwick.org/sites/g/files/vyhlif5971/f/uploads/streetmap.pdf",
+      "publisher": "Town of North Berwick / CAI Technologies",
+      "usage": "reference only; not redistributed"
+    },
+    {
+      "role": "water/forest/farm context",
+      "url": "https://overpass-api.de/api/interpreter",
+      "publisher": "OpenStreetMap contributors"
+    },
+    {
+      "role": "landmark geocoding",
+      "url": "https://nominatim.openstreetmap.org/search",
+      "publisher": "OpenStreetMap contributors"
     }
   ],
   "transformations": [
     "All geographic vector geometry converted to a local meter coordinate system centered on North Berwick.",
-    "Residential address/location fields are not included in game output.",
-    "Building heights are heuristic and explicitly labeled as such.",
-    "Remote GIS services are build-time inputs only; generated game assets require no GIS/API calls at runtime."
+    "Residential address/location attributes are not copied from the Maine building-footprint layer.",
+    "Building heights are heuristic; named landmark styles supply minimum-height overrides only.",
+    "Named-road labels and street-sign intersection candidates are derived from Maine E911 road names.",
+    "Trees and utility poles are deterministic procedural scenery; they are not survey-grade asset locations.",
+    "Remote GIS/open-data services are build-time inputs only; generated game assets require no map/API calls at runtime."
   ],
   "counts": {
     "roads": 330,
     "driveways": 0,
-    "buildings": 1705
+    "buildings": 1705,
+    "roadLabels": 145,
+    "intersections": 163,
+    "landmarks": 11,
+    "resolvedLandmarks": 11,
+    "trees": 5500,
+    "utilityPoles": 2198,
+    "waterPolygons": 239,
+    "waterways": 467,
+    "forestPolygons": 35,
+    "farmlandPolygons": 75
   },
   "terrain": null,
   "orthophotoBytes": 0

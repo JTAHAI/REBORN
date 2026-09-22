@@ -91,7 +91,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
   </div>
   <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DATA: MAINE GEOLIBRARY / MAINE ESCB</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 008 <i>/</i> EVOLUTION / LIVING LIGHT</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> MAINE GEOLIBRARY / ESCB · OSM CONTEXT</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 008 <i>/</i> EVOLUTION / LIVING LIGHT</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <header class="hud-top"><div class="brand"><b>99½</b><span>REBORN</span></div><div id="drive-mode"><i></i><b>STREET</b><span>FWD</span></div><div class="hud-right"><span id="heat" aria-label="Police heat"></span><button id="camera-button" class="square camera-toggle" data-action="camera" aria-label="Change camera view">CAM<br><b>3P</b></button><button id="pause-button" class="square" aria-label="Pause game">Ⅱ</button></div></header>
@@ -260,16 +260,18 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
     if (!source?.boundsLocal || !Array.isArray(source.roads)) throw new Error('North Berwick world data is incomplete.');
     const random = rng(seed + 41), bounds = source.boundsLocal, spawn = source.defaultSpawn || {};
     const world = {
-      northBerwick: true, noTraffic: true, mapName: 'NORTH BERWICK, ME', roads: [], buildings: [], trees: [], props: [], pickups: [], hash: new SpatialHash(), seed,
+      northBerwick: true, noTraffic: true, mapName: 'NORTH BERWICK, ME', roads: [], buildings: [], trees: [], poles: [], props: [], pickups: [], hash: new SpatialHash(), seed,
       bounds: { minX: bounds.minX + 14, maxX: bounds.maxX - 14, minZ: bounds.minZ + 14, maxZ: bounds.maxZ - 14 },
       garage: { x: spawn.x || 0, z: spawn.z || 0 }, arena: { x: 0, z: 0, w: 0, d: 0 },
-      spawn: { x: spawn.x || 0, z: spawn.z || 0, yaw: Math.PI }, nodes: []
+      spawn: { x: spawn.x || 0, z: spawn.z || 0, yaw: Math.PI }, nodes: [], version: source.format || 'REBORN_WORLD_V1',
+      roadLabels: Array.isArray(source.roadLabels) ? source.roadLabels : [], landmarks: Array.isArray(source.landmarks) ? source.landmarks.filter(l=>Number.isFinite(l.x)&&Number.isFinite(l.z)) : [],
+      intersections: Array.isArray(source.intersections) ? source.intersections : [], openContext: source.openContext || {}, priorityRoadNames: source.ui?.priorityRoadNames || []
     };
     for (const feature of source.roads) for (const line of feature.lines || []) {
       const points = simplifyRoadLine(line), width = clamp(Number(feature.widthM) || 6.1, 4.5, 13);
       for (let i = 1; i < points.length; i++) {
         const [x1, z1] = points[i - 1], [x2, z2] = points[i];
-        if (Math.hypot(x2 - x1, z2 - z1) > .5) world.roads.push({ x1, z1, x2, z2, width, surface: feature.class === 'Unpaved' ? 'gravel' : 'asphalt', name: feature.name || 'North Berwick road' });
+        if (Math.hypot(x2 - x1, z2 - z1) > .5) world.roads.push({ x1, z1, x2, z2, width, surface: feature.class === 'Unpaved' ? 'gravel' : 'asphalt', name: feature.name || 'North Berwick road', class: feature.class || 'Local' });
       }
     }
     // One recovery node is sufficient for the no-traffic Free Drive world.
@@ -278,10 +280,16 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
       const points = (building.polygons || []).flat(2).filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(p[1]));
       if (!points.length) continue;
       const xs = points.map(p => p[0]), zs = points.map(p => p[1]), minX = Math.min(...xs), maxX = Math.max(...xs), minZ = Math.min(...zs), maxZ = Math.max(...zs);
-      const w = Math.max(3, maxX - minX), d = Math.max(3, maxZ - minZ), area = w * d;
-      const solid = { x: (minX + maxX) / 2, z: (minZ + maxZ) / 2, w, d, h: clamp(Number(building.heightM) || 5.2, 3.2, 13), style: area > 420 ? 'warehouse' : area > 170 ? 'mill' : 'town', color: Math.floor(random() * 4) };
+      const w = Math.max(3, maxX - minX), d = Math.max(3, maxZ - minZ), area = w * d, sourceStyle = String(building.style || '');
+      const style = ['civic','fireStation','gasStation','historicQueenAnne','brickIndustrial','smallRetail','school','supermarket','industrialCampus','farmstand'].includes(sourceStyle) ? sourceStyle : area > 420 ? 'warehouse' : area > 170 ? 'mill' : 'town';
+      const solid = { x: (minX + maxX) / 2, z: (minZ + maxZ) / 2, w, d, h: clamp(Number(building.heightM) || 5.2, 3.2, 16), style, color: Math.floor(random() * 4), landmarkId: building.landmarkId || null };
       world.buildings.push(solid); world.hash.insert(solid);
     }
+    // Keep the static renderer bounded while retaining a representative, deterministic
+    // sample of the generated roadside context around the town.
+    const sample = (items, limit) => items.length <= limit ? items : items.filter((_, index) => index % Math.ceil(items.length / limit) === 0).slice(0, limit);
+    for (const tree of sample(source.props?.trees || [], 800)) world.trees.push({ x:tree.x,z:tree.z,h:5.5+(Number(tree.scale)||1)*5.5,r:1.4+(Number(tree.scale)||1)*1.2,tone:tree.kind==='conifer'?.72:.32 });
+    for (const pole of sample(source.props?.utilityPoles || [], 620)) world.poles.push({ x:pole.x,z:pole.z,h:clamp(Number(pole.heightM)||9,6,13),angle:Number(pole.angleRad)||0 });
     return world;
   }
   function roadAt(world, x, z, margin = 0) {
@@ -290,6 +298,15 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
       if (Math.hypot(x-r.x1-t*dx,z-r.z1-t*dz) <= r.width/2+margin) return r;
     }
     return null;
+  }
+  function nearestRoad(world, x, z, maximum = Infinity) {
+    let found = null, best = maximum;
+    for (const r of world.roads) {
+      const dx = r.x2-r.x1, dz = r.z2-r.z1, den = dx*dx+dz*dz, t = den ? clamp(((x-r.x1)*dx+(z-r.z1)*dz)/den,0,1) : 0;
+      const distance = Math.hypot(x-r.x1-t*dx,z-r.z1-t*dz);
+      if (distance < best) { best = distance; found = r; }
+    }
+    return found ? { road: found, distance: best } : null;
   }
   function surfaceAt(world, x, z) {
     const a = world.arena;
@@ -504,7 +521,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
       sound:typeof s.sound==='boolean'?s.sound:true,autoThrottle:typeof s.autoThrottle==='boolean'?s.autoThrottle:false,
       weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,validateSave};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,validateSave};
 });
 
 </script>
@@ -693,13 +710,20 @@ function buildWorld(world){
    const dx=r.x2-r.x1,dz=r.z2-r.z1,len=Math.hypot(dx,dz),a=Math.atan2(dx,dz),x=(r.x1+r.x2)/2,z=(r.z1+r.z2)/2;
    add('box',x,.02,z,r.width+2.4,.13,len+.12,r.surface==='gravel'?'#aa9a78':'#747b70',a);
    add('box',x,.095,z,r.width,.12,len+.10,r.surface==='gravel'?'#a18e69':'#344345',a);
+   if(r.surface==='asphalt'&&r.width>=6.5&&len>24){
+    for(let t=8;t<len-5;t+=26){const px=r.x1+dx*t/len,pz=r.z1+dz*t/len;add('box',px,.165,pz,.13,.025,7.2,'#d0bc78',a);}
+    for(const side of [-1,1])add('box',x+Math.cos(a)*(r.width/2-.4)*side,.165,z-Math.sin(a)*(r.width/2-.4)*side,.08,.02,len,'#b8c2b5',a);
+   }
   }
-  const palettes={town:['#76847d','#697b77','#7f8273','#6f7c70'],mill:['#765a4e','#826452','#6a7167','#8e765d'],warehouse:['#737f77','#778786','#888274','#64736f']};
+  const palettes={town:['#76847d','#697b77','#7f8273','#6f7c70'],mill:['#765a4e','#826452','#6a7167','#8e765d'],warehouse:['#737f77','#778786','#888274','#64736f'],civic:['#71818a','#657883','#7e8b8a','#68777a'],fireStation:['#855e50','#936a58','#715e56','#a16a58'],gasStation:['#78827a','#66776f','#86806e','#607872'],historicQueenAnne:['#8b7767','#756b61','#8a705c','#6e7770'],brickIndustrial:['#805c4e','#724f45','#8d6652','#695c56'],smallRetail:['#71817c','#837862','#687b74','#847168'],school:['#79817a','#747a70','#8a826e','#6d7d75'],supermarket:['#737f77','#677773','#838070','#6e7e78'],industrialCampus:['#68797a','#617171','#73807b','#73766e'],farmstand:['#8a755d','#7d6b55','#7e7865','#71806d']};
   for(const building of world.buildings){
-   const col=palettes[building.style][building.color];
+   const col=(palettes[building.style]||palettes.town)[building.color];
    add('box',building.x,building.h/2,building.z,building.w,building.h,building.d,col);
    add('box',building.x,building.h+.18,building.z,building.w+.5,.38,building.d+.5,'#46514c');
+   if(building.style==='historicQueenAnne'||building.style==='farmstand')add('cone',building.x,building.h+.72,building.z,Math.max(building.w,building.d)*.72,1.1,Math.max(building.w,building.d)*.72,'#5a5148');
   }
+  for(const tree of world.trees){add('cylinder',tree.x,tree.h*.26,tree.z,.38,tree.h*.52,.38,'#5b4c39');add('cone',tree.x,tree.h*.57,tree.z,tree.r*2,tree.h*.80,tree.r*2,tree.tone>.5?'#31564c':'#48644e');}
+  for(const pole of world.poles){add('cylinder',pole.x,pole.h/2,pole.z,.11,pole.h,.11,'#4d5047');add('box',pole.x,pole.h*.84,pole.z,1.7,.10,.10,'#5f655a',pole.angle);}
   return out;
  }
  for(let x=-475;x<365;x+=110)for(let z=-495;z<550;z+=110)add('box',x,-.6,z,110,1,110,'#4c6453');
@@ -2120,6 +2144,11 @@ function drawExpandedMap(){
  for(const building of world.buildings){const [x,z]=p(building.x-building.w/2,building.z+building.d/2);ctx.fillStyle='#425a55';ctx.fillRect(x,z,Math.max(.7,building.w*scale),Math.max(.7,building.d*scale));}
  ctx.lineCap='round';
  for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);ctx.strokeStyle=road.surface==='gravel'?'#b4a075':'#9fc2b2';ctx.stroke();}
+ if(world.northBerwick){
+  const seen=new Set();ctx.font='600 12px Arial';ctx.fillStyle='#d1e3cf';
+  for(const label of world.roadLabels){if(!world.priorityRoadNames.includes(label.name)||seen.has(label.name))continue;seen.add(label.name);const [x,z]=p(label.x,label.z);ctx.fillText(label.name,x+5,z-5);}
+  ctx.font='600 11px Arial';ctx.fillStyle='#efc887';for(const landmark of world.landmarks){const [x,z]=p(landmark.x,landmark.z);ctx.fillRect(x-2,z-2,4,4);ctx.fillText(landmark.name,x+5,z+4);}
+ }
  const [x,z]=p(car.x,car.z);ctx.save();ctx.translate(x,z);ctx.rotate(-car.yaw);ctx.fillStyle='#f5dfaa';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(7,8);ctx.lineTo(0,4);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();ctx.restore();
  ctx.fillStyle='#c2d9d0';ctx.font='600 16px Arial';ctx.fillText(world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',pad,28);ctx.font='12px Arial';ctx.fillStyle='#91aba3';ctx.fillText('YOU ARE HERE · M TO RETURN',pad,h-19);
  $('map-title').textContent=world.northBerwick?'North Berwick Free Drive':'Blackwater County';$('map-subtitle').textContent=world.northBerwick?'Data-derived roads and footprint placement · you are here':'Activity map · you are here';
@@ -2130,6 +2159,7 @@ function drawMap(){
  const p=(x,z)=>[origin.x+(x-c.x)*scale,origin.z+(z-c.z)*scale];
  for(const b of sim.world.buildings){const [x,z]=p(b.x-b.w/2,b.z-b.d/2);ctx.fillStyle='#38504b';ctx.fillRect(x,z,b.w*scale,b.d*scale);}
  for(const r of sim.world.roads){ctx.beginPath();ctx.moveTo(...p(r.x1,r.z1));ctx.lineTo(...p(r.x2,r.z2));ctx.lineWidth=r.width*scale*.6;ctx.strokeStyle=r.surface==='gravel'?'#7e795d':'#7c9485';ctx.stroke();}
+ if(sim.world.northBerwick){const nearby=C.nearestRoad(sim.world,c.x,c.z,45);if(nearby){ctx.font='bold 11px Arial';ctx.fillStyle='#d8e9d4';ctx.fillText(nearby.road.name,10,20);}}
  if(sim.mode==='run'&&sim.mission.status==='active'){
   const remaining=C.ROUTE.slice(sim.mission.checkpoint);ctx.strokeStyle='#eac68b';ctx.lineWidth=3;ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(...p(c.x,c.z));for(const cp of remaining)ctx.lineTo(...p(cp.x,cp.z));ctx.stroke();ctx.setLineDash([]);
   const cp=remaining[0];if(cp){ctx.fillStyle='#ffdc98';const[x,z]=p(cp.x,cp.z);ctx.beginPath();ctx.arc(x,z,8,0,Math.PI*2);ctx.fill();}
@@ -2143,9 +2173,10 @@ function updateHUD(){
  $('speed').textContent=String(mph).padStart(3,'0');$('gear').innerHTML=(c.forwardSpeed<-.5?'R':mph<1?'N':String(Math.min(6,Math.floor(mph/22)+1)))+'<b>MPH</b>';
  $('drive-mode').querySelector('b').textContent=mp.name;$('drive-mode').querySelector('span').textContent=mp.drive;$('drive-mode').querySelector('i').style.background=mp.color;
  $('health-value').textContent=Math.round(c.health)+'%';$('energy-value').textContent=Math.round(c.energy);$('energy-bar').style.width=c.energy+'%';$('health-bar').style.width=c.health+'%';$('health-bar').style.background=c.health<30?'#df866b':'var(--accent)';
- $('region').textContent=C.regionAt(c.x,c.z,sim.world);$('map-label').textContent=sim.world.northBerwick?'NORTH BERWICK':'BLACKWATER';$('surface').textContent=c.surface.toUpperCase();$('heat').textContent='◆'.repeat(sim.heat);$('heat').setAttribute('aria-label','Police heat '+sim.heat+' of 5');
+ const currentRoad=sim.world.northBerwick?C.nearestRoad(sim.world,c.x,c.z,45):null;
+ $('region').textContent=currentRoad?.road.name?.toUpperCase()||C.regionAt(c.x,c.z,sim.world);$('map-label').textContent=sim.world.northBerwick?'NORTH BERWICK':'BLACKWATER';$('surface').textContent=c.surface.toUpperCase();$('heat').textContent='◆'.repeat(sim.heat);$('heat').setAttribute('aria-label','Police heat '+sim.heat+' of 5');
  $('pulse-ready').textContent=c.mode!=='reborn'?'REBORN ONLY':c.pulseCooldown>0?'RECHARGE '+c.pulseCooldown.toFixed(1):c.energy<30?'NEEDS 30 ENERGY':'READY / 30 ENERGY';
- let title=sim.world.northBerwick?'North Berwick free drive.':'A second life.',detail=sim.world.northBerwick?(touch?'Use the left stick like arrow keys: up drives, down reverses, left/right steer.':'Explore your hometown roads. Up/W accelerates; Down/S brakes or reverses.'):(touch?'Explore Blackwater. Tap TRANSFORM to change the car.':'Explore Blackwater. T changes the car. E fires the Reborn pulse.'),progress=0;
+ let title=sim.world.northBerwick?(currentRoad?.road.name||'North Berwick free drive.'):'A second life.',detail=sim.world.northBerwick?(currentRoad?('CURRENT ROAD / '+currentRoad.road.name+' · M FOR NAMED TOWN MAP'):touch?'Use the left stick like arrow keys: up drives, down reverses, left/right steer.':'Explore your hometown roads. Up/W accelerates; Down/S brakes or reverses.'):(touch?'Explore Blackwater. Tap TRANSFORM to change the car.':'Explore Blackwater. T changes the car. E fires the Reborn pulse.'),progress=0;
  if(sim.mode==='run'){title='Harbor run. '+formatTime(Math.max(0,m.limit-m.time));detail='GATE '+Math.min(m.checkpoint+1,9)+' / 9 — '+(C.ROUTE[m.checkpoint]?.name||'HOME');progress=m.checkpoint/C.ROUTE.length;}
  else if(sim.mode==='pursuit'){title=sim.escape>0?'Losing the signal…':'Lose the tail.';detail='Break line of sight for 10 seconds. '+(sim.escape>0?sim.escape.toFixed(1)+' / 10.0 s':'Three patrol units are looking for you.');progress=sim.escape/10;}
  else if(sim.mode==='arena'){title='Clear the yard.';detail=sim.kills+' / 3 raiders down. Pulse within 70 m; walls block it. Stay clear of warning beams.';progress=sim.kills/3;}
