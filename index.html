@@ -292,6 +292,10 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
     const hash=id=>{let h=2166136261;for(const c of String(id||'')){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
     const landmarkById=new Map(world.landmarks.map(l=>[l.id,l]));
     const districtFor=(x,z)=>{let match=null,best=Infinity;for(const d of world.districts){const n=Math.hypot(x-d.x,z-d.z);if(n<best){best=n;match=d;}}return match&&best<=match.radiusM?{id:match.id,distance:best}:null;};
+    // The supplied downtown coordinate is a roadside point. Start in the right
+    // lane, aligned with the actual road segment, rather than facing across it.
+    const entry=closestRoad(world.spawn.x,world.spawn.z);
+    if(entry.road){const yaw=Math.atan2(entry.road.x2-entry.road.x1,-(entry.road.z2-entry.road.z1)),lane=entry.road.width*.25;world.spawn={x:entry.x+Math.cos(yaw)*lane,z:entry.z+Math.sin(yaw)*lane,yaw};world.garage={x:world.spawn.x,z:world.spawn.z};}
     world.nodes.push({ id: 0, x: world.spawn.x, z: world.spawn.z, neighbors: [] });
     for (const building of source.buildings || []) {
       const points = (building.polygons || []).flat(2).filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(p[1]));
@@ -742,6 +746,7 @@ function contextGeometry(name,features,y=.01,maxFeatures=140){
 function buildWorld(world){
  const out=[];const add=(...a)=>{const o=object(...a);out.push(o);return o;};
  if(world.northBerwick){
+  const M=root.RebornVehicle.M;
   const b=world.bounds,cx=(b.minX+b.maxX)/2,cz=(b.minZ+b.maxZ)/2,landmarks=new Map(world.landmarks.map(l=>[l.id,l]));
   const place=(mesh,x,y,z,sx,sy,sz,col,ry=0,mat=M.STANDARD,rough=.72,metal=.03,em=0,rx=0,rz=0,hero=false)=>{const o=add(mesh,x,y,z,sx,sy,sz,col,ry,rx,rz);o.surface=[mat,rough,metal,em];if(hero)o.hero=true;return o;};
   const local=(base,lx,y,lz,sx,sy,sz,col,mat=M.STANDARD,rough=.72,metal=.03,em=0,mesh='box',extraYaw=0)=>{const co=Math.cos(base.yaw||0),si=Math.sin(base.yaw||0),x=base.x+co*lx+si*lz,z=base.z-si*lx+co*lz;return place(mesh,x,y,z,sx,sy,sz,col,(base.yaw||0)+extraYaw,mat,rough,metal,em);};
@@ -771,10 +776,7 @@ function buildWorld(world){
    if(id==='riverside-farm-stand'){hero.w=38;hero.d=22;hero.h=8;place('box',hero.x,4,hero.z,38,8,22,'#a87c55',hero.yaw,M.STANDARD,.84);roof(hero,8,'gable','#494946',4);const f=frontInfo(hero);for(let i=-1;i<=1;i++){const gx=hero.x+f.tx*i*20-f.nx*24,gz=hero.z+f.tz*i*20-f.nz*24;place('box',gx,2.4,gz,14,4.8,30,'#9fc4b8',hero.yaw,M.GLASS,.18,.08);place('gableRoof',gx,4.8,gz,14.4,3.2,30.4,'#b8d8d0',hero.yaw,M.GLASS,.16,.05);}for(let row=-3;row<=3;row++)place('box',hero.x+f.nx*48+f.tx*row*5,.04,hero.z+f.nz*48+f.tz*row*5,2.4,.05,54,'#74583e',f.yaw,M.STANDARD,.95);return;}
    commercial(hero);
   };
-  // Ground is tiled around the actual town coordinate space.  Build 009 replaced
-  // the old world with one 12 x 16 km slab plus convex-hulled context meshes;
-  // that oversized geometry is what made the live road scene disappear on some
-  // WebGL drivers even though the minimap still had the road graph.
+  // Bounded tiles allow distant ground to be culled in the town coordinate space.
   const groundTile=640;
   for(let x0=b.minX;x0<b.maxX;x0+=groundTile)for(let z0=b.minZ;z0<b.maxZ;z0+=groundTile){const tw=Math.min(groundTile,b.maxX-x0)+2,td=Math.min(groundTile,b.maxZ-z0)+2;place('box',x0+tw/2,-.66,z0+td/2,tw,1.2,td,'#50674f',0,M.STANDARD,.97);}
   const context=world.openContext||{};
@@ -1235,7 +1237,7 @@ const COLORS={paint:'#05070b',glass:'#071823',black:'#0a0d11',rubber:'#111317',m
 // The licensed factory shell is kept byte-for-byte as a GLB. We decode only its
 // exterior drawables at runtime, map its axes to the game coordinate system, and
 // add the owner's front-only kit separately below.
-const factoryModel={ready:false,parts:[]};
+const factoryModel={ready:false,parts:[],roofParts:[]};
 const FACTORY_GLB='assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb';
 // Match the canonical component node in its ancestry, never a reused material
 // leaf. The source GLB contains optional rusty, stance and V6 variants that
@@ -1269,6 +1271,26 @@ function addFactoryPrimitive(name,doc,bin,primitive){
  }
  R.geometries[name]={data:new Float32Array(data),faces:[]};meta[name]={triangles:data.length/18,source:'CC-BY-4.0 GLB'};
 }
+function fitFactorySunroof(){
+ const roofY=(x,z)=>{
+  let height=-Infinity;
+  for(const name of factoryModel.roofParts){const d=R.geometries[name].data;
+   for(let i=0;i<d.length;i+=18){
+    const ax=d[i],az=d[i+2],bx=d[i+6],bz=d[i+8],cx=d[i+12],cz=d[i+14];
+    const den=(bz-cz)*(ax-cx)+(cx-bx)*(az-cz);if(Math.abs(den)<1e-10)continue;
+    const a=((bz-cz)*(x-cx)+(cx-bx)*(z-cz))/den,b=((cz-az)*(x-cx)+(ax-cx)*(z-cz))/den,c=1-a-b;
+    if(Math.min(a,b,c)>=-1e-6)height=Math.max(height,a*d[i+1]+b*d[i+7]+c*d[i+13]);
+   }
+  }
+  if(!Number.isFinite(height))throw new Error('Sunroof lies outside the imported roof');
+  return height;
+ };
+ // Sample the curved factory roof in its own coordinates; the procedural shell
+ // has a different height. Millimetre offsets keep the glass/gasket on the skin.
+ for(const [name,w,d,lift] of [['mkiv_sunroof_gasket',.760,.380,.002],['mkiv_sunroof_glass',.724,.344,.004]]){
+  grid(name,24,20,(u,v)=>{const z=(v-.5)*d+.154,r=.035,dz=Math.max(0,Math.abs(z-.154)-(d/2-r)),half=w/2-r+Math.sqrt(Math.max(0,r*r-dz*dz)),x=(u*2-1)*half;return [x,roofY(x,z)+lift,z];},true);
+ }
+}
 async function loadFactoryModel(){
  try{
   const bytes=await fetch(FACTORY_GLB).then(r=>{if(!r.ok)throw new Error('GLB '+r.status);return r.arrayBuffer();});
@@ -1280,9 +1302,9 @@ async function loadFactoryModel(){
    // The source asset is badged Bora: its small trunk-only decal mesh (96) is
    // deliberately omitted so the game car can accurately be a Jetta.
    if(node.mesh===96&&/BoraVR6_trunk/.test(path))return;
-   const style=factoryStyle(path);doc.meshes[node.mesh].primitives.forEach((primitive,part)=>{if(primitive.attributes.POSITION===undefined)return;const name='mkiv_factory_'+i+'_'+part;addFactoryPrimitive(name,doc,bin,primitive);factoryModel.parts.push({name,color:style[0],mat:style[1],rough:style[2],metal:style[3],em:style[4]});count++;});
+   const style=factoryStyle(path);doc.meshes[node.mesh].primitives.forEach((primitive,part)=>{if(primitive.attributes.POSITION===undefined)return;const name='mkiv_factory_'+i+'_'+part;addFactoryPrimitive(name,doc,bin,primitive);factoryModel.parts.push({name,color:style[0],mat:style[1],rough:style[2],metal:style[3],em:style[4]});if(/BoraVR6_roof_plain/.test(path))factoryModel.roofParts.push(name);count++;});
   });
-  if(!count)throw new Error('No exterior meshes found');factoryModel.ready=true;root.dispatchEvent(new Event('reborn-vehicle-model-ready'));
+  if(!count)throw new Error('No exterior meshes found');fitFactorySunroof();factoryModel.ready=true;root.dispatchEvent(new Event('reborn-vehicle-model-ready'));
  }catch(error){factoryModel.error=String(error);}
 }
 loadFactoryModel();
@@ -1304,8 +1326,8 @@ function importedObjects(c,time=0){
  add('hero_kit_lower',0,0,0,1,1,1,COLORS.paint,M.PAINT,.16,.02);add('hero_honeycomb',0,.286,-2.181,1.68,1.13,1,'#1c252b',M.METAL,.46,.38,0,Math.PI);add('hero_round',0,.132,-2.137,1.54,.042,.090,'#111419',M.CARBON,.36,.16);
  // The downloaded shell has a plain roof.  Restore the owner's tinted glass
  // sunroof as a recessed, gasketed overlay instead of pretending it is paint.
- add('hero_sunroof',0,1.492,.028,1,1,1,'#06090d',M.RUBBER,.35);
- add('hero_sunroof',0,1.505,.028,.91,1,.90,'#071a27',M.GLASS,.045,.70);
+ add('mkiv_sunroof_gasket',0,0,0,1,1,1,'#06090d',M.RUBBER,.35);
+ add('mkiv_sunroof_glass',0,0,0,1,1,1,'#071a27',M.GLASS,.045,.70);
  // Registration plate sits on the painted bumper-cover strip between the grille
  // and lower intake, never in the grille opening or on the splitter.
  add('hero_plate',0,.318,-2.246,.96,1,1,'#78838e',M.METAL,.19,.9);add('hero_label',0,.318,-2.258,.480,.107,1,'#ffffff',M.PLATE,.4,0,0,Math.PI);addOwnerWheels(out,c,add);
@@ -1821,7 +1843,8 @@ class PolishedRenderer extends R.Renderer{
  if(this.gl){this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.contextLost=true;root.dispatchEvent(new Event('reborn-context-lost'));});this.canvas.addEventListener('webglcontextrestored',()=>{try{this.initGL();this.resize();this.contextLost=false;root.dispatchEvent(new Event('reborn-context-restored'));}catch(e){this.error=e.message;root.dispatchEvent(new Event('reborn-context-failed'));}});}
  }
  setWorld(world){
-  this.world=world;this.static=R.buildWorld(world);this.decorated=false;
+  const objects=R.buildWorld(world);
+  this.world=world;this.static=objects;this.decorated=false;
   if(this.gl){this.initGL();this.resize();}
   else {if(!world.northBerwick)this.static=decorate(world,this.static).concat(root.RebornArt.streetSigns(world));this.decorated=true;}
  }
@@ -2071,7 +2094,7 @@ function closeMap(){
 }
 function activateWorld(world){
  if(sim.world===world)return;
- sim.world=world;renderer.setWorld(world);cameraEye=null;cameraTarget=null;
+ renderer.setWorld(world);sim.world=world;cameraEye=null;cameraTarget=null;
 }
 async function loadNorthBerwick(){
  try{
