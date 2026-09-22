@@ -10,7 +10,7 @@ for (const id of ['town-office-police','cumberland-farms','fire-department','hur
   if (!landmarkIds.has(id)) throw new Error(`Missing North Berwick landmark: ${id}`);
   if (!html.includes(`id==='${id}'`)) throw new Error(`Missing authored hero landmark renderer: ${id}`);
 }
-for (const token of ['frontYaw','orientedFootprints:true','contextGeometry','nb_water','nb_forests','nb_farmland','parkingRows','wireCount<260','remoteTexture']) {
+for (const token of ['frontYaw','orientedFootprints:true','groundTile=640','context.waterways','parkingRows','wireCount<260','remoteTexture']) {
   if (!html.includes(token)) throw new Error(`Realism pipeline invariant absent: ${token}`);
 }
 if ((world.openContext?.waterPolygons?.length || 0) < 100 || (world.openContext?.forests?.length || 0) < 20 || (world.props?.utilityPoles?.length || 0) < 1000) throw new Error('Open North Berwick context is incomplete.');

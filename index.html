@@ -55,8 +55,8 @@ body[data-state=inspect] #weather-fx,body[data-state=menu] #weather-fx,body[data
 body.touch #touch-controls{display:block}body.touch .touch-left{position:absolute;left:max(20px,env(safe-area-inset-left));bottom:max(20px,env(safe-area-inset-bottom));display:block}body.touch .touch-right{position:absolute;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));display:grid;grid-template-columns:58px 62px 86px;grid-template-rows:58px 70px;gap:8px;align-items:stretch}.drive-stick{width:142px;height:142px;border:1px solid #bed0be8a;border-radius:50%;background:radial-gradient(circle at 40% 35%,#416066b8,#142a2fce 64%,#091a20bb);box-shadow:inset 0 0 0 11px #b6d7cc10,0 3px 18px #06171cbf;touch-action:none;user-select:none;pointer-events:auto}.drive-stick:before,.drive-stick:after{content:'';position:absolute;background:#b7d3ca32}.drive-stick:before{width:1px;height:112px;left:70px;top:15px}.drive-stick:after{height:1px;width:112px;top:70px;left:15px}.drive-stick i{position:absolute;width:54px;height:54px;left:44px;top:44px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#e8efd8,#a7b5a7 34%,#45646a 37%,#1d3840 75%);border:1px solid #e9f1de9c;box-shadow:0 2px 10px #031318b8;transform:translate(0,0);will-change:transform}.drive-stick span{position:absolute;inset:auto 0 13px;text-align:center;font-size:7px;letter-spacing:1.6px;color:#dbe7d9;pointer-events:none}.drive-stick.active{border-color:#e9c988;box-shadow:inset 0 0 0 11px #e9c98818,0 0 18px #e9c98855}.touch.action{min-width:0;min-height:0;width:auto;height:auto;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:12px;line-height:1;letter-spacing:.7px;background:#153137de;border:1px solid #b5d0c275;color:#edf1d9;box-shadow:0 3px 14px #06171cb8;touch-action:none;user-select:none;-webkit-user-select:none;pointer-events:auto!important}.touch.action small{font-size:6px;letter-spacing:.65px;margin-top:4px}.touch.action.held{background:#d5c193;color:#102d33;border-color:#f4ddaa}.touch.action.gas{grid-column:3;grid-row:1 / span 2;width:86px;height:136px;border-radius:46% 46% 50% 50%;font-size:23px;background:#2d594fdf;border-color:#9edbc786}.touch.action.gas small{font-size:8px}.touch.action.brake{grid-column:2;grid-row:2}.touch.action.drift{grid-column:1;grid-row:2;font-size:7px}.touch.action.boost{grid-column:2;grid-row:1;background:#6a542ecc;color:#ffe4ac;border-color:#d9bd86bb;font-size:7px}.touch.action.pulse{grid-column:1;grid-row:1;color:var(--mint);font-size:7px}.touch.action.camera{display:none}.touch.transform{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:174px;min-width:142px;min-height:34px;border-radius:18px;color:var(--accent);font-size:8px;background:#142d32d9;border:1px solid #b4ceb474;pointer-events:auto!important}.touch.transform>span{font-size:8px;letter-spacing:1.2px;margin-left:8px}.touch.throttle{display:none!important}body.touch .map-wrap{display:none}body.touch .instrument{top:68px;right:max(19px,env(safe-area-inset-right));bottom:auto;width:116px}body.touch .speedline>strong{font-size:45px}body.touch .meter-label{font-size:5px}body.touch .health-label{margin-top:6px}
 @media (pointer:coarse) and (orientation:portrait){body.touch #rotate-device{display:flex;position:fixed;z-index:200;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:#0c1d24f7;color:#edf0dd;text-align:center;padding:32px;font-weight:700;letter-spacing:1.4px;font-size:13px}#rotate-device i{width:74px;height:110px;border:3px solid var(--accent);border-radius:12px;display:block;transform:rotate(90deg);position:relative;box-shadow:0 0 28px #eebe7e33}#rotate-device i:after{content:'↻';position:absolute;inset:21px 0 auto;font-size:34px;color:var(--accent);font-style:normal}#rotate-device small{font-size:9px;line-height:1.6;letter-spacing:1px;color:#aec2b5}}
 @media (pointer:coarse) and (orientation:landscape) and (max-height:540px){body.touch .touch-left{left:max(16px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom))}.drive-stick{width:118px;height:118px}.drive-stick:before{height:94px;left:58px;top:12px}.drive-stick:after{width:94px;top:58px;left:12px}.drive-stick i{width:46px;height:46px;left:36px;top:36px}.drive-stick span{bottom:10px;font-size:6px}.touch.transform{left:max(16px,env(safe-area-inset-left));bottom:142px;min-width:118px;min-height:29px;font-size:7px}body.touch .touch-right{right:max(16px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));grid-template-columns:50px 54px 76px;grid-template-rows:50px 58px;gap:6px}.touch.action.gas{width:76px;height:114px;font-size:20px}.touch.action{font-size:10px}.touch.action small{font-size:5px}.touch.action.drift,.touch.action.boost,.touch.action.pulse{font-size:6px}body.touch .instrument{top:56px;right:max(15px,env(safe-area-inset-right));width:104px}.camera-toggle{display:none}}
-.map-modal{width:min(960px,94vw);padding:22px;background:#0d1d2a;border-color:#81b9d766}.map-modal header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.map-modal h2{font-size:24px;margin:0;letter-spacing:.3px}.map-modal p{font-size:10px;letter-spacing:1px;color:#b4cad2;margin:5px 0 0}.map-modal canvas{display:block;width:100%;max-height:70vh;aspect-ratio:16/9;background:#132b31;border:1px solid #80acc070}.map-modal .map-key{font-size:9px;color:#9ccce6;letter-spacing:1.4px}
-@media(max-width:650px){.map-modal{width:100%;min-height:100%;padding:18px}.map-modal canvas{max-height:76vh;aspect-ratio:1/1}.map-modal h2{font-size:20px}.map-modal p{font-size:8px}.map-modal .secondary{padding:10px;font-size:8px}}
+.minimap-zoom{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:3px;z-index:1}.minimap-zoom button{width:23px;height:23px;padding:0;border:1px solid #9bbad2a0;background:#0a1825dd;color:#e2f1f8;font-size:17px;line-height:1}.minimap-zoom button:hover{background:#27506aaa}.map-modal{width:min(960px,94vw);padding:22px;background:#0d1d2a;border-color:#81b9d766}.map-modal header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.map-modal h2{font-size:24px;margin:0;letter-spacing:.3px}.map-modal p{font-size:10px;letter-spacing:1px;color:#b4cad2;margin:5px 0 0}.map-actions,.map-zoom{display:flex;align-items:center;gap:7px}.map-zoom output{min-width:45px;text-align:center;font-size:9px;letter-spacing:1px;color:#c6deeb}.map-zoom .secondary{min-width:36px;padding:10px;font-size:16px;line-height:1}.map-modal canvas{display:block;width:100%;max-height:70vh;aspect-ratio:16/9;background:#132b31;border:1px solid #80acc070}.map-modal .map-key{font-size:9px;color:#9ccce6;letter-spacing:1.4px}
+@media(max-width:650px){.map-modal{width:100%;min-height:100%;padding:18px}.map-modal header{align-items:flex-start}.map-actions{gap:5px}.map-zoom{gap:3px}.map-zoom output{display:none}.map-zoom .secondary{min-width:32px;padding:8px}.map-modal canvas{max-height:76vh;aspect-ratio:1/1}.map-modal h2{font-size:20px}.map-modal p{font-size:8px}.map-modal .secondary{padding:10px;font-size:8px}.map-zoom .secondary{font-size:16px}}
 </style>
 </head>
 <body data-standalone="true">
@@ -99,7 +99,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
  <div id="waypoint" hidden aria-hidden="true"><b>◇</b><span>240 m</span></div>
  <aside id="radio" aria-label="Story radio subtitles" role="status" aria-live="polite" hidden><div id="radio-speaker">MOTORWORKS</div><p id="radio-text"></p></aside>
  <div id="toast" role="status" aria-live="polite"></div>
- <div class="map-wrap"><canvas id="minimap" width="340" height="340" aria-label="Road map and next objective"></canvas><div><span id="map-label">NORTH BERWICK</span><span id="surface">ASPHALT</span></div></div>
+ <div class="map-wrap"><canvas id="minimap" width="340" height="340" aria-label="Road map and next objective. Scroll to zoom."></canvas><div class="minimap-zoom" role="group" aria-label="Minimap zoom"><button id="minimap-zoom-in" type="button" aria-label="Zoom minimap in">+</button><button id="minimap-zoom-out" type="button" aria-label="Zoom minimap out">−</button></div><div><span id="map-label">NORTH BERWICK</span><span id="surface">ASPHALT</span></div></div>
  <div class="instrument"><div class="speedline"><strong id="speed">000</strong><span id="gear">N<b>MPH</b></span></div><div class="meter-label"><span>ENERGY</span><b id="energy-value">100</b></div><div class="meter"><i id="energy-bar"></i></div><div class="meter-label health-label"><span>BODY</span><b id="health-value">100%</b></div><div class="meter body-meter"><i id="health-bar"></i></div></div>
  <div class="desktop-keys"><span><kbd>T</kbd> TRANSFORM</span><span><kbd>E</kbd> PULSE</span><span><kbd>SPACE</kbd> DRIFT</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>C</kbd> CAMERA</span></div>
  <div id="touch-controls" aria-label="Landscape touch driving controls">
@@ -144,7 +144,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
  <div class="modal-buttons"><button id="resume" class="primary">BACK TO THE ROAD <span>→</span></button><button id="recover" class="secondary">RECOVER CAR</button><button id="garage" class="quiet">RETURN TO GARAGE</button><button id="reset-progress" class="quiet">RESET PROGRESS</button></div>
  </div>
 </div>
-<div id="map-overlay" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><div class="modal map-modal"><header><div><div class="eyebrow">ROAD MAP / PAUSED</div><h2 id="map-title">North Berwick Free Drive</h2><p id="map-subtitle">Your position is centered on the map.</p></div><button id="map-resume" class="secondary">BACK TO DRIVE <span class="map-key">M</span></button></header><canvas id="expanded-map" width="1200" height="760" aria-label="Expanded road map"></canvas></div></div>
+<div id="map-overlay" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><div class="modal map-modal"><header><div><div class="eyebrow">ROAD MAP / PAUSED</div><h2 id="map-title">North Berwick Free Drive</h2><p id="map-subtitle">Your position is centered on the map.</p></div><div class="map-actions"><div class="map-zoom" role="group" aria-label="Map zoom"><button id="map-zoom-out" class="secondary" type="button" aria-label="Zoom map out">−</button><output id="map-zoom-readout" for="map-zoom-out map-zoom-in">100%</output><button id="map-zoom-in" class="secondary" type="button" aria-label="Zoom map in">+</button></div><button id="map-resume" class="secondary">BACK TO DRIVE <span class="map-key">M</span></button></div></header><canvas id="expanded-map" width="1200" height="760" aria-label="Expanded road map. Scroll to zoom."></canvas></div></div>
 <div id="result" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden><div class="modal result-modal"><div class="eyebrow" id="result-label">RUN COMPLETE</div><h2 id="result-title">Still got it.</h2><p id="result-copy"></p><p id="result-echo" class="story-echo"></p><div id="result-stats"></div><div class="modal-buttons"><button id="result-next" class="primary" hidden>NEXT CHAPTER <span>→</span></button><button id="retry" class="primary">GO AGAIN <span>→</span></button><button id="result-garage" class="secondary">BACK TO GARAGE</button></div></div></div>
 <div id="fatal" class="modal-wrap" role="alert" hidden><div class="modal"><h2>Ignition interrupted.</h2><p id="fatal-message"></p><button class="primary" onclick="location.reload()">RETRY</button></div></div>
 <noscript><div class="modal-wrap"><div class="modal"><h2>Turn the ignition on.</h2><p>This driving game needs JavaScript. Enable it to play.</p></div></div></noscript>
@@ -771,14 +771,20 @@ function buildWorld(world){
    if(id==='riverside-farm-stand'){hero.w=38;hero.d=22;hero.h=8;place('box',hero.x,4,hero.z,38,8,22,'#a87c55',hero.yaw,M.STANDARD,.84);roof(hero,8,'gable','#494946',4);const f=frontInfo(hero);for(let i=-1;i<=1;i++){const gx=hero.x+f.tx*i*20-f.nx*24,gz=hero.z+f.tz*i*20-f.nz*24;place('box',gx,2.4,gz,14,4.8,30,'#9fc4b8',hero.yaw,M.GLASS,.18,.08);place('gableRoof',gx,4.8,gz,14.4,3.2,30.4,'#b8d8d0',hero.yaw,M.GLASS,.16,.05);}for(let row=-3;row<=3;row++)place('box',hero.x+f.nx*48+f.tx*row*5,.04,hero.z+f.nz*48+f.tz*row*5,2.4,.05,54,'#74583e',f.yaw,M.STANDARD,.95);return;}
    commercial(hero);
   };
-  // Ground and open-land context.
-  place('box',cx,-.66,cz,b.maxX-b.minX+80,1.2,b.maxZ-b.minZ+80,'#50674f',0,M.STANDARD,.97);
+  // Ground is tiled around the actual town coordinate space.  Build 009 replaced
+  // the old world with one 12 x 16 km slab plus convex-hulled context meshes;
+  // that oversized geometry is what made the live road scene disappear on some
+  // WebGL drivers even though the minimap still had the road graph.
+  const groundTile=640;
+  for(let x0=b.minX;x0<b.maxX;x0+=groundTile)for(let z0=b.minZ;z0<b.maxZ;z0+=groundTile){const tw=Math.min(groundTile,b.maxX-x0)+2,td=Math.min(groundTile,b.maxZ-z0)+2;place('box',x0+tw/2,-.66,z0+td/2,tw,1.2,td,'#50674f',0,M.STANDARD,.97);}
   const context=world.openContext||{};
-  for(const [key,name,col,mat,rough,max] of [['farmland','nb_farmland','#72805b',M.STANDARD,.96,75],['forests','nb_forests','#344f40',M.STANDARD,.98,35],['waterPolygons','nb_water','#2d5660',M.WATER,.13,80]]){const mesh=contextGeometry(name,context[key],.012,max);if(mesh){const o=place(mesh,0,0,0,1,1,1,col,0,mat,rough,mat===M.WATER?.12:0,0,0,0,true);o.radius=20000;}}
+  // Retain source waterways as bounded segments.  Do not triangulate the large
+  // open-context polygons at runtime: their flattened rings can form invalid
+  // continent-sized convex hulls across the local scene.
   for(const water of (context.waterways||[]).slice(0,260)){const pts=water.points||[];for(let i=1;i<pts.length;i++){const a=pts[i-1],q=pts[i];if(!a||!q)continue;const dx=q[0]-a[0],dz=q[1]-a[1],len=Math.hypot(dx,dz);if(len<1)continue;place('box',(a[0]+q[0])/2,.018,(a[1]+q[1])/2,Math.max(1.2,Number(water.widthM)||2.2),.035,len,'#2c5863',Math.atan2(dx,dz),M.WATER,.12,.1);}}
   // Roads, shoulders, paint, sidewalks and town-center practical lighting.
   let lightCount=0;
-  for(const r of world.roads){const dx=r.x2-r.x1,dz=r.z2-r.z1,len=Math.hypot(dx,dz),a=Math.atan2(dx,dz),x=(r.x1+r.x2)/2,z=(r.z1+r.z2)/2,secondary=r.class==='Secondary'||r.width>=7.2,core=Math.hypot(x-3850,z-4300)<1450;
+  for(const r of world.roads){const dx=r.x2-r.x1,dz=r.z2-r.z1,len=Math.hypot(dx,dz),a=Math.atan2(dx,dz),x=(r.x1+r.x2)/2,z=(r.z1+r.z2)/2,secondary=r.class==='Secondary'||r.width>=7.2,core=Math.hypot(x-world.spawn.x,z-world.spawn.z)<1450;
    place('box',x,.015,z,r.width+(secondary?3.7:2.5),.11,len+.18,r.surface==='gravel'?'#9b8a6c':'#74776f',a,M.STANDARD,.94);
    place('box',x,.092,z,r.width,.12,len+.12,r.surface==='gravel'?'#9d8a67':'#3c4448',a,r.surface==='gravel'?M.STANDARD:M.ROAD,r.surface==='gravel'?.94:.82,.03);
    if(r.surface==='asphalt'&&secondary&&len>15){for(const off of [-.11,.11])place('box',x+Math.cos(a)*off,.166,z-Math.sin(a)*off,.075,.022,len,'#d9bd6c',a,M.STANDARD,.62);for(const side of [-1,1])place('box',x+Math.cos(a)*(r.width/2-.30)*side,.167,z-Math.sin(a)*(r.width/2-.30)*side,.07,.020,len,'#d5d8d0',a,M.STANDARD,.66);}
@@ -786,7 +792,7 @@ function buildWorld(world){
    if(core&&world.priorityRoadNames.includes(r.name)){for(const side of [-1,1])place('box',x+Math.cos(a)*(r.width/2+1.35)*side,.13,z-Math.sin(a)*(r.width/2+1.35)*side,1.35,.20,len,'#9b9a8f',a,M.STANDARD,.90);}
    if(core&&secondary&&lightCount<90){for(let t=25;t<len-10&&lightCount<90;t+=72){const px=r.x1+dx*t/len+Math.cos(a)*(r.width/2+2.5),pz=r.z1+dz*t/len-Math.sin(a)*(r.width/2+2.5);place('cylinder',px,3.7,pz,.13,7.4,.13,'#465052',0,M.METAL,.58,.5);lamp(px,7.43,pz,1.55);lightCount++;}}
   }
-  for(const intersection of world.intersections.slice(0,180)){if(Math.hypot(intersection.x-3850,intersection.z-4300)>1500)continue;const roads=intersection.roads||intersection.names||[];for(let k=-2;k<=2;k++)place('box',intersection.x+k*1.5,.173,intersection.z,1.0,.023,3.2,'#d8d9d2',0,M.STANDARD,.68);}
+  for(const intersection of world.intersections.slice(0,180)){if(Math.hypot(intersection.x-world.spawn.x,intersection.z-world.spawn.z)>1500)continue;for(let k=-2;k<=2;k++)place('box',intersection.x+k*1.5,.173,intersection.z,1.0,.023,3.2,'#d8d9d2',0,M.STANDARD,.68);}
   // Hero landmarks first so generic footprint boxes never cover them.
   for(const building of world.buildings.filter(b=>b.landmarkId))heroBuilding(building);
   for(const building of world.buildings){if(building.landmarkId)continue;if(building.style==='house'||building.style==='largeHouse'||building.style==='shed')house(building);else commercial(building);}
@@ -1113,7 +1119,9 @@ function rounded(name,w,h,d,r=.04,n=4){
 function interp(z,pts){for(let i=1;i<pts.length;i++)if(z<=pts[i][0]){const t=C.clamp((z-pts[i-1][0])/(pts[i][0]-pts[i-1][0]),0,1);return C.lerp(pts[i-1][1],pts[i][1],t*t*(3-2*t));}return pts.at(-1)[1];}
 // Continuous shoulder sections. A round shoulder rolls into the door skin rather
 // than ending in a flat slab. The reference-informed dimensions are still editable.
-const BODY_Y=.875, WHEEL_X=.735, REAR_WHEEL_X=.860, AXLES=[-1.29,1.23], ARCH=.391, WHEEL_Y=.355/BODY_Y;
+// The front wheel face should sit close to the Mk IV flare, but still leave a
+// visible clearance.  Keep the rear's previously approved wider fitment.
+const BODY_Y=.875, WHEEL_X=.780, REAR_WHEEL_X=.860, AXLES=[-1.29,1.23], ARCH=.391, WHEEL_Y=.355/BODY_Y;
 const width=z=>interp(z,[[-2.21,.755],[-2.05,.836],[-1.73,.895],[-1.32,.909],[-.79,.874],[.5,.874],[1.23,.908],[1.80,.855],[2.18,.765]]);
 const top=z=>interp(z,[[-2.21,.985],[-2.00,1.024],[-1.2,1.047],[-.75,1.039],[.6,1.045],[1.3,1.05],[1.92,1.007],[2.18,.972]]);
 const bottom=z=>{let y=.15;for(const center of AXLES){const d=Math.abs(z-center);if(d<ARCH)y=Math.max(y,WHEEL_Y+Math.sqrt(ARCH*ARCH-d*d)/BODY_Y);}return y;};
@@ -1144,8 +1152,9 @@ for(const side of [-1,1]){
  for(let k=0;k<2;k++){
   const zc=AXLES[k];
   grid('hero_arch'+side+'_'+k,44,5,(u,v)=>{const a=.005+u*(Math.PI-.01),radius=ARCH+v*.018,z=zc-Math.cos(a)*radius,y=WHEEL_Y+Math.sin(a)*radius/BODY_Y;return [side*(sideX(z,y)+.003+Math.sin(v*Math.PI)*.009),y,z];},side<0);
-  // Dark recessed liner closes the see-through holes without covering the tyre.
-  grid('hero_liner'+side+'_'+k,36,3,(u,v)=>{const a=-.13+u*(Math.PI+.26),r=ARCH-.006;return [side*C.lerp(.705,.887,v),WHEEL_Y+Math.sin(a)*r/BODY_Y,zc-Math.cos(a)*r];},side>0);
+  // Keep the dark wheel-house liner behind the tyre.  Its old outer edge crossed
+  // through the custom wheel, which made the flare appear to clip the sidewall.
+  grid('hero_liner'+side+'_'+k,36,3,(u,v)=>{const a=-.13+u*(Math.PI+.26),r=ARCH-.006;return [side*C.lerp(.620,.674,v),WHEEL_Y+Math.sin(a)*r/BODY_Y,zc-Math.cos(a)*r];},side>0);
  }
  // The side skirts curve in both axes and terminate inside the wheel opening.
  grid('hero_skirt'+side,46,8,(u,v)=>{const z=C.lerp(-.874,.814,u),a=v*Math.PI;return [side*(.862+Math.sin(a)*.036),.155+v*.127,z];},side>0);
@@ -1222,7 +1231,7 @@ latheX('hero_exhaust',[[0,.5],[.04,.5],[.065,.46],[.055,.385],[-.43,.385],[-.45,
 latheX('hero_steering',[[0,.425],[.10,.44],[.11,.51],[0,.525],[-.1,.51],[-.1,.44],[0,.425]],40);
 // Paint remains visibly black under broad studio strips. The clearcoat is a second
 // lobe in the material shader, not an excuse to turn the whole body into chrome.
-const COLORS={paint:'#101318',glass:'#0a1721',black:'#0d1013',rubber:'#111317',metal:'#aeb8c1',darkmetal:'#47515a',red:'#c01116'};
+const COLORS={paint:'#05070b',glass:'#071823',black:'#0a0d11',rubber:'#111317',metal:'#aeb8c1',darkmetal:'#47515a',red:'#c01116'};
 // The licensed factory shell is kept byte-for-byte as a GLB. We decode only its
 // exterior drawables at runtime, map its axes to the game coordinate system, and
 // add the owner's front-only kit separately below.
@@ -1240,7 +1249,7 @@ function factoryStyle(path){
  if(/taillight/i.test(path))return ['#2a2028',M.GLASS,.13,.42,.10];
  if(/chrome|mirror/i.test(path))return ['#aeb8c1',M.METAL,.22,.88,0];
  if(/black|frame|nodamage/i.test(path))return ['#111418',M.RUBBER,.78,.02,0];
- return [COLORS.paint,M.PAINT,.285,.015,0];
+ return [COLORS.paint,M.PAINT,.16,.018,0];
 }
 function decodeAccessor(doc,bin,index){
  const a=doc.accessors[index],view=doc.bufferViews[a.bufferView],width={SCALAR:1,VEC2:2,VEC3:3,VEC4:4}[a.type];
@@ -1292,7 +1301,11 @@ function importedObjects(c,time=0){
  for(const part of factoryModel.parts)add(part.name,0,0,0,1,1,1,part.color,part.mat,part.rough,part.metal,part.em);
  // Owner-only modification: a lower intake surround and narrow lip. The model's
  // Mk IV nose, grille, lamps and upper bumper stay visible and unmodified.
- add('hero_kit_lower',0,0,0,1,1,1,COLORS.paint,M.PAINT,.26,.02);add('hero_honeycomb',0,.286,-2.181,1.68,1.13,1,'#1c252b',M.METAL,.46,.38,0,Math.PI);add('hero_round',0,.132,-2.137,1.54,.042,.090,'#111419',M.CARBON,.36,.16);
+ add('hero_kit_lower',0,0,0,1,1,1,COLORS.paint,M.PAINT,.16,.02);add('hero_honeycomb',0,.286,-2.181,1.68,1.13,1,'#1c252b',M.METAL,.46,.38,0,Math.PI);add('hero_round',0,.132,-2.137,1.54,.042,.090,'#111419',M.CARBON,.36,.16);
+ // The downloaded shell has a plain roof.  Restore the owner's tinted glass
+ // sunroof as a recessed, gasketed overlay instead of pretending it is paint.
+ add('hero_sunroof',0,1.492,.028,1,1,1,'#06090d',M.RUBBER,.35);
+ add('hero_sunroof',0,1.505,.028,.91,1,.90,'#071a27',M.GLASS,.045,.70);
  // Registration plate sits on the painted bumper-cover strip between the grille
  // and lower intake, never in the grille opening or on the splitter.
  add('hero_plate',0,.318,-2.246,.96,1,1,'#78838e',M.METAL,.19,.9);add('hero_label',0,.318,-2.258,.480,.107,1,'#ffffff',M.PLATE,.4,0,0,Math.PI);addOwnerWheels(out,c,add);
@@ -1332,8 +1345,8 @@ function objects(c,time=0){
  const out=[],ride=(c.rallyBlend||0)*.15+(c.modeBlend||0)*.06;
  const parent=transform(c.x,.134+ride,c.z,1,BODY_Y,1,-c.yaw,c.pitch||0,c.roll||0);
  function add(name,x,y,z,sx,sy,sz,col,mat=M.STANDARD,rough=.55,metal=0,em=0,ry=0,rx=0,rz=0,par=parent){const m=mul(par,transform(x,y,z,sx,sy,sz,ry,rx,rz));const color=R.rgb(col);color[3]=em;out.push({mesh:name,m,color,surface:[mat,rough,metal,em],x:m[12],y:m[13],z:m[14],radius:Math.max(Math.abs(sx),Math.abs(sy),Math.abs(sz),1)*2.4,hero:true});}
- const part=(name,col=COLORS.paint,mat=M.PAINT,rough=.285,metal=.015)=>add(name,0,0,0,1,1,1,col,mat,rough,metal);
- const box=(x,y,z,w,h,d,col=COLORS.paint,mat=M.PAINT,rough=.305,metal=.025,ry=0,rx=0,rz=0)=>add('hero_round',x,y,z,w,h,d,col,mat,rough,metal,0,ry,rx,rz);
+ const part=(name,col=COLORS.paint,mat=M.PAINT,rough=.16,metal=.018)=>add(name,0,0,0,1,1,1,col,mat,rough,metal);
+ const box=(x,y,z,w,h,d,col=COLORS.paint,mat=M.PAINT,rough=.18,metal=.025,ry=0,rx=0,rz=0)=>add('hero_round',x,y,z,w,h,d,col,mat,rough,metal,0,ry,rx,rz);
  const line=(a,b,r,col=COLORS.paint,mat=M.PAINT)=>{const d=b.map((v,i)=>v-a[i]),len=Math.hypot(...d),mid=a.map((v,i)=>(v+b[i])/2);add('cylinder',...mid,r,len,r,col,mat,.28,.2,0,Math.atan2(d[0],d[2]),Math.acos(C.clamp(d[1]/len,-1,1)),0);};
  // Street keeps the factory Mk IV rocker and door-line silhouette. The owner's
  // custom coachwork is intentionally concentrated at the front fascia.
@@ -1769,8 +1782,14 @@ function shader(gl,type,text){const sh=gl.createShader(type);gl.shaderSource(sh,
 function program(gl,vert,frag){const p=gl.createProgram(),v=shader(gl,gl.VERTEX_SHADER,vert),f=shader(gl,gl.FRAGMENT_SHADER,frag);gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));const uniforms={};return {p,u:name=>uniforms[name]??(uniforms[name]=gl.getUniformLocation(p,name))};}
 function ortho(l,r,b,t,n,f){return new Float32Array([2/(r-l),0,0,0,0,2/(t-b),0,0,0,0,-2/(f-n),0,-(r+l)/(r-l),-(t+b)/(t-b),-(f+n)/(f-n),1]);}
 function atlasCanvas(){const c=document.createElement('canvas');c.width=1024;c.height=512;const x=c.getContext('2d');x.clearRect(0,0,1024,512);
- x.fillStyle='#13181e';x.fillRect(0,0,1024,256);x.strokeStyle='#c1c8ce';x.lineWidth=8;x.strokeRect(14,14,996,228);x.font='bold 169px Arial';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#f5f1e7';x.fillText('9855 MD',512,132,914);
- for(const xx of [45,979]){x.fillStyle='#cbd2d6';x.beginPath();x.arc(xx,127,10,0,Math.PI*2);x.fill();}
+ // Owner-correct Maine chickadee / Vacationland plate, drawn procedurally so
+ // the shipped build uses no plate photograph while preserving 9855 MD.
+ const plate=x.createLinearGradient(0,0,0,256);plate.addColorStop(0,'#f2eed8');plate.addColorStop(.70,'#eef0d9');plate.addColorStop(.71,'#78a95a');plate.addColorStop(1,'#3f7a3c');x.fillStyle=plate;x.fillRect(0,0,1024,256);x.strokeStyle='#171714';x.lineWidth=17;x.strokeRect(10,10,1004,236);x.strokeStyle='#c6b87e';x.lineWidth=3;x.strokeRect(24,24,976,208);
+ x.fillStyle='#1a1c17';x.textAlign='center';x.textBaseline='middle';x.font='700 61px Georgia';x.fillText('MAINE',512,53);x.font='700 142px Arial Narrow,Arial';x.fillText('9855 MD',580,142,694);x.font='italic 600 35px Georgia';x.fillText('Vacationland',556,218);
+ // Simplified chickadee perched on a pine branch at the plate's left edge.
+ x.strokeStyle='#315a31';x.lineWidth=8;x.beginPath();x.moveTo(46,198);x.lineTo(255,113);x.moveTo(74,184);x.lineTo(150,222);x.stroke();for(let i=0;i<7;i++){const px=77+i*25,py=177-i*10;x.strokeStyle=i%2?'#578a45':'#3d773c';x.lineWidth=6;x.beginPath();x.moveTo(px,py);x.lineTo(px-20,py-25);x.moveTo(px,py);x.lineTo(px+22,py+16);x.stroke();}
+ x.save();x.translate(159,94);x.fillStyle='#20231f';x.beginPath();x.arc(0,0,35,0,Math.PI*2);x.fill();x.fillStyle='#d9d8c6';x.beginPath();x.ellipse(18,19,34,24,.22,0,Math.PI*2);x.fill();x.fillStyle='#11130f';x.beginPath();x.moveTo(-24,-5);x.lineTo(-57,9);x.lineTo(-24,14);x.closePath();x.fill();x.fillStyle='#eef0dd';x.beginPath();x.arc(8,-5,17,0,Math.PI*2);x.fill();x.fillStyle='#10120f';x.beginPath();x.arc(5,-8,5,0,Math.PI*2);x.fill();x.restore();
+ for(const xx of [53,971]){x.fillStyle='#202119';x.beginPath();x.arc(xx,48,9,0,Math.PI*2);x.fill();x.beginPath();x.arc(xx,211,9,0,Math.PI*2);x.fill();}
  x.fillStyle='#0d1520';x.beginPath();x.arc(128,384,116,0,Math.PI*2);x.fill();x.strokeStyle='#e3e9ed';x.lineWidth=9;x.stroke();x.lineWidth=13;x.lineJoin='round';x.beginPath();x.moveTo(75,312);x.lineTo(126,385);x.lineTo(177,312);x.moveTo(36,348);x.lineTo(79,450);x.lineTo(127,381);x.lineTo(172,450);x.lineTo(220,348);x.stroke();
  x.textAlign='center';x.textBaseline='middle';x.font='bold 98px Arial';x.fillStyle='#d3d8de';x.fillText('JETTA',640,326,704);x.font='bold 89px Arial';x.fillText('MK IV',640,451,704);return c;}
 function envCanvas(){const c=document.createElement('canvas');c.width=1024;c.height=512;const x=c.getContext('2d'),random=C.rng(22995);const sky=x.createLinearGradient(0,0,0,512);sky.addColorStop(0,'#263b55');sky.addColorStop(.34,'#75899f');sky.addColorStop(.51,'#c2cbd1');sky.addColorStop(.58,'#384859');sky.addColorStop(1,'#05090f');x.fillStyle=sky;x.fillRect(0,0,1024,512);
@@ -2091,7 +2110,7 @@ function action(name){
  if(name==='transform')sim.transform();else if(name==='pulse')sim.pulse();else if(name==='recover')sim.recover();else if(name==='camera'){cameraStyle=(cameraStyle+1)%3;cameraEye=null;cameraTarget=null;updateCameraChoice();notify(cameraNames[cameraStyle]);}
 }
 for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{selected=b.dataset.mode;for(const card of document.querySelectorAll('[data-mode]')){const active=card===b;card.classList.toggle('selected',active);card.setAttribute('aria-pressed',String(active));}});
-$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();garage();}else{btn.textContent='CONFIRM RESET?';}});
+$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('minimap').addEventListener('wheel',mapWheel,{passive:false});$('expanded-map').addEventListener('wheel',mapWheel,{passive:false});$('map-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('map-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('minimap-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('minimap-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();garage();}else{btn.textContent='CONFIRM RESET?';}});
 $('inspect-car').addEventListener('click',()=>{state='inspect';input.clear();inspectAngle=-2.34;inspectHeight=.20;inspectDistance=5.8;inspectDragged=false;inspectTarget=[0,.84,0];inspectFocus='front';updateInspect();showState();});
 $('inspect-close').addEventListener('click',garage);
 for(const b of document.querySelectorAll('[data-inspect]'))b.addEventListener('click',()=>{for(let i=0;i<3&&sim.car.mode!==b.dataset.inspect;i++)C.changeMode(sim.car);updateInspect();});
@@ -2208,26 +2227,29 @@ function updateCamera(dt){
  if(cameraStyle!==2&&C.lineBlocked(sim.world,{x:c.x,z:c.z},{x:cameraEye[0],z:cameraEye[2]}))cameraEye=[c.x-Math.sin(cameraYaw)*3.2,4.2,c.z+Math.cos(cameraYaw)*3.2];
  renderer.setCamera(cameraEye,cameraTarget);
 }
-const mapCtx=$('minimap').getContext('2d');
+const mapCtx=$('minimap').getContext('2d'),MAP_ZOOM_MIN=.55,MAP_ZOOM_MAX=3.2;
+let mapZoom=1;
+function setMapZoom(value){
+ const next=C.clamp(value,MAP_ZOOM_MIN,MAP_ZOOM_MAX);if(Math.abs(next-mapZoom)<.001)return;
+ mapZoom=next;const readout=Math.round(mapZoom*100)+'%';$('map-zoom-readout').textContent=readout;$('map-zoom-in').disabled=mapZoom>=MAP_ZOOM_MAX-.01;$('map-zoom-out').disabled=mapZoom<=MAP_ZOOM_MIN+.01;$('minimap-zoom-in').disabled=mapZoom>=MAP_ZOOM_MAX-.01;$('minimap-zoom-out').disabled=mapZoom<=MAP_ZOOM_MIN+.01;
+ if(state==='map')drawExpandedMap();if(state==='play')drawMap();
+}
+function changeMapZoom(direction){setMapZoom(mapZoom*Math.pow(1.25,direction));}
+function mapWheel(event){if(event.ctrlKey)return;event.preventDefault();setMapZoom(mapZoom*Math.exp(-event.deltaY*.0018));}
 function drawExpandedMap(){
  const canvas=$('expanded-map'),ctx=canvas.getContext('2d'),world=sim.world,car=sim.car,w=canvas.width,h=canvas.height,pad=46,b=world.bounds;
- const spanX=Math.max(1,b.maxX-b.minX),spanZ=Math.max(1,b.maxZ-b.minZ),scale=Math.min((w-pad*2)/spanX,(h-pad*2)/spanZ);
- const p=(x,z)=>[pad+(x-b.minX)*scale,h-pad-(z-b.minZ)*scale];
- ctx.fillStyle='#10252b';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#628077';ctx.lineWidth=1;ctx.strokeRect(pad,pad,w-pad*2,h-pad*2);
+ const spanX=Math.max(1,b.maxX-b.minX),spanZ=Math.max(1,b.maxZ-b.minZ),scale=Math.min((w-pad*2)/spanX,(h-pad*2)/spanZ)*mapZoom,baseX=(b.minX+b.maxX)/2,baseZ=(b.minZ+b.maxZ)/2,follow=C.clamp((mapZoom-1)/.75,0,1),centerX=C.lerp(baseX,car.x,follow),centerZ=C.lerp(baseZ,car.z,follow);
+ const p=(x,z)=>[w/2+(x-centerX)*scale,h/2-(z-centerZ)*scale];
+ ctx.fillStyle='#10252b';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#628077';ctx.lineWidth=1;ctx.strokeRect(pad,pad,w-pad*2,h-pad*2);ctx.save();ctx.beginPath();ctx.rect(pad,pad,w-pad*2,h-pad*2);ctx.clip();
  for(const building of world.buildings){const [x,z]=p(building.x,building.z);ctx.save();ctx.translate(x,z);ctx.rotate(-(building.yaw||0));ctx.fillStyle=building.landmarkId?'#b88b61':'#425a55';ctx.fillRect(-Math.max(.7,building.w*scale)/2,-Math.max(.7,building.d*scale)/2,Math.max(.7,building.w*scale),Math.max(.7,building.d*scale));ctx.restore();}
- ctx.lineCap='round';
- for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);ctx.strokeStyle=road.surface==='gravel'?'#b4a075':'#9fc2b2';ctx.stroke();}
- if(world.northBerwick){
-  const seen=new Set();ctx.font='600 12px Arial';ctx.fillStyle='#d1e3cf';
-  for(const label of world.roadLabels){if(!world.priorityRoadNames.includes(label.name)||seen.has(label.name))continue;seen.add(label.name);const [x,z]=p(label.x,label.z);ctx.fillText(label.name,x+5,z-5);}
-  ctx.font='600 11px Arial';ctx.fillStyle='#efc887';for(const landmark of world.landmarks){const [x,z]=p(landmark.x,landmark.z);ctx.fillRect(x-2,z-2,4,4);ctx.fillText(landmark.name,x+5,z+4);}
- }
- const [x,z]=p(car.x,car.z);ctx.save();ctx.translate(x,z);ctx.rotate(-car.yaw);ctx.fillStyle='#f5dfaa';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(7,8);ctx.lineTo(0,4);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();ctx.restore();
- ctx.fillStyle='#c2d9d0';ctx.font='600 16px Arial';ctx.fillText(world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',pad,28);ctx.font='12px Arial';ctx.fillStyle='#91aba3';ctx.fillText('YOU ARE HERE · M TO RETURN',pad,h-19);
- $('map-title').textContent=world.northBerwick?'North Berwick Free Drive':'Blackwater County';$('map-subtitle').textContent=world.northBerwick?'Data-derived roads and footprint placement · you are here':'Activity map · you are here';
+ ctx.lineCap='round';for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);ctx.strokeStyle=road.surface==='gravel'?'#b4a075':'#9fc2b2';ctx.stroke();}
+ if(world.northBerwick){const seen=new Set();ctx.font='600 12px Arial';ctx.fillStyle='#d1e3cf';for(const label of world.roadLabels){if(!world.priorityRoadNames.includes(label.name)||seen.has(label.name))continue;seen.add(label.name);const [x,z]=p(label.x,label.z);ctx.fillText(label.name,x+5,z-5);}ctx.font='600 11px Arial';ctx.fillStyle='#efc887';for(const landmark of world.landmarks){const [x,z]=p(landmark.x,landmark.z);ctx.fillRect(x-2,z-2,4,4);ctx.fillText(landmark.name,x+5,z+4);}}
+ const [x,z]=p(car.x,car.z);ctx.save();ctx.translate(x,z);ctx.rotate(-car.yaw);ctx.fillStyle='#f5dfaa';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(7,8);ctx.lineTo(0,4);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();ctx.restore();ctx.restore();
+ ctx.fillStyle='#c2d9d0';ctx.font='600 16px Arial';ctx.fillText(world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',pad,28);ctx.font='12px Arial';ctx.fillStyle='#91aba3';ctx.fillText('SCROLL OR +/- TO ZOOM · M TO RETURN',pad,h-19);
+ $('map-title').textContent=world.northBerwick?'North Berwick Free Drive':'Blackwater County';$('map-subtitle').textContent=(world.northBerwick?'Data-derived roads and footprint placement':'Activity map')+' · '+Math.round(mapZoom*100)+'% · you are here';
 }
 function drawMap(){
- const ctx=mapCtx,c=sim.car,s=340,scale=.74,origin={x:s/2,z:s/2};
+ const ctx=mapCtx,c=sim.car,s=340,scale=.74*mapZoom,origin={x:s/2,z:s/2};
  ctx.clearRect(0,0,s,s);ctx.save();ctx.beginPath();ctx.rect(0,0,s,s);ctx.clip();ctx.fillStyle='#183138';ctx.fillRect(0,0,s,s);
  const p=(x,z)=>[origin.x+(x-c.x)*scale,origin.z+(z-c.z)*scale];
  for(const b of sim.world.buildings){const [x,z]=p(b.x,b.z);ctx.save();ctx.translate(x,z);ctx.rotate(-(b.yaw||0));ctx.fillStyle=b.landmarkId?'#9b7254':'#38504b';ctx.fillRect(-b.w*scale/2,-b.d*scale/2,b.w*scale,b.d*scale);ctx.restore();}
