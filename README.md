@@ -12,16 +12,21 @@ The live game is available at [reborn.tahai.net](https://reborn.tahai.net).
 npm start
 ```
 
-Open `http://127.0.0.1:4173`. Build 004 has been preserved unchanged in `legacy/`.
+Open `http://127.0.0.1:4173`. Build 004 remains preserved unchanged in `legacy/`.
 
-## Current source status
+## North Berwick Free Drive — Build 009
 
-The supplied material contained the verified Build 004 standalone but not its original extracted source archive. The runnable working copy is `index.html`; the project structure, asset registry, and static build tooling are being established without modifying the legacy checkpoint.
+Free Drive uses a completely static North Berwick, Maine world assembled from public Maine E911 roads, Maine ESCB building footprints, and OpenStreetMap water/woods/farmland context. It performs no map or GIS API calls while playing.
 
-## North Berwick Free Drive
+Build 009 adds a driver-eye reconstruction layer:
 
-Free Drive uses the locally bundled v2 `assets/worlds/north-berwick/world.json` for North Berwick, Maine. It includes named public Maine E911 road centerlines, Maine ESCB footprints, landmark anchors, and an OpenStreetMap-derived water/woods/farmland context, with no runtime GIS/API calls. The HUD reports the current named road; `M` (or a minimap tap) opens the named-road town map. Visible attribution includes: “North Berwick geographic data: Maine GeoLibrary / Maine ESCB” and “© OpenStreetMap contributors” for the additional context.
+- oriented building footprints rather than axis-aligned blocks;
+- procedural New England houses with gable/hip roofs, windows, doors, porches, chimneys, foundations and roadside details;
+- authored hero structures for Town Office/Police, Cumberland Farms, Fire Department, Hurd Manor, Olde Woolen Mill, Allard's, Mary Hurd Academy, Hannaford, Pratt & Whitney, Noble High School and Riverside Farm Stand;
+- water, forest, farmland, sidewalks, crosswalks, street lighting, utility poles and wires;
+- a lower cinematic chase camera;
+- attributed open-reference facade textures for Town Hall, Hurd Manor and the Olde Woolen Mill.
 
-See [`assets/worlds/north-berwick/CREDITS.md`](assets/worlds/north-berwick/CREDITS.md) and the retained [`provenance.json`](assets/worlds/north-berwick/provenance.json) for sources and transformations. Centerlines and footprint placement are data-derived; road widths and building heights are gameplay/visual heuristics.
+See [`assets/worlds/north-berwick/CREDITS.md`](assets/worlds/north-berwick/CREDITS.md), [`provenance.json`](assets/worlds/north-berwick/provenance.json), and [`facades-atlas.json`](assets/worlds/north-berwick/facades-atlas.json). Road alignment and building placement are data-derived; procedural architecture outside the specifically referenced hero landmarks remains an approximation.
 
-On touch devices, the landscape left stick is a four-way equivalent of the keyboard arrow keys: up accelerates, down brakes/reverses, and left/right steer. It does not auto-throttle.
+Engineering and verification notes: [`docs/NORTH_BERWICK_REALISM_BUILD_009.md`](docs/NORTH_BERWICK_REALISM_BUILD_009.md).

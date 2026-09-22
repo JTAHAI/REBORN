@@ -1,0 +1,139 @@
+{
+  "format": "REBORN_NORTH_BERWICK_FACADE_ATLAS_V1",
+  "generatedAt": "2026-09-22T10:15:00Z",
+  "columns": 4,
+  "rows": 2,
+  "cellSize": 512,
+  "licenseNotice": "Each atlas cell remains under the source image license shown below. The combined atlas is distributed under CC BY-SA 4.0; attribution is retained per source.",
+  "requiredCredit": "See entries[].author, entries[].license, and entries[].sourcePage.",
+  "entries": [
+    {
+      "index": 0,
+      "id": "town-hall",
+      "sourceFile": "NorthBerwickME_TownHall.jpg",
+      "cell": [
+        0,
+        0
+      ],
+      "title": "File:NorthBerwickME TownHall.jpg",
+      "description": "North Berwick Town Hall (formerly a high school), North Berwick, Maine.",
+      "author": "User:Magicpiano",
+      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:NorthBerwickME_TownHall.jpg",
+      "date": "2015",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 1,
+      "id": "hurd-manor",
+      "sourceFile": "NorthBerwickME_MaryHurdHouse.jpg",
+      "cell": [
+        1,
+        0
+      ],
+      "title": "File:NorthBerwickME MaryHurdHouse.jpg",
+      "description": "Mary R. Hurd House, North Berwick, Maine.",
+      "author": "Magicpiano",
+      "license": "CC BY-SA 3.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:NorthBerwickME_MaryHurdHouse.jpg",
+      "date": "2015-10-15 16:14:53",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 2,
+      "id": "olde-woolen-mill",
+      "sourceFile": "Olde_Woolen_Mill_North_Berwick_1.jpg",
+      "cell": [
+        2,
+        0
+      ],
+      "title": "File:Olde Woolen Mill, North Berwick 1.jpg",
+      "description": "Olde Woolen Mill on the Great Works River, which served as the site of the Parrish Shoe Factory in the 1995 fantasy movie Jumanji",
+      "author": "Kalki",
+      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Olde_Woolen_Mill,_North_Berwick_1.jpg",
+      "date": "2014-07-13 12:51:45",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 3,
+      "id": "commercial-block",
+      "sourceFile": "1893_Commercial_Block_North_Berwick_ME.jpg",
+      "cell": [
+        3,
+        0
+      ],
+      "title": "File:1893 Commercial Block, North Berwick ME.jpg",
+      "description": "1893 Commercial Block, North Berwick Maine",
+      "author": "John Phelan",
+      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:1893_Commercial_Block,_North_Berwick_ME.jpg",
+      "date": "2018-09-16 14:45:33",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 4,
+      "id": "national-bank",
+      "sourceFile": "North_Berwick_National_Bank_North_Berwick_ME.jpg",
+      "cell": [
+        0,
+        1
+      ],
+      "title": "File:North Berwick National Bank, North Berwick ME.jpg",
+      "description": "North Berwick National Bank, North Berwick Maine",
+      "author": "John Phelan",
+      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:North_Berwick_National_Bank,_North_Berwick_ME.jpg",
+      "date": "2018-09-16 14:35:07",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 5,
+      "id": "first-baptist",
+      "sourceFile": "First_Baptist_Church_of_North_Berwick_ME.jpg",
+      "cell": [
+        1,
+        1
+      ],
+      "title": "File:First Baptist Church of North Berwick ME.jpg",
+      "description": "First Baptist Church of North Berwick Maine",
+      "author": "John Phelan",
+      "license": "CC BY-SA 4.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:First_Baptist_Church_of_North_Berwick_ME.jpg",
+      "date": "2018-09-16 14:42:51",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 6,
+      "id": "hussey-museum",
+      "sourceFile": "NorthBerwickME_HusseyCompanyMuseum.jpg",
+      "cell": [
+        2,
+        1
+      ],
+      "title": "File:NorthBerwickME HusseyCompanyMuseum.jpg",
+      "description": "Hussey Plow Company Building, now the museum of the Hussey Seating Company, North Berwick, Maine.",
+      "author": "Magicpiano",
+      "license": "CC BY-SA 3.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:NorthBerwickME_HusseyCompanyMuseum.jpg",
+      "date": "2015-10-15 16:26:49",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    },
+    {
+      "index": 7,
+      "id": "prescott-house",
+      "sourceFile": "NorthBerwickME_PrescottHouse.jpg",
+      "cell": [
+        3,
+        1
+      ],
+      "title": "File:NorthBerwickME PrescottHouse.jpg",
+      "description": "J.L. Prescott House, North Berwick, Maine.",
+      "author": "Doug Kerr",
+      "license": "CC BY-SA 2.0",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:NorthBerwickME_PrescottHouse.jpg",
+      "date": "2011-07-02 18:06:29",
+      "derivativeUse": "cropped, color-normalized, and packed into facades-atlas.webp for in-game facade material"
+    }
+  ]
+}

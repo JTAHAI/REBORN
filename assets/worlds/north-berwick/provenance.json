@@ -47,6 +47,12 @@
       "role": "landmark geocoding",
       "url": "https://nominatim.openstreetmap.org/search",
       "publisher": "OpenStreetMap contributors"
+    },
+    {
+      "role": "facade reconstruction imagery",
+      "publisher": "Wikimedia Commons contributors",
+      "manifest": "facades-atlas.json",
+      "usage": "openly licensed photographs cropped and color-normalized into facades-atlas.webp; exact authors/licenses/source pages retained per atlas entry"
     }
   ],
   "transformations": [
@@ -55,7 +61,11 @@
     "Building heights are heuristic; named landmark styles supply minimum-height overrides only.",
     "Named-road labels and street-sign intersection candidates are derived from Maine E911 road names.",
     "Trees and utility poles are deterministic procedural scenery; they are not survey-grade asset locations.",
-    "Remote GIS/open-data services are build-time inputs only; generated game assets require no map/API calls at runtime."
+    "Remote GIS/open-data services are build-time inputs only; generated game assets require no map/API calls at runtime.",
+    "Building footprints are reduced to oriented local frames so rooflines and facades follow the source footprint instead of axis-aligned blocks.",
+    "Road-facing sides are estimated from the nearest named Maine E911 road and used to place doors, windows, porches, parking, and landmark frontage.",
+    "Selected North Berwick facade photographs are cropped, color-normalized, packed into a 4 by 2 WebP atlas, and mapped only to corresponding authored/reference structures.",
+    "The combined facade atlas is distributed under CC BY-SA 4.0 with per-image attribution preserved in facades-atlas.json."
   ],
   "counts": {
     "roads": 330,
@@ -70,8 +80,30 @@
     "waterPolygons": 239,
     "waterways": 467,
     "forestPolygons": 35,
-    "farmlandPolygons": 75
+    "farmlandPolygons": 75,
+    "facadeAtlasCells": 8,
+    "authoredHeroLandmarks": 11
   },
   "terrain": null,
-  "orthophotoBytes": 0
+  "orthophotoBytes": 0,
+  "realismPass": {
+    "version": "driver-eye-v3",
+    "build": "0.6.0-pass009",
+    "generatedAt": "2026-09-22T10:15:00Z",
+    "features": [
+      "oriented building massing",
+      "procedural New England residential details",
+      "authored hero landmark structures",
+      "sidewalks and crosswalks",
+      "parking lots and roadside props",
+      "street lighting",
+      "utility poles and wires",
+      "facade atlas"
+    ],
+    "limitations": [
+      "not a survey-grade digital twin",
+      "non-hero private residences are procedural approximations",
+      "modern commercial landmark dimensions and parking layouts are approximate unless directly supported by open source geometry/reference material"
+    ]
+  }
 }
