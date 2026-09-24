@@ -1,0 +1,28 @@
+name: Export pre-Grand-Prix REBORN source
+
+on:
+  push:
+    branches:
+      - chatgpt-export-reborn-39f
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/reborn-39f
+          mkdir -p /tmp/reborn-39f
+          rsync -a --exclude='.git/' --exclude='release-packages/' ./ /tmp/reborn-39f/
+          test -f /tmp/reborn-39f/index.html
+          test -f /tmp/reborn-39f/assets/worlds/north-berwick/world.json
+      - name: Upload source
+        uses: actions/upload-artifact@v4
+        with:
+          name: reborn-source-39f41a7
+          path: /tmp/reborn-39f/
+          if-no-files-found: error
+          retention-days: 1
