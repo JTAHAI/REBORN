@@ -2,6 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+require('./sync-town.cjs');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'dist');
 fs.rmSync(out, {recursive:true, force:true});
@@ -15,4 +16,4 @@ const worldSource = path.join(root, 'assets', 'worlds', 'north-berwick');
 const worldOut = path.join(out, 'assets', 'worlds', 'north-berwick');
 fs.mkdirSync(worldOut, {recursive:true});
 for (const file of ['world.json', 'provenance.json', 'CREDITS.md', 'facades-atlas.webp', 'facades-atlas.json']) fs.copyFileSync(path.join(worldSource, file), path.join(worldOut, file));
-console.log('Static Build 011 written to dist/ with diagnostics, hands-on garage, Living Car, Road Memory, licensed vehicle, North Berwick world data, and attributed facade atlas.');
+console.log('Static Build 012 written to dist/ with Living Town Director, diagnostics, Living Car, Road Memory, licensed vehicle and North Berwick data.');
