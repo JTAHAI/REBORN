@@ -57,6 +57,14 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
 @media (pointer:coarse) and (orientation:landscape) and (max-height:540px){body.touch .touch-left{left:max(16px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom))}.drive-stick{width:118px;height:118px}.drive-stick:before{height:94px;left:58px;top:12px}.drive-stick:after{width:94px;top:58px;left:12px}.drive-stick i{width:46px;height:46px;left:36px;top:36px}.drive-stick span{bottom:10px;font-size:6px}.touch.transform{left:max(16px,env(safe-area-inset-left));bottom:142px;min-width:118px;min-height:29px;font-size:7px}body.touch .touch-right{right:max(16px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));grid-template-columns:50px 54px 76px;grid-template-rows:50px 58px;gap:6px}.touch.action.gas{width:76px;height:114px;font-size:20px}.touch.action{font-size:10px}.touch.action small{font-size:5px}.touch.action.drift,.touch.action.boost,.touch.action.pulse{font-size:6px}body.touch .instrument{top:56px;right:max(15px,env(safe-area-inset-right));width:104px}.camera-toggle{display:none}}
 .minimap-zoom{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:3px;z-index:1}.minimap-zoom button{width:23px;height:23px;padding:0;border:1px solid #9bbad2a0;background:#0a1825dd;color:#e2f1f8;font-size:17px;line-height:1}.minimap-zoom button:hover{background:#27506aaa}.map-modal{width:min(960px,94vw);padding:22px;background:#0d1d2a;border-color:#81b9d766}.map-modal header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.map-modal h2{font-size:24px;margin:0;letter-spacing:.3px}.map-modal p{font-size:10px;letter-spacing:1px;color:#b4cad2;margin:5px 0 0}.map-actions,.map-zoom{display:flex;align-items:center;gap:7px}.map-zoom output{min-width:45px;text-align:center;font-size:9px;letter-spacing:1px;color:#c6deeb}.map-zoom .secondary{min-width:36px;padding:10px;font-size:16px;line-height:1}.map-modal canvas{display:block;width:100%;max-height:70vh;aspect-ratio:16/9;background:#132b31;border:1px solid #80acc070}.map-modal .map-key{font-size:9px;color:#9ccce6;letter-spacing:1.4px}
 @media(max-width:650px){.map-modal{width:100%;min-height:100%;padding:18px}.map-modal header{align-items:flex-start}.map-actions{gap:5px}.map-zoom{gap:3px}.map-zoom output{display:none}.map-zoom .secondary{min-width:32px;padding:8px}.map-modal canvas{max-height:76vh;aspect-ratio:1/1}.map-modal h2{font-size:20px}.map-modal p{font-size:8px}.map-modal .secondary{padding:10px;font-size:8px}.map-zoom .secondary{font-size:16px}}
+
+/* Build 010: Living Car + Road Memory */
+.launch-row #inspect-car{margin-left:auto}.launch-row #journey-open,.launch-row #intro-help{margin-left:0}
+.systems-mini{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:4px 8px;margin-top:11px;padding-top:10px;border-top:1px solid #b7c9bc32;font-size:6px;letter-spacing:1.2px;color:#b9cbbf}.systems-mini b{font-size:7px;color:#eff2df;font-variant-numeric:tabular-nums}.systems-mini .mini-meter{grid-column:1 / 4;height:2px;background:#dbe3cf25}.systems-mini .mini-meter i{display:block;height:100%;background:#eebe7e;transition:width .2s,background .2s}.systems-mini .temp-meter i{background:#8bdec9}.systems-mini button{grid-column:1 / 4;margin-top:3px;padding:5px 0;background:transparent;color:#b9d5df;border-top:1px solid #b7c9bc25;font-size:6px;letter-spacing:1.4px;text-align:left}.systems-mini button:hover{color:#fff0c8}
+.journey-modal{width:min(1050px,96vw);max-height:min(880px,94vh);overflow:auto;background:linear-gradient(145deg,#10242cf5,#152d31f5);padding:28px}.journey-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:16px;border-bottom:1px solid #b4c9bd2b}.journey-header h2{font-size:38px;margin:7px 0 3px}.journey-header p{margin:0;color:#a9bdb2;font-size:10px;line-height:1.7}.journey-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:17px}.journey-panel{background:#0c1d25b8;border:1px solid #a9c0b130;padding:17px;min-width:0}.journey-panel h3{margin:0 0 12px;font-size:12px;letter-spacing:1.8px;color:#e7d0a1}.condition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.condition-card{padding:10px;background:#173139a8;border:1px solid #95aa9d29}.condition-card header{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:8px;letter-spacing:1.2px}.condition-card header b{font-size:12px;color:#eef0dc;font-variant-numeric:tabular-nums}.condition-card small{display:block;color:#91aaa0;font-size:7px;letter-spacing:.8px;margin-top:6px}.condition-bar{height:3px;background:#07171d;margin-top:8px}.condition-bar i{display:block;height:100%;background:#8bdec9}.condition-card.warn .condition-bar i{background:#eebe7e}.condition-card.critical .condition-bar i{background:#dc7767}.condition-card.warn header b{color:#f0c98a}.condition-card.critical header b{color:#f08f7b}.service-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.service-actions button{flex:1;min-width:160px}.service-note{font-size:8px;color:#90a69d;line-height:1.65;margin:10px 0 0}.road-memory-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}.road-memory-summary div{padding:9px;background:#173139a8;border:1px solid #95aa9d29}.road-memory-summary b{display:block;font-size:19px;color:#e8d0a0}.road-memory-summary span{font-size:6px;letter-spacing:1px;color:#95aaa0}.road-memory-list,.drive-journal{display:grid;gap:6px;max-height:286px;overflow:auto;padding-right:3px}.road-row,.drive-entry{display:grid;grid-template-columns:1fr auto;gap:8px;padding:9px;background:#122832c9;border-left:3px solid #52776f}.road-row strong,.drive-entry strong{font-size:9px;letter-spacing:.35px}.road-row small,.drive-entry small{display:block;margin-top:4px;color:#92aaa0;font-size:7px;line-height:1.45}.road-row b{font-size:10px;color:#d8c28f}.drive-entry{border-left-color:#9b7652}.drive-entry b{font-size:9px;color:#e5d0a1;text-align:right}.empty-log{padding:18px;border:1px dashed #80988d45;color:#91a99e;font-size:9px;line-height:1.7;text-align:center}.journal-span{grid-column:1 / 3}.journey-key{font-size:8px;color:#8db9cc;letter-spacing:1.2px;margin-top:10px}.road-memory-badge{display:inline-flex;align-items:center;gap:6px;color:#d7c18e}.road-memory-badge:before{content:'';width:5px;height:5px;border-radius:50%;background:#8bdec9;box-shadow:0 0 7px #8bdec988}
+@media(max-width:780px){.journey-modal{width:100%;min-height:100%;max-height:none;padding:19px}.journey-grid{grid-template-columns:1fr}.journal-span{grid-column:auto}.condition-grid{grid-template-columns:1fr 1fr}.journey-header h2{font-size:29px}.road-memory-list,.drive-journal{max-height:210px}}
+@media(max-height:540px) and (orientation:landscape){.journey-modal{padding:16px}.journey-header{padding-bottom:9px}.journey-header h2{font-size:25px;margin:3px 0}.journey-grid{grid-template-columns:1.1fr .9fr;gap:9px;margin-top:9px}.journey-panel{padding:10px}.condition-card{padding:7px}.road-memory-list,.drive-journal{max-height:142px}.journal-span{grid-column:1 / 3}.service-actions{margin-top:7px}.journey-header p,.service-note{display:none}}
+
 </style>
 </head>
 <body data-standalone="true">
@@ -71,7 +79,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
 <section id="intro" class="screen" aria-label="Main menu" hidden>
  <header class="topline">
   <div class="brand"><b>99½</b><span>REBORN</span></div>
-  <div class="buildtag"><i></i> PLAYABLE PRE-ALPHA <span>/ 008</span></div>
+  <div class="buildtag"><i></i> PLAYABLE PRE-ALPHA <span>/ 010</span></div>
   <button class="quiet sound-toggle" aria-label="Toggle sound">SOUND ON <span>◖))</span></button>
  </header>
  <div class="intro-copy">
@@ -89,9 +97,9 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
    <button class="mode-card" data-mode="pursuit" aria-pressed="false"><span>03 / PURSUIT</span><strong>Lose the tail <i>↗</i></strong><small>Break sight. Disappear.</small></button>
    <button class="mode-card" data-mode="arena" aria-pressed="false"><span>04 / VEHICLE COMBAT</span><strong>Breaker yard <i>↗</i></strong><small>Armor up. Clear the yard.</small></button>
   </div>
-  <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
+  <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="journey-open" class="quiet">JETTA STATUS / ROAD JOURNAL ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 009 <i>/</i> NORTH BERWICK / LIVING TOWN</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 010 <i>/</i> LIVING CAR / ROAD MEMORY</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <header class="hud-top"><div class="brand"><b>99½</b><span>REBORN</span></div><div id="drive-mode"><i></i><b>STREET</b><span>FWD</span></div><div class="hud-right"><span id="heat" aria-label="Police heat"></span><button id="camera-button" class="square camera-toggle" data-action="camera" aria-label="Change camera view">CAM<br><b>3P</b></button><button id="pause-button" class="square" aria-label="Pause game">Ⅱ</button></div></header>
@@ -100,8 +108,8 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
  <aside id="radio" aria-label="Story radio subtitles" role="status" aria-live="polite" hidden><div id="radio-speaker">MOTORWORKS</div><p id="radio-text"></p></aside>
  <div id="toast" role="status" aria-live="polite"></div>
  <div class="map-wrap"><canvas id="minimap" width="340" height="340" aria-label="Road map and next objective. Scroll to zoom."></canvas><div class="minimap-zoom" role="group" aria-label="Minimap zoom"><button id="minimap-zoom-in" type="button" aria-label="Zoom minimap in">+</button><button id="minimap-zoom-out" type="button" aria-label="Zoom minimap out">−</button></div><div><span id="map-label">NORTH BERWICK</span><span id="surface">ASPHALT</span></div></div>
- <div class="instrument"><div class="speedline"><strong id="speed">000</strong><span id="gear">N<b>MPH</b></span></div><div class="meter-label"><span>ENERGY</span><b id="energy-value">100</b></div><div class="meter"><i id="energy-bar"></i></div><div class="meter-label health-label"><span>BODY</span><b id="health-value">100%</b></div><div class="meter body-meter"><i id="health-bar"></i></div></div>
- <div class="desktop-keys"><span><kbd>T</kbd> TRANSFORM</span><span><kbd>E</kbd> PULSE</span><span><kbd>SPACE</kbd> DRIFT</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>C</kbd> CAMERA</span></div>
+ <div class="instrument"><div class="speedline"><strong id="speed">000</strong><span id="gear">N<b>MPH</b></span></div><div class="meter-label"><span>ENERGY</span><b id="energy-value">100</b></div><div class="meter"><i id="energy-bar"></i></div><div class="meter-label health-label"><span>BODY</span><b id="health-value">100%</b></div><div class="meter body-meter"><i id="health-bar"></i></div><div class="systems-mini"><span>FUEL</span><i></i><b id="fuel-value">100%</b><div class="mini-meter"><i id="fuel-bar"></i></div><span>COOLANT</span><i></i><b id="temp-value">72°F</b><div class="mini-meter temp-meter"><i id="temp-bar"></i></div><button id="journey-hud" type="button">J · JETTA STATUS / ROAD JOURNAL</button></div></div>
+ <div class="desktop-keys"><span><kbd>T</kbd> TRANSFORM</span><span><kbd>E</kbd> PULSE</span><span><kbd>SPACE</kbd> DRIFT</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>C</kbd> CAMERA</span><span><kbd>J</kbd> JOURNAL</span></div>
  <div id="touch-controls" aria-label="Landscape touch driving controls">
   <div class="touch-left"><div id="drive-stick" class="drive-stick" role="slider" aria-label="Steering joystick" aria-valuemin="-1" aria-valuemax="1" aria-valuenow="0"><i></i><span>STEER</span></div></div>
   <div class="touch-right">
@@ -117,7 +125,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
 </section>
 <section id="inspection" class="screen" aria-label="Interactive car inspection" hidden>
  <header class="inspection-header"><div class="brand"><b>99½</b><span>THE JETTA</span></div><button id="inspect-close" class="secondary">BACK TO GARAGE ×</button></header>
- <div class="inspection-bottom"><div><div class="eyebrow">REAL-TIME 3D / BUILD 009</div><h2 id="detail-title">Black paint. Silver soul.</h2><p>The same car you drive. Every detail rendered live.</p><div class="view-picker" role="group" aria-label="Inspection camera"><button data-view="front" class="selected">FRONT ¾</button><button data-view="rear">REAR ¾</button><button data-view="wheels">WHEEL DETAIL</button><button data-view="side">BODY LINES</button><button data-view="optics">OPTICS</button></div><p class="orbit-hint">Drag to orbit · Scroll or use + / − to zoom</p></div><div class="inspection-buttons" role="group" aria-label="Vehicle configuration"><button data-inspect="street">STREET</button><button data-inspect="rally">RALLY</button><button data-inspect="reborn">REBORN</button><button id="inspect-near" aria-label="Zoom in">+</button><button id="inspect-far" aria-label="Zoom out">−</button><button id="inspect-light">LIGHT / STUDIO</button><button id="inspect-finish">FINISH / DRY BLACK</button></div></div>
+ <div class="inspection-bottom"><div><div class="eyebrow">REAL-TIME 3D / BUILD 010</div><h2 id="detail-title">Black paint. Silver soul.</h2><p>The same car you drive. Every detail rendered live.</p><div class="view-picker" role="group" aria-label="Inspection camera"><button data-view="front" class="selected">FRONT ¾</button><button data-view="rear">REAR ¾</button><button data-view="wheels">WHEEL DETAIL</button><button data-view="side">BODY LINES</button><button data-view="optics">OPTICS</button></div><p class="orbit-hint">Drag to orbit · Scroll or use + / − to zoom</p></div><div class="inspection-buttons" role="group" aria-label="Vehicle configuration"><button data-inspect="street">STREET</button><button data-inspect="rally">RALLY</button><button data-inspect="reborn">REBORN</button><button id="inspect-near" aria-label="Zoom in">+</button><button id="inspect-far" aria-label="Zoom out">−</button><button id="inspect-light">LIGHT / STUDIO</button><button id="inspect-finish">FINISH / DRY BLACK</button></div></div>
 </section>
 <div id="story" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="story-title" hidden>
  <div class="modal story-modal"><div class="eyebrow" id="story-number">THE OPENING STORY / CHAPTER 01 OF 04</div>
@@ -139,12 +147,21 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
   <label><span>Rendering</span><select id="quality-setting"><option value="auto">Adaptive</option><option value="high">High</option><option value="low">Battery saver</option></select></label>
   <label><span>Reduced motion <small>Less camera movement and no speed particles</small></span><input id="motion-setting" type="checkbox"></label>
  </div>
- <div class="control-help"><p><b>KEYBOARD</b> W or Up accelerates · S or Down brakes/reverses · A/D or Left/Right steers · Space drifts · Shift boosts<br>T transforms · E pulses · C changes camera · M opens the map · R recovers · Esc pauses and resumes</p><p><b>CONTROLLER</b> Left stick steers · RT throttles · LT brakes/reverses<br>A drifts · B boosts · Y transforms · X pulses · Start pauses</p><p><b>TOUCH / LANDSCAPE</b> The left stick is a four-way arrow pad: up accelerates, down brakes/reverses, left/right steer. Right buttons add drift and boost. Tap the minimap to pause and expand it.<br>Third person is default. Tap CAM for wide third-person or driver view.</p></div>
+ <div class="control-help"><p><b>KEYBOARD</b> W or Up accelerates · S or Down brakes/reverses · A/D or Left/Right steers · Space drifts · Shift boosts<br>T transforms · E pulses · C changes camera · M opens the map · J opens Jetta status and the road journal · R recovers · Esc pauses and resumes</p><p><b>CONTROLLER</b> Left stick steers · RT throttles · LT brakes/reverses<br>A drifts · B boosts · Y transforms · X pulses · Start pauses</p><p><b>TOUCH / LANDSCAPE</b> The left stick is a four-way arrow pad: up accelerates, down brakes/reverses, left/right steer. Right buttons add drift and boost. Tap the minimap to pause and expand it.<br>Third person is default. Tap CAM for wide third-person or driver view.</p></div>
  <p class="build-info" id="renderer-info"></p>
- <div class="modal-buttons"><button id="resume" class="primary">BACK TO THE ROAD <span>→</span></button><button id="recover" class="secondary">RECOVER CAR</button><button id="garage" class="quiet">RETURN TO GARAGE</button><button id="reset-progress" class="quiet">RESET PROGRESS</button></div>
+ <div class="modal-buttons"><button id="resume" class="primary">BACK TO THE ROAD <span>→</span></button><button id="recover" class="secondary">RECOVER CAR</button><button id="journey-pause" class="secondary">JETTA STATUS / JOURNAL</button><button id="garage" class="quiet">RETURN TO GARAGE</button><button id="reset-progress" class="quiet">RESET PROGRESS</button></div>
  </div>
 </div>
 <div id="map-overlay" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="map-title" hidden><div class="modal map-modal"><header><div><div class="eyebrow">ROAD MAP / PAUSED</div><h2 id="map-title">North Berwick Free Drive</h2><p id="map-subtitle">Your position is centered on the map.</p></div><div class="map-actions"><div class="map-zoom" role="group" aria-label="Map zoom"><button id="map-zoom-out" class="secondary" type="button" aria-label="Zoom map out">−</button><output id="map-zoom-readout" for="map-zoom-out map-zoom-in">100%</output><button id="map-zoom-in" class="secondary" type="button" aria-label="Zoom map in">+</button></div><button id="map-resume" class="secondary">BACK TO DRIVE <span class="map-key">M</span></button></div></header><canvas id="expanded-map" width="1200" height="760" aria-label="Expanded road map. Scroll to zoom."></canvas></div></div>
+
+<div id="journey" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="journey-title" hidden><div class="modal journey-modal">
+ <header class="journey-header"><div><div class="eyebrow"><span class="line"></span> LIVING CAR / ROAD MEMORY</div><h2 id="journey-title">The Jetta remembers.</h2><p id="journey-status">One car. Every mile, road and repair stays with it.</p><div class="journey-key">PRESS J TO OPEN OR CLOSE</div></div><button id="journey-close" class="secondary">BACK ×</button></header>
+ <div class="journey-grid">
+  <section class="journey-panel"><h3>JETTA CONDITION</h3><div id="vehicle-condition-grid" class="condition-grid"></div><div class="service-actions"><button id="journey-refuel" class="secondary">REFUEL / CHARGE</button><button id="journey-service" class="primary">FULL SERVICE <span>→</span></button></div><p id="journey-service-note" class="service-note">Garage service is free during pre-alpha. Odometer and drive history are never reset.</p></section>
+  <section class="journey-panel"><h3>ROAD MEMORY</h3><div id="road-memory-summary" class="road-memory-summary"></div><div id="road-memory-list" class="road-memory-list"></div></section>
+  <section class="journey-panel journal-span"><h3>RECENT DRIVES</h3><div id="drive-journal" class="drive-journal"></div></section>
+ </div>
+</div></div>
 <div id="result" class="modal-wrap" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden><div class="modal result-modal"><div class="eyebrow" id="result-label">RUN COMPLETE</div><h2 id="result-title">Still got it.</h2><p id="result-copy"></p><p id="result-echo" class="story-echo"></p><div id="result-stats"></div><div class="modal-buttons"><button id="result-next" class="primary" hidden>NEXT CHAPTER <span>→</span></button><button id="retry" class="primary">GO AGAIN <span>→</span></button><button id="result-garage" class="secondary">BACK TO GARAGE</button></div></div></div>
 <div id="fatal" class="modal-wrap" role="alert" hidden><div class="modal"><h2>Ignition interrupted.</h2><p id="fatal-message"></p><button class="primary" onclick="location.reload()">RETRY</button></div></div>
 <noscript><div class="modal-wrap"><div class="modal"><h2>Turn the ignition on.</h2><p>This driving game needs JavaScript. Enable it to play.</p></div></div></noscript>
@@ -157,7 +174,7 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
   else root.RebornCore = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  const VERSION = '0.6.0-pass009';
+  const VERSION = '0.7.0-pass010';
   const DT = 1 / 120;
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -346,7 +363,8 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
   }
   function createCar(x = 100,z = 315,yaw = 0) {
     return { x,z,yaw,vx:0,vz:0,steer:0,yawRate:0,health:100,energy:100,mode:'street',modeBlend:0,rallyBlend:0,boosting:false,
-      forwardSpeed:0,lateralSpeed:0,roll:0,pitch:0,distance:0,wheelSpin:0,surface:'asphalt',damageCooldown:0,stun:0,pulseCooldown:0 };
+      forwardSpeed:0,lateralSpeed:0,roll:0,pitch:0,distance:0,wheelSpin:0,surface:'asphalt',damageCooldown:0,stun:0,pulseCooldown:0,
+      tireGrip:1,brakeEffect:1,enginePower:1,fuelAvailable:true,engineTempC:22 };
   }
   function changeMode(car) { car.mode = ['street','rally','reborn'][(['street','rally','reborn'].indexOf(car.mode)+1)%3]; return car.mode; }
   function stepCar(c,input,world,dt=DT,wet=false) {
@@ -354,21 +372,21 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
     dt = Math.min(dt, .05);
     const m=MODES[c.mode] || MODES.street;
     const surface=surfaceAt(world,c.x,c.z), asphalt=surface==='asphalt'||surface==='concrete';
-    const grip=(asphalt?m.grip:m.dirt)*(wet?(asphalt?.76:.86):1)*(surface==='grass'?.75:1);
+    const grip=(asphalt?m.grip:m.dirt)*(wet?(asphalt?.76:.86):1)*(surface==='grass'?.75:1)*clamp(Number(c.tireGrip)||1,.45,1);
     c.surface=surface; c.stun=Math.max(0,c.stun-dt); c.damageCooldown=Math.max(0,c.damageCooldown-dt);c.pulseCooldown=Math.max(0,c.pulseCooldown-dt);
     c.modeBlend=approach(c.modeBlend,c.mode==='reborn'?1:0,4.5,dt); c.rallyBlend=approach(c.rallyBlend,c.mode==='rally'?1:0,4.5,dt);
     const disabled=c.health<=0 || c.stun>0;
-    const throttle=disabled?0:clamp(Number(input.throttle)||0,-1,1), braking=disabled?1:clamp(Number(input.brake)||0,0,1);
+    const throttle=disabled||c.fuelAvailable===false?0:clamp(Number(input.throttle)||0,-1,1), braking=disabled?1:clamp(Number(input.brake)||0,0,1);
     c.braking=braking>.05;
     const handbrake=!disabled&&!!input.handbrake, boost=!disabled&&!!input.boost&&c.energy>1&&throttle>0;
     c.steer=approach(c.steer,disabled?0:clamp(Number(input.steer)||0,-1,1),10,dt);
     const fx=Math.sin(c.yaw),fz=-Math.cos(c.yaw),rx=Math.cos(c.yaw),rz=Math.sin(c.yaw);
     let vf=c.vx*fx+c.vz*fz,vs=c.vx*rx+c.vz*rz;
     const top=m.top*(asphalt?1:surface==='grass'?.57:.78);
-    let acceleration=throttle*m.accel*(throttle*vf<0?1.4:clamp(1-Math.abs(vf)/(throttle<0?10:top),.09,1));
+    let acceleration=throttle*m.accel*(throttle*vf<0?1.4:clamp(1-Math.abs(vf)/(throttle<0?10:top),.09,1))*clamp(Number(c.enginePower)||1,.35,1);
     if (boost) acceleration+=9.5*clamp(1-Math.max(0,vf-top)/(top*.26),0,1);
     const rolling=.48+(asphalt?0:1.35),drag=.0014*vf*vf;
-    let dragForce=Math.sign(vf)*(rolling+drag+braking*19+(handbrake?3.2:0));
+    let dragForce=Math.sign(vf)*(rolling+drag+braking*19*clamp(Number(c.brakeEffect)||1,.35,1)+(handbrake?3.2:0));
     if (Math.abs(vf)<.05 && Math.abs(throttle)<.01) { vf=0;dragForce=0; }
     if (Math.abs(vf)>0 && Math.abs(dragForce*dt)>Math.abs(vf) && Math.abs(throttle)<.01) dragForce=vf/dt;
     const slipPenalty=asphalt?clamp(1-Math.abs(vs)/22,.45,1):.90;
@@ -535,15 +553,27 @@ body.touch #touch-controls{display:block}body.touch .touch-left{position:absolut
     }
     snapshot(){const c=this.car;return {version:VERSION,mode:this.mode,time:this.time,car:{x:c.x,z:c.z,yaw:c.yaw,speed:Math.hypot(c.vx,c.vz),health:c.health,energy:c.energy,mode:c.mode,surface:c.surface},mission:{...this.mission},heat:this.heat,escape:this.escape,kills:this.kills,nearMisses:this.nearMisses};}
   }
+  function defaultVehicle(){return {fuel:100,battery:100,tires:100,brakes:100,oil:100,coolant:100,body:100,engineTempC:22,odometerMiles:0,serviceCount:0,lastServiceOdometer:0};}
+  const finite=(value,fallback,lo=-Infinity,hi=Infinity)=>Number.isFinite(Number(value))?clamp(Number(value),lo,hi):fallback;
+  function validateVehicle(raw){const d=defaultVehicle(),v=raw&&typeof raw==='object'?raw:{};return {
+    fuel:finite(v.fuel,d.fuel,0,100),battery:finite(v.battery,d.battery,0,100),tires:finite(v.tires,d.tires,0,100),brakes:finite(v.brakes,d.brakes,0,100),
+    oil:finite(v.oil,d.oil,0,100),coolant:finite(v.coolant,d.coolant,0,100),body:finite(v.body,d.body,0,100),engineTempC:finite(v.engineTempC,d.engineTempC,-30,160),
+    odometerMiles:finite(v.odometerMiles,d.odometerMiles,0,1e7),serviceCount:Math.floor(finite(v.serviceCount,0,0,1e6)),lastServiceOdometer:finite(v.lastServiceOdometer,0,0,1e7)};}
+  function validateRoadKnowledge(raw){const out={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;for(const [name,value] of Object.entries(raw).slice(0,700)){if(typeof name!=='string'||!name.trim())continue;const r=value&&typeof value==='object'?value:{};out[name.slice(0,90)]={distanceM:finite(r.distanceM,0,0,2e7),entries:Math.floor(finite(r.entries,0,0,1e6)),milestone:Math.floor(finite(r.milestone,0,0,100)),lastVisit:finite(r.lastVisit,0,0,Number.MAX_SAFE_INTEGER)};}return out;}
+  function validateJournal(raw){if(!Array.isArray(raw))return [];return raw.slice(0,18).filter(item=>item&&typeof item==='object').map((item,index)=>({
+    id:String(item.id||('drive-'+index)).slice(0,80),kind:item.kind==='service'?'service':'drive',endedAt:String(item.endedAt||'').slice(0,40),mode:String(item.mode||'free').slice(0,24),world:String(item.world||'').slice(0,80),
+    reason:String(item.reason||'').slice(0,100),seconds:finite(item.seconds,0,0,86400),miles:finite(item.miles,0,0,10000),roads:Math.floor(finite(item.roads,0,0,1000)),startRoad:String(item.startRoad||'').slice(0,90),endRoad:String(item.endRoad||'').slice(0,90),
+    fuelUsed:finite(item.fuelUsed,0,0,100),bodyLoss:finite(item.bodyLoss,0,-100,100),maxMph:finite(item.maxMph,0,0,400)}));}
   function validateSave(raw){
-    const defaults={version:1,bestRun:null,settings:{sound:true,autoThrottle:false,weather:'clear',quality:'auto',reducedMotion:false}};
+    const defaults={version:1,bestRun:null,settings:{sound:true,autoThrottle:false,weather:'clear',quality:'auto',reducedMotion:false},vehicle:defaultVehicle(),roadKnowledge:{},journal:[],stats:{trips:0,totalMiles:0,roadsDiscovered:0,sequence:0}};
     if(!raw||typeof raw!=='object'||raw.version!==1)return defaults;
-    const s=raw.settings||{};
+    const s=raw.settings||{},knowledge=validateRoadKnowledge(raw.roadKnowledge),journal=validateJournal(raw.journal),stats=raw.stats&&typeof raw.stats==='object'?raw.stats:{};
     return {version:1,bestRun:Number.isFinite(raw.bestRun)&&raw.bestRun>0&&raw.bestRun<3600?raw.bestRun:null,settings:{
       sound:typeof s.sound==='boolean'?s.sound:true,autoThrottle:typeof s.autoThrottle==='boolean'?s.autoThrottle:false,
-      weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion}};
+      weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion},
+      vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,validateSave};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave};
 });
 
 </script>
@@ -1983,7 +2013,7 @@ class Input {
  constructor(onAction){
   this.keys=new Set();this.holds=new Map();this.actions=onAction;this.padButtons=[];this.padConnected=false;this.reverseTime=0;this.steerTouch=0;this.driveTouch=0;this.stickPointer=null;this.blocked=false;
   const driveKeys=new Set(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight']);
-  const actionKeys={KeyT:'transform',KeyE:'pulse',KeyR:'recover',KeyP:'pause',Escape:'pause',KeyC:'camera',KeyM:'map'};
+  const actionKeys={KeyT:'transform',KeyE:'pulse',KeyR:'recover',KeyP:'pause',Escape:'pause',KeyC:'camera',KeyM:'map',KeyJ:'journal'};
   window.addEventListener('keydown',e=>{
    if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
    if(driveKeys.has(e.code)||actionKeys[e.code])e.preventDefault();
@@ -2079,7 +2109,7 @@ document.body.classList.toggle('touch',touch);
 let save,hadSave=false,storageAvailable=true;
 try{const raw=localStorage.getItem(STORAGE);hadSave=!!raw;save=C.validateSave(raw?JSON.parse(raw):null);}catch(_e){save=C.validateSave(null);storageAvailable=false;}
 if(!hadSave){save.settings.weather='rain';save.settings.autoThrottle=false;save.settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;}
-const settings=save.settings;let storyData=null;try{storyData=JSON.parse(localStorage.getItem(STORY_STORAGE)||'null');}catch(_e){}
+const settings=save.settings;let vehicle=save.vehicle,roadKnowledge=save.roadKnowledge,driveJournal=save.journal;let storyData=null;try{storyData=JSON.parse(localStorage.getItem(STORY_STORAGE)||'null');}catch(_e){}
 // Touch must always begin at rest: the stick supplies the same four directions as arrow keys.
 settings.autoThrottle=false;
 const director=new S.Director(storyData);let viewingChapter=S.nextIndex(director.progress);
@@ -2091,12 +2121,50 @@ renderer.night=settings.weather==='clear'?0:1;renderer.rain=settings.weather==='
 const sim=new C.Simulation(),blackwaterWorld=sim.world;sim.car.x=300;let northBerwickWorld=null;const audio=new RebornAudio();audio.enabled=settings.sound;
 let state='menu',selected='free',pausedFromMenu=false,accumulator=0,lastFrame=0,clock=0,uiClock=0,toastUntil=0,cameraStyle=0,cameraYaw=0,cameraEye=null,cameraTarget=null,lastHealth=100,focusBefore=null,lastInput={};
 let fps=0,frameCounter=0,fpsClock=0,lowFpsSeconds=0,frameErrors=[];
+let activeTrip=null,lastCarDistance=0,currentRoadName='',lastRoadName='',systemPersistClock=0,systemAlerts=new Set(),journeyReturnState='menu';
 const input=new RebornInput(action);
 const cameraNames=['THIRD PERSON','WIDE THIRD','DRIVER VIEW'];
 function updateCameraChoice(){const short=['3P','WIDE','IN'][cameraStyle],label=cameraNames[cameraStyle];document.body.dataset.camera=cameraStyle===2?'inside':'third';for(const b of document.querySelectorAll('[data-action="camera"]')){b.setAttribute('aria-label','Camera: '+label+'. Tap to change view.');const small=b.querySelector('small');if(small)small.textContent=short;else if(b.id==='camera-button')b.innerHTML='CAM<br><b>'+short+'</b>';}}
 let inspectAngle=-2.34,inspectHeight=.20,inspectDistance=5.8,inspectPointer=null,inspectDragged=false,inspectFocus='front',inspectTarget=[0,.84,0];
 const detailView=()=>inspectFocus==='wheels'||inspectFocus==='optics';
+
 function notify(text,duration=2.4){$('toast').textContent=text;$('toast').classList.add('visible');toastUntil=clock+duration;}
+function safeText(value){return String(value??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));}
+function vehicleSnapshot(){return {fuel:vehicle.fuel,battery:vehicle.battery,tires:vehicle.tires,brakes:vehicle.brakes,oil:vehicle.oil,coolant:vehicle.coolant,body:vehicle.body,engineTempC:vehicle.engineTempC,odometerMiles:vehicle.odometerMiles};}
+function roadMemoryScore(entry){return C.clamp(Math.round(Math.sqrt(Math.max(0,entry?.distanceM||0)/8000)*100),0,100);}
+function roadMemoryLabel(score){return score>=100?'MEMORIZED':score>=75?'KNOWN':score>=45?'FAMILIAR':score>=18?'LEARNING':'DISCOVERED';}
+function conditionClass(value,reverse=false){const score=reverse?100-value:value;return score<25?'critical':score<50?'warn':'';}
+function conditionCard(label,value,suffix,detail,barValue=value,statusValue=barValue){return '<article class="condition-card '+conditionClass(statusValue)+'"><header><span>'+safeText(label)+'</span><b>'+safeText(value)+safeText(suffix)+'</b></header><div class="condition-bar"><i style="width:'+C.clamp(barValue,0,100)+'%"></i></div><small>'+safeText(detail)+'</small></article>';}
+function updateJourneyPanel(){
+ const tempF=Math.round(vehicle.engineTempC*9/5+32),tempScore=C.clamp(100-Math.max(0,vehicle.engineTempC-96)*3.2,0,100),serviceDue=Math.max(0,vehicle.odometerMiles-vehicle.lastServiceOdometer);
+ $('journey-status').textContent=Math.round(vehicle.odometerMiles).toLocaleString()+' MILES · '+vehicle.serviceCount+' GARAGE SERVICE'+(vehicle.serviceCount===1?'':'S')+' · '+(activeTrip?'CURRENT DRIVE PAUSED':'READY IN THE GARAGE');
+ $('vehicle-condition-grid').innerHTML=[
+  conditionCard('FUEL',Math.round(vehicle.fuel),'%','Range changes with throttle and boost.'),
+  conditionCard('BATTERY',Math.round(vehicle.battery),'%','Charges while the engine is turning.'),
+  conditionCard('ENGINE TEMP',tempF,'°F',vehicle.engineTempC>108?'Back off and let the cooling system work.':'Load, weather and road speed affect temperature.',tempScore,tempScore),
+  conditionCard('BODY',Math.round(vehicle.body),'%','Collision damage follows the car home.'),
+  conditionCard('TIRES',Math.round(vehicle.tires),'%','Sliding and rough surfaces accelerate wear.'),
+  conditionCard('BRAKES',Math.round(vehicle.brakes),'%','Hard braking consumes pad life.'),
+  conditionCard('OIL',Math.round(vehicle.oil),'%','Long-term engine protection.'),
+  conditionCard('COOLANT',Math.round(vehicle.coolant),'%','Low coolant raises thermal risk.')
+ ].join('');
+ const entries=Object.entries(roadKnowledge).sort((a,b)=>(b[1].distanceM||0)-(a[1].distanceM||0)),familiar=entries.filter(([,r])=>roadMemoryScore(r)>=45).length,totalRoadMiles=entries.reduce((sum,[,r])=>sum+(r.distanceM||0),0)/1609.344;
+ $('road-memory-summary').innerHTML='<div><b>'+entries.length+'</b><span>ROADS FOUND</span></div><div><b>'+familiar+'</b><span>FAMILIAR</span></div><div><b>'+totalRoadMiles.toFixed(1)+'</b><span>ROAD MILES</span></div>';
+ $('road-memory-list').innerHTML=entries.length?entries.slice(0,12).map(([name,r])=>{const score=roadMemoryScore(r);return '<div class="road-row"><div><strong>'+safeText(name)+'</strong><small>'+roadMemoryLabel(score)+' · '+(r.distanceM/1609.344).toFixed(1)+' mi · '+r.entries+' entr'+(r.entries===1?'y':'ies')+'</small></div><b>'+score+'%</b></div>';}).join(''):'<div class="empty-log">North Berwick roads appear here as the Jetta actually drives them.</div>';
+ $('drive-journal').innerHTML=driveJournal.length?driveJournal.slice(0,12).map(entry=>{const date=entry.endedAt?new Date(entry.endedAt):null,when=date&&!Number.isNaN(date.valueOf())?date.toLocaleString():entry.kind==='service'?'GARAGE SERVICE':'RECORDED DRIVE';if(entry.kind==='service')return '<div class="drive-entry"><div><strong>GARAGE SERVICE</strong><small>'+safeText(entry.reason)+' · Odometer '+entry.miles.toFixed(1)+' mi</small></div><b>'+safeText(when)+'</b></div>';return '<div class="drive-entry"><div><strong>'+safeText(entry.world||entry.mode.toUpperCase())+'</strong><small>'+entry.miles.toFixed(1)+' mi · '+Math.round(entry.seconds/60)+' min · '+entry.roads+' roads<br>'+safeText(entry.startRoad||'START')+' → '+safeText(entry.endRoad||'GARAGE')+'</small></div><b>'+Math.round(entry.maxMph)+' MPH<br>'+safeText(when)+'</b></div>';}).join(''):'<div class="empty-log">The first completed drive will create a permanent journal entry.</div>';
+ const canService=journeyReturnState==='menu';$('journey-refuel').disabled=!canService;$('journey-service').disabled=!canService;$('journey-service-note').textContent=canService?'Garage service is free during pre-alpha. Odometer and drive history are never reset.':('Finish or return from the current drive before service. '+serviceDue.toFixed(0)+' miles since the last full service.');
+}
+function openJourney(){if(!['menu','play','pause','result'].includes(state))return;journeyReturnState=state==='result'?'menu':state;state='journey';input.clear();accumulator=0;updateJourneyPanel();showState();$('journey-close').focus();}
+function closeJourney(){if(state!=='journey')return;state=journeyReturnState;input.clear();accumulator=0;showState();if(state==='play'){audio.start();acquireWake();}else $('journey-open').focus();}
+function appendJournal(entry){driveJournal=[entry,...driveJournal].slice(0,18);save.journal=driveJournal;}
+function serviceVehicle(full){if(journeyReturnState!=='menu'){notify('RETURN TO THE GARAGE BEFORE SERVICE');return;}const odometer=vehicle.odometerMiles,services=vehicle.serviceCount+1;if(full){Object.assign(vehicle,C.defaultVehicle(),{odometerMiles:odometer,serviceCount:services,lastServiceOdometer:odometer});}else{vehicle.fuel=100;vehicle.battery=Math.max(92,vehicle.battery);vehicle.engineTempC=Math.min(vehicle.engineTempC,28);vehicle.serviceCount=services;}appendJournal({id:'service-'+(++save.stats.sequence),kind:'service',endedAt:new Date().toISOString(),mode:'garage',world:'99½ MOTORWORKS',reason:full?'FULL SERVICE / BODY, FLUIDS, TIRES AND BRAKES':'REFUEL / BATTERY CHARGE',seconds:0,miles:odometer,roads:0,startRoad:'',endRoad:'',fuelUsed:0,bodyLoss:0,maxMph:0});persist();updateJourneyPanel();notify(full?'FULL SERVICE COMPLETE':'FUEL AND BATTERY READY');}
+function applyVehicleCondition(initial=false){const weakest=Math.min(vehicle.oil,vehicle.coolant,vehicle.battery),thermal=vehicle.engineTempC>105?C.clamp(1-(vehicle.engineTempC-105)/58,.48,1):1;sim.car.tireGrip=.62+.38*vehicle.tires/100;sim.car.brakeEffect=.42+.58*vehicle.brakes/100;sim.car.enginePower=(vehicle.fuel>.02&&vehicle.battery>2?1:0)*(.72+.28*weakest/100)*thermal;sim.car.fuelAvailable=vehicle.fuel>.02&&vehicle.battery>2;sim.car.engineTempC=vehicle.engineTempC;if(initial)sim.car.health=C.clamp(vehicle.body,0,100);}
+function beginTrip(mode){save.stats.sequence++;activeTrip={id:'drive-'+save.stats.sequence,mode,world:sim.world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',startedAt:new Date().toISOString(),startClock:clock,startSimTime:sim.time,startOdometer:vehicle.odometerMiles,startVehicle:vehicleSnapshot(),startRoad:'',roads:new Set(),maxMph:0};lastCarDistance=sim.car.distance;lastRoadName='';currentRoadName='';systemAlerts.clear();systemPersistClock=0;applyVehicleCondition(true);}
+function finishTrip(reason='RETURNED TO GARAGE'){if(!activeTrip){persist();return null;}vehicle.body=C.clamp(sim.car.health,0,100);const seconds=Math.max(0,sim.time-activeTrip.startSimTime),miles=Math.max(0,vehicle.odometerMiles-activeTrip.startOdometer),end=vehicleSnapshot(),entry={id:activeTrip.id,kind:'drive',endedAt:new Date().toISOString(),mode:activeTrip.mode,world:activeTrip.world,reason,seconds,miles,roads:activeTrip.roads.size,startRoad:activeTrip.startRoad,endRoad:currentRoadName||lastRoadName,fuelUsed:Math.max(0,activeTrip.startVehicle.fuel-end.fuel),bodyLoss:activeTrip.startVehicle.body-end.body,maxMph:activeTrip.maxMph};if(seconds>=4||miles>=.01){appendJournal(entry);save.stats.trips++;save.stats.totalMiles+=miles;}activeTrip=null;persist();return entry;}
+function recordRoadKnowledge(deltaM){if(!sim.world.northBerwick||deltaM<=0){if(!sim.world.northBerwick)currentRoadName='';return;}const near=C.nearestRoad(sim.world,sim.car.x,sim.car.z,34);if(!near||near.distance>(near.road.width||6)/2+7){currentRoadName='';return;}const name=String(near.road.name||'').trim();if(!name||name==='North Berwick road'){currentRoadName='';return;}currentRoadName=name;let entry=roadKnowledge[name],created=false;if(!entry){entry=roadKnowledge[name]={distanceM:0,entries:0,milestone:0,lastVisit:0};created=true;save.stats.roadsDiscovered=Object.keys(roadKnowledge).length;}if(name!==lastRoadName){entry.entries++;lastRoadName=name;if(activeTrip){activeTrip.roads.add(name);if(!activeTrip.startRoad)activeTrip.startRoad=name;}if(created)notify('ROAD REMEMBERED / '+name.toUpperCase(),2.6);}entry.distanceM+=deltaM;entry.lastVisit=Date.now();const score=roadMemoryScore(entry),milestone=[100,75,50,25].find(level=>score>=level)||0;if(milestone>entry.milestone){entry.milestone=milestone;if(milestone>=25)notify(name.toUpperCase()+' / ROAD MEMORY '+milestone+'%',2.2);}}
+function systemWarning(id,condition,text){if(condition&&!systemAlerts.has(id)){systemAlerts.add(id);notify(text,3.2);}}
+function tickLivingCar(dt,input){const c=sim.car,deltaM=Math.max(0,c.distance-lastCarDistance);lastCarDistance=c.distance;const speed=Math.abs(c.forwardSpeed),load=C.clamp(Math.max(0,input?.throttle||0)+(c.boosting?.55:0),0,1.6),ambient=settings.weather==='night'?7:settings.weather==='rain'?13:21;vehicle.odometerMiles+=deltaM/1609.344;vehicle.fuel=C.clamp(vehicle.fuel-deltaM*(.00012+load*.00009+(c.boosting?.00009:0)),0,100);vehicle.tires=C.clamp(vehicle.tires-deltaM*.000005-Math.abs(c.lateralSpeed)*dt*.00062-(input?.handbrake?speed*dt*.00038:0),0,100);vehicle.brakes=C.clamp(vehicle.brakes-(input?.brake||0)*speed*dt*.00016,0,100);vehicle.oil=C.clamp(vehicle.oil-deltaM*.0000017-Math.max(0,vehicle.engineTempC-112)*dt*.00006,0,100);vehicle.coolant=C.clamp(vehicle.coolant-deltaM*.0000011-Math.max(0,vehicle.engineTempC-110)*dt*.00010,0,100);const targetTemp=vehicle.fuel<=.02?ambient:78+load*19+(c.boosting?12:0)+(speed<2&&load>.35?8:0)+(vehicle.coolant<40?(40-vehicle.coolant)*.30:0);vehicle.engineTempC=C.approach(vehicle.engineTempC,targetTemp,targetTemp>vehicle.engineTempC?.035:.018,dt);const electrical=settings.weather==='rain'||settings.weather==='night'?1:.35,batteryTarget=vehicle.fuel>.02&&speed>3?92-electrical*5:78-electrical*13;vehicle.battery=C.clamp(C.approach(vehicle.battery,batteryTarget,speed>3?.020:.007,dt),0,100);if(vehicle.engineTempC>116){const loss=(vehicle.engineTempC-116)*.0035*dt;c.health=C.clamp(c.health-loss,0,100);}vehicle.body=C.clamp(c.health,0,100);applyVehicleCondition();recordRoadKnowledge(deltaM);if(activeTrip)activeTrip.maxMph=Math.max(activeTrip.maxMph,speed*2.236936);systemWarning('fuel-low',vehicle.fuel<=15&&vehicle.fuel>.02,'LOW FUEL / RETURN TO MOTORWORKS');systemWarning('fuel-empty',vehicle.fuel<=.02,'OUT OF FUEL / THE JETTA CAN ONLY COAST');systemWarning('temp',vehicle.engineTempC>=108,'COOLANT TEMP HIGH / REDUCE LOAD');systemWarning('tires',vehicle.tires<=30,'TIRE WEAR CRITICAL / GRIP REDUCED');systemWarning('brakes',vehicle.brakes<=30,'BRAKE WEAR CRITICAL / STOPPING DISTANCE INCREASED');systemWarning('battery',vehicle.battery<=18,'CHARGING SYSTEM LOW');systemPersistClock+=dt;if(systemPersistClock>=8){systemPersistClock=0;persist();}}
+
 function applySettings(){
  settings.autoThrottle=false;
  if(renderer.qualityHint!==settings.quality){renderer.qualityHint=settings.quality;renderer.resize();}
@@ -2110,12 +2178,12 @@ function applySettings(){
 }
 function showState(){
  $('intro').hidden=state!=='menu' && !(state==='pause'&&pausedFromMenu);
- $('hud').hidden=state==='menu'||state==='inspect'||state==='story'||(state==='pause'&&pausedFromMenu);
- $('inspection').hidden=state!=='inspect';$('story').hidden=state!=='story';
+ $('hud').hidden=state==='menu'||state==='inspect'||state==='story'||state==='journey'||(state==='pause'&&pausedFromMenu);
+ $('inspection').hidden=state!=='inspect';$('story').hidden=state!=='story';$('journey').hidden=state!=='journey';
  $('pause').hidden=state!=='pause';$('map-overlay').hidden=state!=='map';$('result').hidden=state!=='result';
  input.blocked=state!=='play';
  document.body.dataset.state=state;
- renderer.presentation=(state==='menu'||state==='inspect'||state==='story'||(state==='pause'&&pausedFromMenu))?'studio':'road';
+ renderer.presentation=(state==='menu'||state==='inspect'||state==='story'||(state==='journey'&&journeyReturnState!=='play')||(state==='pause'&&pausedFromMenu))?'studio':'road';
  if(state!=='play')$('radio').hidden=true;
 }
 async function tryFullscreen(){
@@ -2151,14 +2219,15 @@ async function loadNorthBerwick(){
  }
 }
 function start(mode=selected,chapterIndex=null){
+ if(activeTrip)finishTrip('RESTARTED');
  if(Number.isInteger(chapterIndex)){activateWorld(blackwaterWorld);if(!director.begin(chapterIndex,sim))return;mode=sim.mode;}
  else{director.stop();activateWorld(mode==='free'&&northBerwickWorld?northBerwickWorld:blackwaterWorld);sim.reset(mode);}
- selected=mode;state='play';accumulator=0;input.clear();cameraYaw=sim.car.yaw;cameraEye=null;cameraTarget=null;lastHealth=100;renderer.skids=[];renderer.particles=[];
+ selected=mode;state='play';accumulator=0;input.clear();cameraYaw=sim.car.yaw;cameraEye=null;cameraTarget=null;renderer.skids=[];renderer.particles=[];beginTrip(mode);lastHealth=sim.car.health;
  showState();audio.enabled=settings.sound;audio.start();tryFullscreen();acquireWake();
  notify(mode==='arena'?'REBORN ARMED / E TO PULSE':mode==='pursuit'?'THREE UNITS / BREAK THEIR LINE OF SIGHT':mode==='run'?'HARBOR RUN / 150 SECONDS':'WELCOME BACK, JUSTIN.',3);
  updateHUD();
 }
-function garage(){director.stop();activateWorld(blackwaterWorld);state='menu';input.clear();sim.reset('free');sim.car.x=300;cameraEye=null;cameraTarget=null;showState();updateStoryMenu();$('drive').focus();wakeLock?.release().catch(()=>{});wakeLock=null;}
+function garage(){finishTrip('RETURNED TO GARAGE');director.stop();activateWorld(blackwaterWorld);state='menu';input.clear();sim.reset('free');sim.car.x=300;applyVehicleCondition(true);cameraEye=null;cameraTarget=null;showState();updateStoryMenu();updateJourneyPanel();$('drive').focus();wakeLock?.release().catch(()=>{});wakeLock=null;}
 function pause(){
  if(state==='result'||state==='story')return;
  if(state==='pause')return resume();
@@ -2170,13 +2239,14 @@ function pause(){
 function resume(){if(state!=='pause')return;state=pausedFromMenu?'menu':'play';input.clear();accumulator=0;showState();if(focusBefore?.focus)focusBefore.focus();if(state==='play'){audio.start();acquireWake();}}
 function action(name){
  if(name==='sound'){settings.sound=!settings.sound;applySettings();persist();return;}
+ if(name==='journal'){if(state==='journey')closeJourney();else openJourney();return;}
  if(name==='map'){if(state==='map')closeMap();else openMap();return;}
  if(name==='pause'){if(state==='map'){closeMap();return;}if(state==='inspect'||state==='story'){garage();return;}pause();return;}
  if(state!=='play')return;
  if(name==='transform')sim.transform();else if(name==='pulse')sim.pulse();else if(name==='recover')sim.recover();else if(name==='camera'){cameraStyle=(cameraStyle+1)%3;cameraEye=null;cameraTarget=null;updateCameraChoice();notify(cameraNames[cameraStyle]);}
 }
 for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{selected=b.dataset.mode;for(const card of document.querySelectorAll('[data-mode]')){const active=card===b;card.classList.toggle('selected',active);card.setAttribute('aria-pressed',String(active));}});
-$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('minimap').addEventListener('wheel',mapWheel,{passive:false});$('expanded-map').addEventListener('wheel',mapWheel,{passive:false});$('map-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('map-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('minimap-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('minimap-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();garage();}else{btn.textContent='CONFIRM RESET?';}});
+$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('journey-open').addEventListener('click',openJourney);$('journey-hud').addEventListener('click',openJourney);$('journey-pause').addEventListener('click',openJourney);$('journey-close').addEventListener('click',closeJourney);$('journey-refuel').addEventListener('click',()=>serviceVehicle(false));$('journey-service').addEventListener('click',()=>serviceVehicle(true));$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('minimap').addEventListener('wheel',mapWheel,{passive:false});$('expanded-map').addEventListener('wheel',mapWheel,{passive:false});$('map-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('map-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('minimap-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('minimap-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;vehicle=save.vehicle=defaults.vehicle;roadKnowledge=save.roadKnowledge=defaults.roadKnowledge;driveJournal=save.journal=defaults.journal;save.stats=defaults.stats;activeTrip=null;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();updateJourneyPanel();garage();}else{btn.textContent='CONFIRM RESET?';}});
 $('inspect-car').addEventListener('click',()=>{state='inspect';input.clear();inspectAngle=-2.34;inspectHeight=.20;inspectDistance=5.8;inspectDragged=false;inspectTarget=[0,.84,0];inspectFocus='front';updateInspect();showState();});
 $('inspect-close').addEventListener('click',garage);
 for(const b of document.querySelectorAll('[data-inspect]'))b.addEventListener('click',()=>{for(let i=0;i<3&&sim.car.mode!==b.dataset.inspect;i++)C.changeMode(sim.car);updateInspect();});
@@ -2220,22 +2290,23 @@ renderer.canvas.addEventListener('wheel',e=>{if(state!=='inspect')return;e.preve
 $('transform-button').addEventListener('click',()=>action('transform'));$('pulse-button').addEventListener('click',()=>action('pulse'));for(const b of document.querySelectorAll('[data-action="camera"]'))b.addEventListener('click',()=>action('camera'));
 for(const b of document.querySelectorAll('.sound-toggle'))b.addEventListener('click',()=>action('sound'));
 for(const [id,key] of [['auto-setting','autoThrottle'],['sound-setting','sound'],['weather-setting','weather'],['quality-setting','quality'],['motion-setting','reducedMotion']])$(id).addEventListener('change',e=>{settings[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;applySettings();persist();});
-window.addEventListener('blur',()=>{if(state==='play')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pause();else if(!document.hidden&&state==='play')acquireWake();});
+window.addEventListener('pagehide',()=>{vehicle.body=C.clamp(sim.car.health,0,100);persist();});window.addEventListener('blur',()=>{if(state==='play')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pause();else if(!document.hidden&&state==='play')acquireWake();});
 window.addEventListener('resize',()=>{renderer.resize();cameraEye=null;cameraTarget=null;resizeFX();});
 window.addEventListener('orientationchange',()=>{input.clear();if(touch&&innerHeight>innerWidth&&state==='play')pause();setTimeout(()=>{renderer.resize();resizeFX();},180);});
 window.addEventListener('reborn-context-lost',()=>{if(state==='play')pause();notify('GRAPHICS INTERRUPTED / DRIVE PAUSED',10);});
 window.addEventListener('reborn-context-restored',()=>notify('GRAPHICS RESTORED / RESUME WHEN READY',5));
 window.addEventListener('reborn-context-failed',()=>{$('fatal-message').textContent='Graphics recovery failed. Reload to retry.';$('fatal').hidden=false;});
 document.addEventListener('keydown',e=>{
- if(e.key==='Tab'&&(state==='pause'||state==='result'||state==='story')){
-  const panel=state==='story'?$('story'):state==='pause'?$('pause'):$('result'),elements=Array.from(panel.querySelectorAll('button,input,select')).filter(el=>!el.hidden&&!el.disabled&&el.offsetParent!==null);
+ if(e.key==='Tab'&&(state==='pause'||state==='result'||state==='story'||state==='journey')){
+  const panel=state==='story'?$('story'):state==='pause'?$('pause'):state==='journey'?$('journey'):$('result'),elements=Array.from(panel.querySelectorAll('button,input,select')).filter(el=>!el.hidden&&!el.disabled&&el.offsetParent!==null);
   const first=elements[0],last=elements[elements.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
  }
  if(e.key==='Escape'){
-  if(state==='pause'||state==='result'||state==='story'){
+  if(state==='pause'||state==='result'||state==='story'||state==='journey'){
    e.preventDefault();
    e.stopPropagation();
    if(focusBefore?.focus)focusBefore.focus();
+   if(state==='journey'){closeJourney();return;}
    state=state==='story'?'menu':pausedFromMenu?'menu':'play';
    input.clear();accumulator=0;showState();
    if(state==='play'){audio.start();acquireWake();}
@@ -2244,14 +2315,14 @@ document.addEventListener('keydown',e=>{
 });
 function formatTime(s){return Math.floor(s/60)+':'+(s%60).toFixed(2).padStart(5,'0');}
 function finish(e){
- state='result';input.clear();showState();const success=e.success;
+ const success=e.success,trip=finishTrip(success?'DRIVE COMPLETE':'DRIVE INTERRUPTED');state='result';input.clear();showState();
  $('result-label').textContent=success?'DRIVE COMPLETE':'BACK TO THE WORKSHOP';$('result-title').textContent=success?(sim.mode==='arena'?'Yard cleared.':sim.mode==='pursuit'?'Ghosted.':'Still got it.'):'Not the end.';
  let text=success?(sim.mode==='arena'?'Three raiders down. The old Mk IV still has a few surprises.':sim.mode==='pursuit'?'Ten seconds out of sight. Blackwater lost your signal.':'Nine gates. The Jetta is home.'):(e.reason==='OUT OF TIME'?'The clock won this round. The road is still there.':'A rebuild, not a goodbye. Get back out there.');
  if(success&&sim.mode==='run'&&(!save.bestRun||sim.mission.time<save.bestRun)){save.bestRun=sim.mission.time;persist();text+=' New local best.';}
  const chapter=director.active?S.CHAPTERS[director.active.index]:null;
  $('result-next').hidden=true;$('result-echo').textContent=chapter?(success?S.MOTTO:'A rebuild. Not a goodbye. Legends Never Die.'):'Legends Never Die — they EVOLVE.';
  if(chapter){const advanced=director.finish(success,sim);if(advanced){persist();text=chapter.success;$('result-title').textContent=['First light.','A new memory.','Signal lost.','Legends Never Die.'][director.active.index];$('result-next').hidden=director.active.index>=3;$('result-label').textContent='CHAPTER '+chapter.number+' COMPLETE';}else if(!success)text='The road does not end here. The workshop is waiting. Rebuild, return, evolve.';}
- $('result-copy').textContent=text;updateStoryMenu();
+ if(trip&&trip.miles>=.01)text+=' '+trip.miles.toFixed(1)+' miles added to the drive journal.';$('result-copy').textContent=text;updateStoryMenu();updateJourneyPanel();
  $('result-stats').innerHTML='<div><b>'+formatTime(sim.mission.time)+'</b><span>ELAPSED</span></div><div><b>'+Math.round(sim.car.health)+'%</b><span>BODY</span></div><div><b>'+(sim.mode==='arena'?sim.kills:sim.nearMisses)+'</b><span>'+(sim.mode==='arena'?'RAIDERS DOWN':'NEAR MISSES')+'</span></div>';
  $('retry').focus();updateBest();
 }
@@ -2308,7 +2379,7 @@ function drawExpandedMap(){
  const p=(x,z)=>[w/2+(x-centerX)*scale,h/2-(z-centerZ)*scale];
  ctx.fillStyle='#10252b';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#628077';ctx.lineWidth=1;ctx.strokeRect(pad,pad,w-pad*2,h-pad*2);ctx.save();ctx.beginPath();ctx.rect(pad,pad,w-pad*2,h-pad*2);ctx.clip();
  for(const building of world.buildings){const [x,z]=p(building.x,building.z);ctx.save();ctx.translate(x,z);ctx.rotate(-(building.yaw||0));ctx.fillStyle=building.landmarkId?'#b88b61':'#425a55';ctx.fillRect(-Math.max(.7,building.w*scale)/2,-Math.max(.7,building.d*scale)/2,Math.max(.7,building.w*scale),Math.max(.7,building.d*scale));ctx.restore();}
- ctx.lineCap='round';for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);ctx.strokeStyle=road.surface==='gravel'?'#b4a075':'#9fc2b2';ctx.stroke();}
+ ctx.lineCap='round';for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);const memory=roadMemoryScore(roadKnowledge[road.name]||{});ctx.strokeStyle=road.surface==='gravel'?(memory?'#d2b77e':'#8e8269'):(memory>=75?'#c8ead9':memory?'#9fc2b2':'#6f8b80');ctx.stroke();}
  if(world.northBerwick){const seen=new Set();ctx.font='600 12px Arial';ctx.fillStyle='#d1e3cf';for(const label of world.roadLabels){if(!world.priorityRoadNames.includes(label.name)||seen.has(label.name))continue;seen.add(label.name);const [x,z]=p(label.x,label.z);ctx.fillText(label.name,x+5,z-5);}ctx.font='600 11px Arial';ctx.fillStyle='#efc887';for(const landmark of world.landmarks){const [x,z]=p(landmark.x,landmark.z);ctx.fillRect(x-2,z-2,4,4);ctx.fillText(landmark.name,x+5,z+4);}}
  const [x,z]=p(car.x,car.z);ctx.save();ctx.translate(x,z);ctx.rotate(-car.yaw);ctx.fillStyle='#f5dfaa';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(7,8);ctx.lineTo(0,4);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();ctx.restore();ctx.restore();
  ctx.fillStyle='#c2d9d0';ctx.font='600 16px Arial';ctx.fillText(world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',pad,28);ctx.font='12px Arial';ctx.fillStyle='#91aba3';ctx.fillText('SCROLL OR +/- TO ZOOM · M TO RETURN',pad,h-19);
@@ -2319,7 +2390,7 @@ function drawMap(){
  ctx.clearRect(0,0,s,s);ctx.save();ctx.beginPath();ctx.rect(0,0,s,s);ctx.clip();ctx.fillStyle='#183138';ctx.fillRect(0,0,s,s);
  const p=(x,z)=>[origin.x+(x-c.x)*scale,origin.z+(z-c.z)*scale];
  for(const b of sim.world.buildings){const [x,z]=p(b.x,b.z);ctx.save();ctx.translate(x,z);ctx.rotate(-(b.yaw||0));ctx.fillStyle=b.landmarkId?'#9b7254':'#38504b';ctx.fillRect(-b.w*scale/2,-b.d*scale/2,b.w*scale,b.d*scale);ctx.restore();}
- for(const r of sim.world.roads){ctx.beginPath();ctx.moveTo(...p(r.x1,r.z1));ctx.lineTo(...p(r.x2,r.z2));ctx.lineWidth=r.width*scale*.6;ctx.strokeStyle=r.surface==='gravel'?'#7e795d':'#7c9485';ctx.stroke();}
+ for(const r of sim.world.roads){ctx.beginPath();ctx.moveTo(...p(r.x1,r.z1));ctx.lineTo(...p(r.x2,r.z2));ctx.lineWidth=r.width*scale*.6;const memory=roadMemoryScore(roadKnowledge[r.name]||{});ctx.strokeStyle=r.surface==='gravel'?(memory?'#a89164':'#6f6955'):(memory>=75?'#b8ddca':memory?'#7c9485':'#526a63');ctx.stroke();}
  if(sim.world.northBerwick){const nearby=C.nearestRoad(sim.world,c.x,c.z,45);if(nearby){ctx.font='bold 11px Arial';ctx.fillStyle='#d8e9d4';ctx.fillText(nearby.road.name,10,20);}}
  if(sim.mode==='run'&&sim.mission.status==='active'){
   const remaining=C.ROUTE.slice(sim.mission.checkpoint);ctx.strokeStyle='#eac68b';ctx.lineWidth=3;ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(...p(c.x,c.z));for(const cp of remaining)ctx.lineTo(...p(cp.x,cp.z));ctx.stroke();ctx.setLineDash([]);
@@ -2333,11 +2404,11 @@ function updateHUD(){
  const c=sim.car,m=sim.mission,mp=C.MODES[c.mode],mph=Math.round(Math.hypot(c.vx,c.vz)*2.236936);
  $('speed').textContent=String(mph).padStart(3,'0');$('gear').innerHTML=(c.forwardSpeed<-.5?'R':mph<1?'N':String(Math.min(6,Math.floor(mph/22)+1)))+'<b>MPH</b>';
  $('drive-mode').querySelector('b').textContent=mp.name;$('drive-mode').querySelector('span').textContent=mp.drive;$('drive-mode').querySelector('i').style.background=mp.color;
- $('health-value').textContent=Math.round(c.health)+'%';$('energy-value').textContent=Math.round(c.energy);$('energy-bar').style.width=c.energy+'%';$('health-bar').style.width=c.health+'%';$('health-bar').style.background=c.health<30?'#df866b':'var(--accent)';
+ $('health-value').textContent=Math.round(c.health)+'%';$('energy-value').textContent=Math.round(c.energy);$('energy-bar').style.width=c.energy+'%';$('health-bar').style.width=c.health+'%';$('health-bar').style.background=c.health<30?'#df866b':'var(--accent)';$('fuel-value').textContent=Math.round(vehicle.fuel)+'%';$('fuel-bar').style.width=vehicle.fuel+'%';$('fuel-bar').style.background=vehicle.fuel<15?'#dc7767':vehicle.fuel<35?'#eebe7e':'#8bdec9';const tempF=Math.round(vehicle.engineTempC*9/5+32),tempPct=C.clamp((vehicle.engineTempC-35)/90*100,0,100);$('temp-value').textContent=tempF+'°F';$('temp-bar').style.width=tempPct+'%';$('temp-bar').style.background=vehicle.engineTempC>108?'#dc7767':vehicle.engineTempC>98?'#eebe7e':'#8bdec9';
  const currentRoad=sim.world.northBerwick?C.nearestRoad(sim.world,c.x,c.z,45):null;
  $('region').textContent=currentRoad?.road.name?.toUpperCase()||C.regionAt(c.x,c.z,sim.world);$('map-label').textContent=sim.world.northBerwick?'NORTH BERWICK':'BLACKWATER';$('surface').textContent=c.surface.toUpperCase();$('heat').textContent='◆'.repeat(sim.heat);$('heat').setAttribute('aria-label','Police heat '+sim.heat+' of 5');
  $('pulse-ready').textContent=c.mode!=='reborn'?'REBORN ONLY':c.pulseCooldown>0?'RECHARGE '+c.pulseCooldown.toFixed(1):c.energy<30?'NEEDS 30 ENERGY':'READY / 30 ENERGY';
- let title=sim.world.northBerwick?(currentRoad?.road.name||'North Berwick free drive.'):'A second life.',detail=sim.world.northBerwick?(currentRoad?('CURRENT ROAD / '+currentRoad.road.name+' · M FOR NAMED TOWN MAP'):touch?'Use the left stick like arrow keys: up drives, down reverses, left/right steer.':'Explore your hometown roads. Up/W accelerates; Down/S brakes or reverses.'):(touch?'Explore Blackwater. Tap TRANSFORM to change the car.':'Explore Blackwater. T changes the car. E fires the Reborn pulse.'),progress=0;
+ let title=sim.world.northBerwick?(currentRoad?.road.name||'North Berwick free drive.'):'A second life.',detail=sim.world.northBerwick?(currentRoad?('CURRENT ROAD / '+currentRoad.road.name+' · ROAD MEMORY '+roadMemoryScore(roadKnowledge[currentRoad.road.name]||{})+'% · J FOR JOURNAL'):touch?'Use the left stick like arrow keys: up drives, down reverses, left/right steer.':'Explore your hometown roads. Up/W accelerates; Down/S brakes or reverses.'):(touch?'Explore Blackwater. Tap TRANSFORM to change the car.':'Explore Blackwater. T changes the car. E fires the Reborn pulse.'),progress=0;
  if(sim.mode==='run'){title='Harbor run. '+formatTime(Math.max(0,m.limit-m.time));detail='GATE '+Math.min(m.checkpoint+1,9)+' / 9 — '+(C.ROUTE[m.checkpoint]?.name||'HOME');progress=m.checkpoint/C.ROUTE.length;}
  else if(sim.mode==='pursuit'){title=sim.escape>0?'Losing the signal…':'Lose the tail.';detail='Break line of sight for 10 seconds. '+(sim.escape>0?sim.escape.toFixed(1)+' / 10.0 s':'Three patrol units are looking for you.');progress=sim.escape/10;}
  else if(sim.mode==='arena'){title='Clear the yard.';detail=sim.kills+' / 3 raiders down. Pulse within 70 m; walls block it. Stay clear of warning beams.';progress=sim.kills/3;}
@@ -2368,7 +2439,7 @@ function frame(timestamp){
   if(state==='play'){
    accumulator=Math.min(accumulator+dt,.12);let steps=0;
    while(accumulator>=C.DT&&steps<15&&state==='play'){
-    lastInput=input.sample(sim.car,C.DT,settings.autoThrottle);if(state!=='play')break;sim.step(lastInput,C.DT,settings.weather==='rain');director.tick(C.DT,sim);accumulator-=C.DT;steps++;consumeEvents();
+    lastInput=input.sample(sim.car,C.DT,settings.autoThrottle);if(state!=='play')break;applyVehicleCondition();sim.step(lastInput,C.DT,settings.weather==='rain');tickLivingCar(C.DT,lastInput);director.tick(C.DT,sim);accumulator-=C.DT;steps++;consumeEvents();
    }
    if(sim.car.health<lastHealth-.5){audio.event('hit');$('damage-flash').style.opacity=settings.reducedMotion?'0':'.7';}
    else $('damage-flash').style.opacity='0';lastHealth=sim.car.health;
@@ -2381,9 +2452,9 @@ function frame(timestamp){
  requestAnimationFrame(frame);
 }
 // Read-only diagnostics are useful for regression tests and issue reports. No remote endpoint.
-window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,graphics:renderer.diagnostics?.()||{},story:director.snapshot(),inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
+window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,graphics:renderer.diagnostics?.()||{},story:director.snapshot(),livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
 $('input-caption').innerHTML=touch?'LANDSCAPE TOUCH · LEFT STICK = ARROW KEYS<br><span>Third person default · tap CAM for driver view.</span>':'WASD / ARROWS · CONTROLLER READY<br><span>Third person default · C changes camera.</span>';
-applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
+applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
 if(location.protocol.startsWith('http')&&window.isSecureContext&&'serviceWorker'in navigator&&!document.body.dataset.standalone){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
 })();
 

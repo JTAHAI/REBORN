@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-for (const value of ['0.6.0-pass009', 'RebornCore', 'RebornStory', 'RebornVehicle', 'RebornRenderer', 'createNorthBerwickWorld', 'data-mode="free"', 'data-mode="run"', 'data-mode="pursuit"', 'data-mode="arena"', 'expanded-map', 'MAP_ZOOM_MIN', 'mapWheel', 'minimap-zoom-in', 'KeyM:\'map\'', '995.reborn.save.v1', 'driver-eye-v3', 'facades-atlas.webp', 'TOWNPHOTO:22', 'geometries.gableRoof', 'heroBuilding', 'groundTile=640', 'hero_sunroof', 'Vacationland']) {
+for (const value of ['0.7.0-pass010', 'RebornCore', 'RebornStory', 'RebornVehicle', 'RebornRenderer', 'createNorthBerwickWorld', 'data-mode="free"', 'data-mode="run"', 'data-mode="pursuit"', 'data-mode="arena"', 'expanded-map', 'MAP_ZOOM_MIN', 'mapWheel', 'minimap-zoom-in', 'KeyM:\'map\'', '995.reborn.save.v1', 'driver-eye-v3', 'facades-atlas.webp', 'TOWNPHOTO:22', 'geometries.gableRoof', 'heroBuilding', 'groundTile=640', 'hero_sunroof', 'Vacationland', 'vehicle-condition-grid', 'road-memory-summary', 'drive-journal', "KeyJ:'journal'"]) {
   if (!html.includes(value)) throw new Error(`Smoke invariant absent: ${value}`);
 }
 if (html.includes('o.radius=20000')) throw new Error('North Berwick must not render unbounded context meshes.');
