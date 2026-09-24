@@ -14,19 +14,24 @@ npm start
 
 Open `http://127.0.0.1:4173`. Build 004 remains preserved unchanged in `legacy/`.
 
-## North Berwick Free Drive — Build 009
+## North Berwick Free Drive
 
 Free Drive uses a completely static North Berwick, Maine world assembled from public Maine E911 roads, Maine ESCB building footprints, and OpenStreetMap water/woods/farmland context. It performs no map or GIS API calls while playing.
 
-Build 009 adds a driver-eye reconstruction layer:
+The driver-eye reconstruction includes oriented footprints, procedural New England houses, current town-center corrections, hero landmarks, water/forest/farmland context, sidewalks, crosswalks, street lighting, utility infrastructure, a lower chase camera, and attributed open-reference facade materials.
 
-- oriented building footprints rather than axis-aligned blocks;
-- procedural New England houses with gable/hip roofs, windows, doors, porches, chimneys, foundations and roadside details;
-- authored hero structures for Town Office/Police, Cumberland Farms, Fire Department, Hurd Manor, Olde Woolen Mill, Allard's, Mary Hurd Academy, Hannaford, Pratt & Whitney, Noble High School and Riverside Farm Stand;
-- water, forest, farmland, sidewalks, crosswalks, street lighting, utility poles and wires;
-- a lower cinematic chase camera;
-- attributed open-reference facade textures for Town Hall, Hurd Manor and the Olde Woolen Mill.
+## North Berwick Grand Prix — curated alternate merge
 
-See [`assets/worlds/north-berwick/CREDITS.md`](assets/worlds/north-berwick/CREDITS.md), [`provenance.json`](assets/worlds/north-berwick/provenance.json), and [`facades-atlas.json`](assets/worlds/north-berwick/facades-atlas.json). Road alignment and building placement are data-derived; procedural architecture outside the specifically referenced hero landmarks remains an approximation.
+The uploaded alternate prototype was reviewed and its strongest reusable systems were integrated without replacing REBORN's identity or canonical Free Drive mode:
 
-Engineering and verification notes: [`docs/NORTH_BERWICK_REALISM_BUILD_009.md`](docs/NORTH_BERWICK_REALISM_BUILD_009.md).
+- visible road course and nine hometown landmark gates;
+- five local AI rivals and race-position HUD;
+- turn guidance, scoring, combos, drafting, overtakes, drift bonuses, boost pads and hazards;
+- Jetta tune/paint profiles and bot difficulty;
+- improved boot, fullscreen, installable PWA and offline cache.
+
+The alternate parody finale, talking-head spectators, experimental vehicles/hood and public networking controls were not exposed. Mobile driving remains keyboard-equivalent: up accelerates, down brakes/reverses, left/right steer, and auto-throttle defaults off.
+
+See [`docs/ALTERNATE_GRAND_PRIX_MERGE.md`](docs/ALTERNATE_GRAND_PRIX_MERGE.md) and [`docs/NORTH_BERWICK_REALISM_BUILD_009.md`](docs/NORTH_BERWICK_REALISM_BUILD_009.md).
+
+See [`assets/worlds/north-berwick/CREDITS.md`](assets/worlds/north-berwick/CREDITS.md), [`provenance.json`](assets/worlds/north-berwick/provenance.json), and [`facades-atlas.json`](assets/worlds/north-berwick/facades-atlas.json) for geographic and facade provenance. Road alignment and building placement are data-derived; unreferenced architecture remains an approximation pending owner-captured street-level video.

@@ -1,12 +1,12 @@
 {
   "name": "99-5-reborn",
-  "version": "0.6.0-north-berwick-p009",
+  "version": "0.10.0-reborn-gp024",
   "private": true,
-  "description": "99½ REBORN static WebGL2 driving game",
+  "description": "99½ REBORN static WebGL2 North Berwick driving game",
   "scripts": {
     "start": "node tools/serve.cjs",
     "build": "node tools/bundle.cjs",
-    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/world-rendering.cjs",
+    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/grand-prix-upgrades.cjs && node tests/world-rendering.cjs",
     "test:http": "node tests/http-smoke.cjs",
     "validate:assets": "node tools/assets/validate-vehicle.cjs"
   }
