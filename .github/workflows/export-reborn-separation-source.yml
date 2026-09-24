@@ -1,0 +1,30 @@
+name: Export REBORN separation source
+
+on:
+  push:
+    branches:
+      - chatgpt-reborn-separation-fix
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Export source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/reborn-source
+          mkdir -p /tmp/reborn-source
+          rsync -a --exclude='.git/' --exclude='release-packages/' ./ /tmp/reborn-source/
+          test -f /tmp/reborn-source/index.html
+          test -f /tmp/reborn-source/assets/worlds/north-berwick/world.json
+      - name: Upload source
+        uses: actions/upload-artifact@v4
+        with:
+          name: reborn-source-1abcbd6
+          path: /tmp/reborn-source/
+          if-no-files-found: error
+          retention-days: 1
