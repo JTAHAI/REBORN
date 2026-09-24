@@ -6,7 +6,7 @@ REBORN remains a distinct memorial driving game centered on one persistent Mk IV
 
 Persistent vehicle condition, condition-sensitive driving, named-road familiarity, a drive journal, and garage service/refueling.
 
-## Pass 2 — Diagnostics and hands-on garage
+## Pass 2 — Diagnostics and hands-on garage — complete
 
 Symptom-driven faults, inspection workflow, repair decisions, parts condition, roadside triage, and a garage history ledger.
 

@@ -48,3 +48,18 @@ Gameplay pass 1 of 8 turns the Jetta and North Berwick roads into persistent par
 - `J`, the HUD, the pause menu, and the main menu open the Jetta Status / Road Journal screen.
 
 See [`docs/LIVING_CAR_ROAD_MEMORY_PASS_010.md`](docs/LIVING_CAR_ROAD_MEMORY_PASS_010.md). The complete eight-pass sequence is tracked in [`docs/GAMEPLAY_ROADMAP.md`](docs/GAMEPLAY_ROADMAP.md).
+
+
+## Build 011 — Diagnostics and Hands-On Garage
+
+Gameplay pass 2 of 8 adds symptom-driven mechanical faults and a permanent repair history:
+
+- aging alternator, cooling, starter, clutch, wheel-bearing, alignment and brake-hydraulic components;
+- symptoms appear before the cause is known; targeted garage tests confirm faults;
+- component condition and temporary roadside fixes alter acceleration, grip, braking, steering pull, temperature and battery behavior;
+- roadside triage can buy a few miles without pretending the fault is repaired;
+- confirmed faults offer rebuild/preserve or replace/modern decisions;
+- rebuilds retain component originality while replacements restore maximum condition;
+- every diagnostic, roadside action, service and repair enters a permanent garage ledger.
+
+Pass 2 is complete. **6 gameplay passes remain.** See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).

@@ -15,4 +15,4 @@ const worldSource = path.join(root, 'assets', 'worlds', 'north-berwick');
 const worldOut = path.join(out, 'assets', 'worlds', 'north-berwick');
 fs.mkdirSync(worldOut, {recursive:true});
 for (const file of ['world.json', 'provenance.json', 'CREDITS.md', 'facades-atlas.webp', 'facades-atlas.json']) fs.copyFileSync(path.join(worldSource, file), path.join(worldOut, file));
-console.log('Static Build 010 written to dist/ with Living Car, Road Memory, licensed vehicle, North Berwick world data, and attributed facade atlas.');
+console.log('Static Build 011 written to dist/ with diagnostics, hands-on garage, Living Car, Road Memory, licensed vehicle, North Berwick world data, and attributed facade atlas.');
