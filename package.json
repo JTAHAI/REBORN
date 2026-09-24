@@ -1,12 +1,12 @@
 {
   "name": "99-5-reborn",
-  "version": "0.8.0-diagnostics-p011",
+  "version": "0.9.0-town-director-p012",
   "private": true,
   "description": "99\u00bd REBORN static WebGL2 living-car and hometown driving game",
   "scripts": {
     "start": "node tools/serve.cjs",
     "build": "node tools/bundle.cjs",
-    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs",
+    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs && node tests/town-director.cjs",
     "test:http": "node tests/http-smoke.cjs",
     "validate:assets": "node tools/assets/validate-vehicle.cjs"
   }

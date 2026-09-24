@@ -62,4 +62,14 @@ Gameplay pass 2 of 8 adds symptom-driven mechanical faults and a permanent repai
 - rebuilds retain component originality while replacements restore maximum condition;
 - every diagnostic, roadside action, service and repair enters a permanent garage ledger.
 
-Pass 2 is complete. **6 gameplay passes remain.** See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).
+Pass 2 is complete. See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).
+
+## Build 012 — Living Town Director
+
+Gameplay pass 3 adds 31 persistent incident definitions, fictional town schedules, bounded lane-following traffic, town trust and follow-up assistance. North Berwick Free Drive shows a clock; amber map dots mark incidents and amber road segments mark temporary reduced lanes. The opposite lane remains available.
+
+Stop near an incident and press **F**, or tap the contextual roadside button. Tab selects a choice, Enter confirms, and Escape returns to driving. Helping takes time and can consume battery, coolant or fuel; unsafe withdrawal calls assistance without a trust penalty. **E remains pulse**, M/minimap opens the paused map, and **J** opens diagnostics plus the Town Ledger. The clock pauses in all blocking menus and outside North Berwick Free Drive.
+
+The existing version-1 save migrates in place. No runtime service, account or map API is added. Generic town vehicles and fictional schedules are gameplay approximations, not current real operating hours. See [`docs/LIVING_TOWN_DIRECTOR_PASS_012.md`](docs/LIVING_TOWN_DIRECTOR_PASS_012.md).
+
+**5 gameplay passes remain.** Pass 4 has not been started.
