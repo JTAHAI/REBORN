@@ -73,3 +73,16 @@ Stop near an incident and press **F**, or tap the contextual roadside button. Ta
 The existing version-1 save migrates in place. No runtime service, account or map API is added. Generic town vehicles and fictional schedules are gameplay approximations, not current real operating hours. See [`docs/LIVING_TOWN_DIRECTOR_PASS_012.md`](docs/LIVING_TOWN_DIRECTOR_PASS_012.md).
 
 **5 gameplay passes remain.** Pass 4 has not been started.
+
+## Driver Experience — 0.9.1
+
+An interface polish release on Build 012, not another gameplay pass:
+
+- redesigned garage activity cards, clearer instruments and a four-tab Jetta hub;
+- searchable road/landmark pins, map dragging and pinch/scroll/keyboard zoom, My Car and Whole Town views;
+- independent minimap zoom and a pinned-place distance/bearing indicator (not turn-by-turn navigation);
+- persisted MPH/KM/H, full/minimal HUD, high contrast, control hints and effects-volume preferences;
+- keyboard-friendly dialogs, first-drive guidance, fullscreen and downloadable save backups;
+- compact landscape touch controls retaining the single manual-throttle joystick and portrait rotation guard.
+
+Run `npm test` for simulation, persistence and UX invariants; `npm run test:ux` runs isolated desktop/touch-emulated browser checks using the locally cached agent-browser CLI. See [`docs/DRIVER_EXPERIENCE_POLISH.md`](docs/DRIVER_EXPERIENCE_POLISH.md) for scope and validation limits.

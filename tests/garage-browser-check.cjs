@@ -16,7 +16,7 @@ assert.ok(args.length === 0 || (args.length === 2 && args[0] === '--action' && O
 const selectedAction = args.length ? actionIds[args[1]] : null;
 const npxCli = path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npx-cli.js');
 assert.ok(fs.existsSync(npxCli), 'Verification requires the installed Node/npm toolchain');
-const session = 'reborn-layout-' + process.pid;
+const session = 'reborn-layout-' + process.pid + '-' + Date.now();
 async function browser(...args) {
   const input = args[0] === 'eval' ? args[1] : null;
   if (input !== null) args = ['eval', '--stdin'];
@@ -41,6 +41,7 @@ async function browser(...args) {
   });
 }
 const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.css':'text/css','.glb':'model/gltf-binary'};
+let browserInitScript='';
 const server = http.createServer((request, response) => {
   let filename;
   try {
@@ -51,7 +52,7 @@ const server = http.createServer((request, response) => {
   fs.readFile(filename, (error, data) => {
     if (error) { response.writeHead(404); return response.end(); }
     response.writeHead(200, {'Content-Type':mime[path.extname(filename)] || 'application/octet-stream','Cache-Control':'no-store'});
-    response.end(data);
+    response.end(browserInitScript && filename===path.join(root,'index.html') ? data.toString('utf8').replace('<head>','<head><script>'+browserInitScript+'</script>') : data);
   });
 });
 const measure = `(() => {
@@ -102,10 +103,12 @@ async function run(action = selectedAction, compactSecondaryLabels = false) {
   }
   if(failure) { console.error(failure.message); process.exitCode=1; }
 }
-async function withBrowser(check) {
+async function withBrowser(check, {initScript='',viewport=null}={}) {
+  browserInitScript=initScript;
   let failure;
   try {
     await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+    if(viewport){await browser('open','about:blank');await browser('set','viewport','1366','900');await browser('set','viewport',...viewport.map(String));}
     await browser('open','http://127.0.0.1:'+server.address().port);
     await check(browser);
   } catch(error) {failure=error;}
