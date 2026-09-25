@@ -1,0 +1,13 @@
+{
+  "name": "reborn",
+  "account_id": "d0a0c98910106f0d2dee26cbd2aabc8a",
+  "compatibility_date": "2026-09-22",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [{"pattern": "reborn.tahai.net", "custom_domain": true}],
+  "assets": {
+    "directory": "./live-map-site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
