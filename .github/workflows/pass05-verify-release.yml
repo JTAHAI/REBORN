@@ -29,9 +29,9 @@ jobs:
           test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass04-weather-release | cut -f1)" = 'e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass05-drive-stories)"
           curl -fL --retry 4 --retry-delay 2 \
-            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-d948-81f5-a70e-54718ef991f9/raw?se=2026-09-26T17%3A02%3A56Z&sp=r&sv=2026-02-06&sr=b&scid=23b20357-a2a5-5cbe-90b7-e74f12613529&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T16%3A21%3A09Z&ske=2026-09-27T16%3A21%3A09Z&sks=b&skv=2026-02-06&sig=fuKnZGcEhk61diPeYawSxYqJ9aYyEcJQRxgdAzcwvww%3D' \
+            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-b908-81f5-a4b9-1e71e898a09f/raw?se=2026-09-26T17%3A12%3A30Z&sp=r&sv=2026-02-06&sr=b&scid=9f156d93-5707-5c94-807f-596085148a86&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T12%3A33%3A09Z&ske=2026-09-27T12%3A33%3A09Z&sks=b&skv=2026-02-06&sig=7VovtD9A20AXP2A4ZZC9Xghw2ER/D22hbS3sbrVDELs%3D' \
             -o /tmp/pass05.zip
-          echo '2a072d9d361629038cbebd0c4020b9cbc3a9dad0a7d9301aa13437575159f557  /tmp/pass05.zip' | sha256sum -c -
+          echo 'c148851bf6f167e551f4779594d79c91d331c8dade689c1031acc422cf87868d  /tmp/pass05.zip' | sha256sum -c -
           unzip -t /tmp/pass05.zip
           git switch -c chatgpt/reborn-pass05-drive-stories
           unzip -o /tmp/pass05.zip
