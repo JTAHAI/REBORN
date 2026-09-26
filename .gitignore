@@ -5,3 +5,8 @@ coverage/
 *.log
 .DS_Store
 Thumbs.db
+
+site-dist/
+standalone-dist/
+packages/
+__pycache__/

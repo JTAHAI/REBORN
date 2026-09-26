@@ -102,6 +102,19 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
 @media(max-height:420px) and (orientation:landscape){body.touch .map-wrap{top:124px;width:84px;padding:4px}body.touch .map-wrap>div:not(.minimap-zoom),body.touch .map-wrap .minimap-zoom{display:none}body.touch #ux-map-button{top:94px;left:20px}body.touch .mission{top:62px;padding:5px 8px}body.touch .mission h2{font-size:15px;margin:0}body.touch .touch-left{bottom:12px}body.touch .drive-stick{width:110px;height:110px}body.touch .drive-stick i{left:30px;top:30px}body.touch .drive-stick:before{left:54px;height:80px}body.touch .drive-stick:after{top:54px;width:80px}body.touch .touch.transform{left:148px;bottom:14px;min-width:94px}body.touch #ux-driving-tip{top:110px;line-height:1.5;width:240px}body.touch .instrument{top:68px;width:125px}body.touch .speedline>strong{font-size:37px}body.touch #town-interact{bottom:16px}}
 
 /* DRIVER_CSS_END */
+/* WEATHER_CSS_BEGIN */
+/* Pass 4: readable conditions, not a racing overlay. */
+#weather-chip{position:absolute;right:38px;top:114px;max-width:min(390px,38vw);min-height:40px;padding:10px 14px;background:#111d25ee;color:#dce6e8;border:1px solid #9cb7c94d;border-radius:8px;font-size:12px;letter-spacing:.2px;text-align:left;pointer-events:auto}
+#weather-chip[data-risk=high]{border-left:3px solid #f0bd83}#weather-chip[data-risk=caution]{border-left:3px solid #83b7d5}
+#weather-panel p{font-size:13px;line-height:1.55;color:#b9cbd1}#weather-panel .weather-headline{font-size:21px;color:#efdfba;margin:3px 0 10px}#weather-panel .weather-disclaimer{font-size:12px;border-top:1px solid #ffffff20;padding-top:12px;color:#a4b7bb}
+.weather-facts{display:grid;grid-template-columns:minmax(100px,1fr) minmax(130px,1.6fr);gap:8px 12px;font-size:13px;line-height:1.45;margin:15px 0}.weather-facts dt{color:#a4b7bb}.weather-facts dd{margin:0;color:#e4e7dc;overflow-wrap:anywhere}
+.weather-memory{list-style:none;padding:0;margin:0;max-height:220px;overflow:auto;font-size:12px;line-height:1.5}.weather-memory li{border-left:2px solid #789cb0;background:#ffffff05;padding:9px 11px;margin:6px 0;overflow-wrap:anywhere}.weather-memory li strong,.weather-memory li span{display:block}.weather-memory li span{color:#a9bfc4;font-size:12px;margin-top:3px}.weather-legend{color:#a8cbdc}
+#pause #town-weather-setting,#pause #town-season-setting{max-width:52%;font-size:12px}#pause .settings label small{display:block;font-size:11px;color:#a5b9bf;margin-top:3px}
+body.touch #weather-chip{top:51px;right:auto;left:50%;transform:translateX(-50%);max-width:42vw;min-height:30px;padding:6px 10px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:11px}body.touch #ux-navigation{top:86px}
+@media(max-height:570px) and (orientation:landscape){#weather-chip{top:105px;right:22px;min-height:32px;font-size:11px;padding:7px 10px}.weather-facts{font-size:12px}#weather-panel .weather-headline{font-size:18px}}
+@media(max-width:680px){.weather-facts{grid-template-columns:1fr 1.3fr}}
+
+/* WEATHER_CSS_END */
 </style>
 </head>
 <body data-standalone="true">
@@ -116,7 +129,7 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
 <section id="intro" class="screen" aria-label="Main menu" hidden>
  <header class="topline">
   <div class="brand"><b>99½</b><span>REBORN</span></div>
-  <div class="buildtag"><i></i> PLAYABLE PRE-ALPHA <span>/ 012 · DRIVER EXPERIENCE</span></div>
+  <div class="buildtag"><i></i> PLAYABLE PRE-ALPHA <span>/ 013 · DRIVER EXPERIENCE</span></div>
   <button class="quiet sound-toggle" aria-label="Toggle sound">SOUND ON <span>◖))</span></button>
  </header>
  <div class="intro-copy">
@@ -136,7 +149,7 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
   </div>
   <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="journey-open" class="quiet">JETTA STATUS / DIAGNOSTICS ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 012 <i>/</i> DRIVER EXPERIENCE</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 013 <i>/</i> DRIVER EXPERIENCE</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <output id="town-clock" aria-label="Fictional town time" hidden></output><button id="town-interact" class="secondary" type="button" hidden>F · ROADSIDE INTERACTION</button>
@@ -218,7 +231,7 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
   else root.RebornCore = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  const VERSION = '0.9.1-pass012';
+  const VERSION = '0.10.0-maine-weather-p013';
   const DT = 1 / 120;
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -416,7 +429,8 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
     dt = Math.min(dt, .05);
     const m=MODES[c.mode] || MODES.street;
     const surface=surfaceAt(world,c.x,c.z), asphalt=surface==='asphalt'||surface==='concrete';
-    const grip=(asphalt?m.grip:m.dirt)*(wet?(asphalt?.76:.86):1)*(surface==='grass'?.75:1)*clamp(Number(c.tireGrip)||1,.45,1);
+    const roadGrip=Number.isFinite(c.roadGrip)?clamp(c.roadGrip,.18,1):1,roadBrake=Number.isFinite(c.roadBrake)?clamp(c.roadBrake,.20,1):1,roadDrive=Number.isFinite(c.roadDrive)?clamp(c.roadDrive,.35,1):1;
+    const grip=(asphalt?m.grip:m.dirt)*(wet?(asphalt?.76:.86):1)*(surface==='grass'?.75:1)*clamp(Number(c.tireGrip)||1,.45,1)*roadGrip;
     c.surface=surface; c.stun=Math.max(0,c.stun-dt); c.damageCooldown=Math.max(0,c.damageCooldown-dt);c.pulseCooldown=Math.max(0,c.pulseCooldown-dt);
     c.modeBlend=approach(c.modeBlend,c.mode==='reborn'?1:0,4.5,dt); c.rallyBlend=approach(c.rallyBlend,c.mode==='rally'?1:0,4.5,dt);
     const disabled=c.health<=0 || c.stun>0;
@@ -429,8 +443,9 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
     const top=m.top*(asphalt?1:surface==='grass'?.57:.78);
     let acceleration=throttle*m.accel*(throttle*vf<0?1.4:clamp(1-Math.abs(vf)/(throttle<0?10:top),.09,1))*clamp(Number(c.enginePower)||1,.35,1);
     if (boost) acceleration+=9.5*clamp(1-Math.max(0,vf-top)/(top*.26),0,1);
-    const rolling=.48+(asphalt?0:1.35),drag=.0014*vf*vf;
-    let dragForce=Math.sign(vf)*(rolling+drag+braking*19*clamp(Number(c.brakeEffect)||1,.35,1)+(handbrake?3.2:0));
+    acceleration*=roadDrive;
+    const rolling=.48+(asphalt?0:1.35)+(Number.isFinite(c.roadRolling)?clamp(c.roadRolling,0,3):0),drag=.0014*vf*vf;
+    let dragForce=Math.sign(vf)*(rolling+drag+braking*19*clamp(Number(c.brakeEffect)||1,.35,1)*roadBrake+(handbrake?3.2:0));
     if (Math.abs(vf)<.05 && Math.abs(throttle)<.01) { vf=0;dragForce=0; }
     if (Math.abs(vf)>0 && Math.abs(dragForce*dt)>Math.abs(vf) && Math.abs(throttle)<.01) dragForce=vf/dt;
     const slipPenalty=asphalt?clamp(1-Math.abs(vs)/22,.45,1):.90;
@@ -441,7 +456,7 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
     let yawTarget=vf/2.51*Math.tan(c.steer*.52/(1+Math.abs(vf)/20))/(1+Math.abs(vf)/35);
     yawTarget=clamp(yawTarget,-(handbrake?2.15:1.28),handbrake?2.15:1.28);
     if(handbrake&&Math.abs(vf)>5) yawTarget*=1.35;
-    c.yawRate=approach(c.yawRate,yawTarget,m.response*(handbrake?.7:1),dt);
+    c.yawRate=approach(c.yawRate,yawTarget,m.response*(handbrake?.7:1)*(Number.isFinite(c.roadResponse)?clamp(c.roadResponse,.55,1):1),dt);
     c.yaw=angle(c.yaw+c.yawRate*dt);
     // World-space momentum persists through a turn instead of snapping to the nose.
     c.vx=fx*vf+rx*vs;c.vz=fz*vf+rz*vs;
@@ -597,6 +612,191 @@ body.touch .map-wrap{display:block!important;width:118px;top:153px;bottom:auto;l
     }
     snapshot(){const c=this.car;return {version:VERSION,mode:this.mode,time:this.time,car:{x:c.x,z:c.z,yaw:c.yaw,speed:Math.hypot(c.vx,c.vz),health:c.health,energy:c.energy,mode:c.mode,surface:c.surface},mission:{...this.mission},heat:this.heat,escape:this.escape,kills:this.kills,nearMisses:this.nearMisses};}
   }
+  /* MAINE_WEATHER_BEGIN */
+// Pure, deterministic game-weather model. Embedded inside RebornCore.
+// These are authored game coefficients, NOT surveyed conditions or forecasts.
+const MaineWeather = (() => {
+  'use strict';
+  const LIMITS = Object.freeze({zones:256, observations:160, history:32, catchUpSteps:288, props:144});
+  const min=Math.min,max=Math.max;
+  const STEP = 5; // town minutes; independent of display framerate
+  const SEASONS = Object.freeze(['spring','summer','autumn','winter']);
+  const KINDS = Object.freeze(['clear','overcast','rain','heavy-rain','fog','frost','snow','sleet','freezing-rain','thaw']);
+  const LABELS = Object.freeze({clear:'Clear skies',overcast:'Overcast',rain:'Rain','heavy-rain':'Heavy rain',fog:'River fog',frost:'Frost',snow:'Snow',sleet:'Sleet','freezing-rain':'Freezing rain',thaw:'Thaw'});
+  const HAZARDS = Object.freeze(['dry','wet','puddles','wet-leaves','snow','packed-snow','slush','black-ice','frost']);
+  const SURFACE_LABELS = Object.freeze({dry:'Dry pavement',wet:'Wet pavement',puddles:'Standing water','wet-leaves':'Wet leaves',snow:'Unplowed snow','packed-snow':'Packed snow',slush:'Slush','black-ice':'Black ice',frost:'Frost'});
+  const num=(v,d,a,b)=>typeof v==='number'&&Number.isFinite(v)?max(a,min(b,v)):d;
+  const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v;
+  const safeName=n=>typeof n==='string'&&n.length>0&&n.length<=90&&!['__proto__','prototype','constructor'].includes(n);
+  const own=(o,k)=>o&&Object.prototype.hasOwnProperty.call(o,k);
+  function hash(text){let h=2166136261;for(const c of String(text))h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0;}
+  function random(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=Math.imul(a^(a>>>15),a|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
+  const emptyZone=()=>({wet:0,puddle:0,snow:0,packed:0,slush:0,ice:0,leaves:0,salt:0,bank:0,lastService:-1});
+  const unitFields=['wet','puddle','snow','packed','slush','ice','leaves','salt','bank'];
+  function defaults(time=480,seed=995){return {schemaVersion:1,seed:Math.floor(num(seed,995,0,4294967295)),mode:'dynamic',seasonBase:'autumn',seasonEpochDay:0,cursor:Math.floor(num(time,480,0,1440001439)/STEP),frontKey:'',wipers:true,zones:{},observations:[],history:[],revision:0};}
+  function sanitize(raw,time=480,seed=995){
+    const d=defaults(time,seed),v=raw&&raw.schemaVersion===1?raw:{};
+    d.wipers=v.wipers!==false;
+    d.mode=v.mode==='dynamic'||KINDS.includes(v.mode)?v.mode:'dynamic';
+    d.seasonBase=SEASONS.includes(v.seasonBase)?v.seasonBase:'autumn';
+    d.seasonEpochDay=Math.floor(num(v.seasonEpochDay,0,0,Math.floor(time/1440)));
+    d.cursor=Math.floor(num(v.cursor,d.cursor,0,d.cursor));
+    d.frontKey=typeof v.frontKey==='string'?v.frontKey.slice(0,100):'';
+    d.revision=Math.floor(num(v.revision,0,0,1e9));
+    const zones=v.zones&&typeof v.zones==='object'&&!Array.isArray(v.zones)?v.zones:{};
+    for(const name of Object.keys(zones).slice(0,LIMITS.zones)){
+      if(!safeName(name))continue;const z=emptyZone(),q=zones[name]||{};
+      for(const f of unitFields)z[f]=num(q[f],0,0,1);
+      z.lastService=Math.floor(num(q.lastService,-1,-1,time));d.zones[name]=z;
+    }
+    const seen=new Set();for(const o of (Array.isArray(v.observations)?v.observations:[]).slice(0,LIMITS.observations)){
+      if(!o||!safeName(o.road)||seen.has(o.road)||!HAZARDS.includes(o.hazard))continue;seen.add(o.road);
+      const hazards=Array.isArray(o.hazards)?[...new Set(o.hazards.filter(h=>HAZARDS.includes(h)))].slice(0,9):[o.hazard];
+      d.observations.push({road:o.road,hazard:o.hazard,hazards,at:num(o.at,time,0,time),visits:Math.floor(num(o.visits,1,1,1e6))});
+    }
+    for(const h of (Array.isArray(v.history)?v.history:[]).slice(0,LIMITS.history)){
+      if(!h||!['front','treatment','selection'].includes(h.type)||typeof h.text!=='string')continue;
+      d.history.push({type:h.type,text:h.text.slice(0,180),at:num(h.at,time,0,time)});
+    }
+    return d;
+  }
+  function seasonAt(s,time){return SEASONS[(SEASONS.indexOf(s.seasonBase)+Math.floor(max(0,Math.floor(time/1440)-s.seasonEpochDay)/30))%4];}
+  function forecast(s,time){
+    time=num(time,480,0,1440001439);const season=seasonAt(s,time),minute=time%1440,front=Math.floor(time/180),rng=random(hash(`${s.seed}:front:${front}`));
+    const sunStart=season==='winter'?450:season==='summer'?300:360,dayLength=season==='winter'?540:season==='summer'?900:720;
+    const daylight=clamp(Math.sin(clamp((minute-sunStart)/dayLength)*Math.PI)*1.8);
+    const base={spring:9,summer:22,autumn:10,winter:-5}[season];
+    const daily=random(hash(`${s.seed}:temperature:${Math.floor(time/1440)}`))();
+    let temp=base+(daily-.5)*9+Math.sin((minute-540)/1440*Math.PI*2)*5;
+    const chance={spring:.42,summer:.25,autumn:.38,winter:.52}[season],roll=rng();let kind='clear';
+    if(roll<chance){kind=temp< -1?'snow':temp<1?(rng()<.55?'freezing-rain':'sleet'):rng()<.30?'heavy-rain':'rain';}
+    else if(roll<chance+.23)kind='overcast';
+    else if(daylight<.15&&temp<1&&season!=='summer')kind='frost';
+    else if(daylight<.30&&roll>.90)kind='fog';
+    const custom=s.mode!=='dynamic';if(custom)kind=s.mode;
+    // Presets are explicit fictional scenarios. Keep precipitation thermodynamically coherent.
+    if(kind==='snow')temp=min(temp,-3);if(kind==='sleet')temp=-.4;if(kind==='freezing-rain')temp=-1;
+    if(kind==='frost')temp=min(temp,-2);if(kind==='thaw')temp=max(temp,5);
+    if(kind==='rain'||kind==='heavy-rain')temp=max(temp,3);
+    const intensity=.45+rng()*.4,cloud=['clear','frost'].includes(kind)?.12:kind==='thaw'?.5:kind==='fog'?.85:.95;
+    const rain=kind==='heavy-rain'?1:kind==='rain'?intensity:0,snow=kind==='snow'?intensity:0,sleet=kind==='sleet'?.7:0,freezing=kind==='freezing-rain'?.65:0;
+    return {kind,season,tempC:temp,rain,snow,sleet,freezing,cloud,daylight,fog:kind==='fog'?.85:kind==='heavy-rain'?.22:kind==='snow'?.30:.02,
+      wind:kind==='heavy-rain'?.85:kind==='snow'?.55:.15+rng()*.25,frontKey:`${s.mode}:${season}:${front}`,custom};
+  }
+  // Road attributes are seeded heuristics. They are not claimed as local measurements.
+  function profile(name){const r=random(hash('road-weather:'+name)),primary=/^(main|elm|wells|somersworth)\b/i.test(name),secondary=/high|noble|market|school/i.test(name);return {shade:.15+r()*.7,drainage:.3+r()*.65,priority:primary?1:secondary?2:3,phase:Math.floor(r()*30)*5};}
+  function evolve(z,p,w,minutes,time){
+    const temp=w.tempC+(w.daylight>.2?(1-p.shade)*1.5:-p.shade*.8),effective=temp+z.salt*4;
+    const liquid=w.rain+w.freezing*.3+w.sleet*.18;
+    z.wet=clamp(z.wet+minutes*(liquid*.024-(.002+max(temp,0)*.00045)*(1-w.cloud*.5)));
+    z.puddle=clamp(z.puddle+minutes*(liquid*(1-p.drainage)*.016-p.drainage*.0035));
+    const melt=min(z.snow,max(effective,0)*minutes*.0025);
+    z.snow=clamp(z.snow+minutes*w.snow*.0035+minutes*w.sleet*.001-melt);
+    z.packed=clamp(z.packed+z.snow*minutes*.0016*(4-p.priority)-max(effective,0)*minutes*.0018);
+    z.slush=clamp(z.slush+melt*.7+minutes*w.sleet*.002-max(effective,1)*minutes*.0015);
+    if(melt>0)z.wet=clamp(z.wet+melt*.7);
+    if(effective<-.3){const freeze=min(z.wet,minutes*(-effective)*.004*(.35+p.shade));z.ice=clamp(z.ice+freeze+minutes*w.freezing*.009+z.slush*minutes*.003);z.wet=clamp(z.wet-freeze*.5);z.puddle=clamp(z.puddle-freeze);z.slush=clamp(z.slush-freeze*.2);}
+    else z.ice=clamp(z.ice-max(effective,.3)*minutes*.004);
+    if(w.kind==='frost'&&effective<0)z.ice=clamp(max(z.ice,min(.20,z.ice+minutes*.002*p.shade)));
+    z.leaves=clamp(z.leaves+minutes*(w.season==='autumn'?.0008+w.wind*.0018:-.002)-minutes*w.rain*.0015);
+    z.salt=clamp(z.salt-minutes*(.0005+w.rain*.002));z.bank=clamp(z.bank-max(temp,0)*minutes*.0007);
+    // Abstract municipal service: priority corridors first. Actual plow actors are visual representatives.
+    const interval=p.priority===1?60:p.priority===2?120:240,slot=Math.floor((time+p.phase)/interval)*interval-p.phase;
+    let treated=false;
+    if(slot>=0&&slot>z.lastService&&slot>time-minutes&&(z.snow>.055||z.ice>.06||z.slush>.08)&&temp<4){
+      z.lastService=slot;z.bank=clamp(z.bank+z.snow*.45);z.snow*=.30;z.packed*=.60;z.slush*=.42;z.salt=max(z.salt,.72);z.ice*=.65;treated=true;
+    }
+    for(const f of unitFields)z[f]=clamp(z[f]);return treated;
+  }
+  function condition(z,w,speed=0,tires=100){
+    z=z||emptyZone();speed=Math.abs(num(speed,0,0,120));tires=num(tires,100,0,100);
+    let hazard='dry',grip=1;
+    if(z.wet>.12){hazard='wet';grip=1-z.wet*.18;}
+    if(z.puddle>.2){hazard='puddles';grip=min(grip,.83);}
+    if(z.leaves>.22&&z.wet>.18){hazard='wet-leaves';grip=min(grip,.76-z.leaves*.18);}
+    if(z.snow>.07){hazard='snow';grip=min(grip,.7-z.snow*.3);}
+    if(z.slush>.10){hazard='slush';grip=min(grip,.65-z.slush*.18);}
+    if(z.packed>.13){hazard='packed-snow';grip=min(grip,.60-z.packed*.25);}
+    if(z.ice>.06){hazard=z.ice>.22?'black-ice':'frost';grip=min(grip,.62-z.ice*.40);}
+    const hydro=clamp((speed-14)/20)*clamp((z.puddle-.18)/.65)*(.45+(1-tires/100)*.55);
+    grip=clamp(grip*(1-hydro*.6),.18,1);
+    return {hazard,label:SURFACE_LABELS[hazard],grip,braking:clamp(grip,.20,1),drive:clamp(.5+grip*.5-hydro*.1,.35,1),response:clamp(.55+grip*.45,.55,1),rolling:z.snow*1.4+z.slush*.7,hydro,
+      wetness:z.wet,puddle:z.puddle,snowDepth:z.snow,packed:z.packed,slush:z.slush,ice:z.ice,salt:z.salt,bank:z.bank,leaves:z.leaves,
+      lastService:z.lastService,tempC:w.tempC,electrical:clamp(.25+(1-w.daylight)*.5+(w.rain+w.snow+w.freezing)*.2+max(0,4-w.tempC)*.012,0,1.5)};
+  }
+  class Director {
+    constructor(raw,world,town={day:0,minuteOfDay:480,seed:995}){
+      this.time=num(town.day,0,0,1e6)*1440+num(town.minuteOfDay,480,0,1439.999999);
+      this.state=sanitize(raw,this.time,town.seed);this.enabled=false;this.roads=[];this.grid=new Map();this.profiles=new Map();this.byName=new Map();this.cachedProps=[];this.propKey='';
+      const names=[...new Set((world.roads||[]).map(r=>r.name).filter(safeName))].sort().slice(0,LIMITS.zones);
+      const allowed=new Set(names);this.current=forecast(this.state,this.state.cursor*STEP);
+      for(const name of names){this.profiles.set(name,profile(name));this.byName.set(name,[]);if(!own(this.state.zones,name))this.state.zones[name]=this.primeZone(this.current);}
+      for(const n of Object.keys(this.state.zones))if(!allowed.has(n))delete this.state.zones[n];
+      this.state.observations=this.state.observations.filter(o=>allowed.has(o.road));
+      for(const r of world.roads||[]){if(!allowed.has(r.name)||![r.x1,r.x2,r.z1,r.z2,r.width].every(Number.isFinite))continue;
+        const len=Math.hypot(r.x2-r.x1,r.z2-r.z1);if(len<.5||len>2000)continue;
+        const q={...r,len,yaw:Math.atan2(r.x2-r.x1,r.z2-r.z1),index:this.roads.length};this.roads.push(q);this.byName.get(r.name).push(q);
+        for(let x=Math.floor((min(r.x1,r.x2)-25)/200);x<=Math.floor((max(r.x1,r.x2)+25)/200);x++)for(let z=Math.floor((min(r.z1,r.z2)-25)/200);z<=Math.floor((max(r.z1,r.z2)+25)/200);z++){
+          const key=x+','+z;if(!this.grid.has(key))this.grid.set(key,[]);this.grid.get(key).push(q);
+        }
+      }
+      this.advanceTo(this.time,true); // bounded old-save catch-up; not wall-clock/offline progress
+    }
+    primeZone(w){const z=emptyZone();z.wet=w.rain*.55;z.puddle=w.rain>.8?.20:0;z.snow=w.snow*.35;z.ice=w.freezing*.6+(w.kind==='frost'?.12:0);z.slush=w.sleet*.25;z.leaves=w.season==='autumn'?.30:0;return z;}
+    note(type,text,time){this.state.history.unshift({type,text,at:time});this.state.history.length=min(this.state.history.length,LIMITS.history);this.state.revision=(this.state.revision+1)%1e9;}
+    advanceTo(time,active=true){
+      if(!active||!Number.isFinite(time)||time<this.state.cursor*STEP)return;
+      this.time=num(time,this.time,0,1440001439);const target=Math.floor(this.time/STEP),s=this.state;if(target===s.cursor)return;
+      // A forged/very old cursor never causes an unbounded synchronous catch-up.
+      if(target-s.cursor>LIMITS.catchUpSteps){s.cursor=target-LIMITS.catchUpSteps;for(const z of Object.values(s.zones))z.lastService=min(z.lastService,s.cursor*STEP);}
+      while(s.cursor<target){s.cursor++;const t=s.cursor*STEP,w=forecast(s,t);let serviced=0;
+        for(const [name,p] of this.profiles)if(evolve(s.zones[name],p,w,STEP,t))serviced++;
+        if(w.frontKey!==s.frontKey){s.frontKey=w.frontKey;this.note('front',LABELS[w.kind]+' · '+w.season+' · '+Math.round(w.tempC)+'°C',t);}
+        if(serviced)this.note('treatment',`Public works treated ${serviced} road corridor${serviced===1?'':'s'}; priority routes first.`,t);
+        this.current=w;
+      }
+      this.current=forecast(s,s.cursor*STEP);
+    }
+    select(mode,season,time=this.time){
+      if(!(mode==='dynamic'||KINDS.includes(mode))||!SEASONS.includes(season))return false;
+      const s=this.state;s.mode=mode;s.seasonBase=season;s.seasonEpochDay=Math.floor(time/1440);s.cursor=Math.floor(time/STEP);this.time=time;this.current=forecast(s,s.cursor*STEP);s.frontKey=this.current.frontKey;
+      // An explicit scenario selection establishes its starting surface, not an invisible timer skip.
+      for(const name of this.profiles.keys())s.zones[name]=this.primeZone(this.current);
+      this.note('selection',`${mode==='dynamic'?'Seeded seasonal journey':LABELS[mode]+' scenario'} · ${season}`,time);this.propKey='';return true;
+    }
+    locate(x,z){let best=null,dist=Infinity;for(const r of this.grid.get(Math.floor(x/200)+','+Math.floor(z/200))||[]){const dx=r.x2-r.x1,dz=r.z2-r.z1,t=clamp(((x-r.x1)*dx+(z-r.z1)*dz)/(r.len*r.len)),d=Math.hypot(x-r.x1-t*dx,z-r.z1-t*dz);if(d<dist&&d<r.width/2+5){best={road:r,t,distance:d};dist=d;}}return best;}
+    sample(player,vehicle={tires:100}){const near=this.locate(player.x,player.z),z=near?this.state.zones[near.road.name]:this.primeZone(this.current);return {...condition(z,this.current,Math.hypot(player.vx||0,player.vz||0),vehicle.tires),road:near?.road.name||'',onRoad:!!near,priority:near?this.profiles.get(near.road.name).priority:0};}
+    observe(sample,distanceM){if(!sample.road||!Number.isFinite(distanceM)||distanceM<=0)return false;const s=this.state;let o=s.observations.find(o=>o.road===sample.road);
+      if(o&&this.time-o.at<15&&o.hazard===sample.hazard)return false;
+      if(o){o.hazard=sample.hazard;o.at=this.time;o.visits=min(1e6,o.visits+1);if(!o.hazards.includes(sample.hazard))o.hazards.push(sample.hazard);s.observations=s.observations.filter(x=>x!==o);}
+      else o={road:sample.road,hazard:sample.hazard,hazards:[sample.hazard],at:this.time,visits:1};
+      s.observations.unshift(o);s.observations.length=min(LIMITS.observations,s.observations.length);return true;
+    }
+    context(){const key=this.state.cursor+':'+this.state.revision;if(this.contextKey===key)return this.cachedContext;this.contextKey=key;let puddle=0,snow=0,ice=0;const zones=Object.values(this.state.zones);for(const z of zones){puddle=max(puddle,z.puddle);snow=max(snow,z.snow);ice=max(ice,z.ice);}const w=this.current;
+      return this.cachedContext={...w,standingWater:puddle,snowCover:snow,iceCover:ice,trafficSpeed:clamp(1-w.fog*.32-w.snow*.25-w.rain*.16-ice*.25,.40,1),needsPlow:snow>.06||ice>.12||w.snow>.1};
+    }
+    scene(sample){const w=this.current;return {...w,wetness:sample?.wetness||0,groundSnow:clamp((sample?.snowDepth||0)+(sample?.packed||0)+(sample?.bank||0)*.4),visibilityM:Math.round(3/(.0017+w.fog*.026+w.snow*.004))};}
+    // Cheap nearby road dressing; cached by movement cell + 5-minute weather tick.
+    props(player){if(!this.enabled)return [];const key=[Math.floor(player.x/30),Math.floor(player.z/30),this.state.cursor,this.state.revision].join(':');if(key===this.propKey)return this.cachedProps;this.propKey=key;
+      const set=new Set();for(let x=Math.floor(player.x/200)-1;x<=Math.floor(player.x/200)+1;x++)for(let z=Math.floor(player.z/200)-1;z<=Math.floor(player.z/200)+1;z++)for(const r of this.grid.get(x+','+z)||[])set.add(r);
+      const out=[];const add=(r,t,off,y,w,h,d,color,material=0,rough=.9)=>{if(out.length>=LIMITS.props)return;const dx=(r.x2-r.x1)/r.len,dz=(r.z2-r.z1)/r.len;out.push({mesh:'box',x:r.x1+dx*r.len*t+dz*off,z:r.z1+dz*r.len*t-dx*off,y,w,h,d,color,yaw:r.yaw,material,rough});};
+      const roads=[...set].sort((a,b)=>Math.hypot((a.x1+a.x2)/2-player.x,(a.z1+a.z2)/2-player.z)-Math.hypot((b.x1+b.x2)/2-player.x,(b.z1+b.z2)/2-player.z)).slice(0,50);
+      for(const r of roads){const z=this.state.zones[r.name];for(let m=6;m<r.len;m+=14){const t=m/r.len,x=r.x1+(r.x2-r.x1)*t,zz=r.z1+(r.z2-r.z1)*t;if(Math.hypot(x-player.x,zz-player.z)>155)continue;
+          if(z.snow>.05||z.bank>.04){const bank=max(z.snow,z.bank);for(const side of [-1,1])add(r,t,side*(r.width/2+.28),.22+bank*.12,.72,.1+bank*.22,10,'#d8e1e4');}
+          if(z.snow>.10)add(r,t,0,.22,r.width*.85,.018,11,z.salt>.25?'#b9c6ca':'#d7e0e4');
+          else if(z.packed>.15||z.slush>.10)add(r,t,r.width*.19,.225,r.width*.27,.02,9,z.packed>.15?'#bac6cd':'#828f93');
+          if(z.ice>.13)add(r,t,-r.width*.14,.242,r.width*.45,.013,7,'#8ba3ad',5,.09);
+          else if(z.puddle>.20)add(r,t,-r.width*.28,.238,r.width*.22,.012,4,'#354b54',5,.09);
+          if(z.leaves>.20&&z.snow<.10)for(const side of [-1,1])add(r,t,side*r.width*.38,.243,.32+z.leaves,.013,2.2,z.wet>.15?'#705641':'#b38d58');
+        }if(out.length>=LIMITS.props)break;
+      }this.cachedProps=out;return out;
+    }
+  }
+  return Object.freeze({LIMITS,STEP,SEASONS,KINDS,LABELS,HAZARDS,SURFACE_LABELS,defaults,sanitize,seasonAt,forecast,profile,evolve,condition,Director,hash,random,emptyZone});
+})();
+
+  /* MAINE_WEATHER_END */
+
   /* TOWN_DIRECTOR_BEGIN */
 // Embedded inside RebornCore by tools/sync-town.cjs. No runtime dependency.
 const Town = (() => {
@@ -649,7 +849,7 @@ const Town = (() => {
   const definitions=new Map(catalog.map(d=>[d.type,d]));
   const STATES=['scheduled','active','acknowledged','assistance-called','player-helping','temporarily-stabilized'];
   const FINAL=['resolved','failed','expired-with-consequence'];
-  const ACTORS=['commuter','school-bus','delivery','public-works','emergency','late-local'];
+  const ACTORS=['commuter','school-bus','delivery','public-works','emergency','late-local','snowplow'];
   const ACTIONS={help:'Stop and help',call:'Call for assistance',warn:'Warn or direct traffic',detour:'Take a detour',continue:'Continue driving',unsafe:'Decline / abandon: Jetta is unsafe',accept:'Accept reserve supplies'};
   const defaults=()=>({schemaVersion:1,seed:995,day:0,minuteOfDay:480,timeScale:1,trust:50,lastSlot:-1,lastActorSlot:-1,revision:0,activeEvents:[],resolvedEvents:[],consequences:[],closures:[],actors:[],history:[],stats:{helped:0,called:0,ignored:0,failed:0,assistance:0}});
   const position=p=>p&&['x','z','t','yaw'].every(k=>typeof p[k]==='number'&&Number.isFinite(p[k]))&&Math.abs(p.x)<1e6&&Math.abs(p.z)<1e6&&p.t>=0&&p.t<=1&&typeof p.roadId==='string'?{x:p.x,z:p.z,t:p.t,yaw:num(p.yaw,0,-Math.PI,Math.PI),roadId:str(p.roadId,140),road:str(p.road,90),side:p.side===-1?-1:1,lane:!!p.lane}:null;
@@ -670,7 +870,7 @@ const Town = (() => {
     for(const k of Object.keys(s.stats))s.stats[k]=Math.floor(num(v.stats?.[k],0,0,1e9));
     return s;
   }
-  function eligible(d,s,weather){const b=band(s.minuteOfDay),schedule=d.schedule;return (d.condition==='any'||weather==='rain')&&(d.cost!=='reward'||s.trust>=60&&s.consequences.some(c=>c.kind==='support'&&c.until>now(s)))&&(schedule==='all'||schedule==='day'&&['Daytime','School Arrival','School Dismissal'].includes(b)||schedule==='morning'&&['Early Morning','Morning Commute'].includes(b)||schedule==='commute'&&b.includes('Commute')||schedule==='evening'&&['Evening','Late Night'].includes(b)||schedule==='edges'&&['Early Morning','Evening','Late Night'].includes(b)||schedule==='arrival'&&b==='School Arrival'||schedule==='dismissal'&&b==='School Dismissal');}
+  function eligible(d,s,weather){const w=weather&&typeof weather==='object'?weather:null;if(w){if(d.type==='flooded-shoulder'&&w.standingWater<.18)return false;if(d.type==='plow-staging'&&!w.needsPlow)return false;}const wet=w?(w.rain>.15||w.freezing>.1||w.wind>.55||w.snow>.1):weather==='rain';const b=band(s.minuteOfDay),schedule=d.schedule;return (d.condition==='any'||wet)&&(d.cost!=='reward'||s.trust>=60&&s.consequences.some(c=>c.kind==='support'&&c.until>now(s)))&&(schedule==='all'||schedule==='day'&&['Daytime','School Arrival','School Dismissal'].includes(b)||schedule==='morning'&&['Early Morning','Morning Commute'].includes(b)||schedule==='commute'&&b.includes('Commute')||schedule==='evening'&&['Evening','Late Night'].includes(b)||schedule==='edges'&&['Early Morning','Evening','Late Night'].includes(b)||schedule==='arrival'&&b==='School Arrival'||schedule==='dismissal'&&b==='School Dismissal');}
   const roadID=r=>`${r.name}:${r.x1.toFixed(2)},${r.z1.toFixed(2)}:${r.x2.toFixed(2)},${r.z2.toFixed(2)}`;
   class Grid{
     constructor(size=100){this.size=size;this.cells=new Map();}
@@ -714,7 +914,7 @@ const Town = (() => {
     syncClosures(){this.state.closures=this.state.activeEvents.filter(e=>definitions.get(e.type).closure&&e.expires>now(this.state)).map(e=>({id:e.id,roadId:e.location.roadId,until:e.expires,widthFactor:.55}));}
     resolve(e,state,trust=0){if(!this.transition(e,state))return false;const s=this.state;if(s.resolvedEvents.some(q=>q.id===e.id))return false;s.trust=clamp(s.trust+trust,0,100);s.resolvedEvents.unshift({id:e.id,type:e.type,state,at:now(s),choice:e.choice,road:e.location.road});s.resolvedEvents.length=Math.min(256,s.resolvedEvents.length);s.activeEvents=s.activeEvents.filter(q=>q.id!==e.id);if(state==='failed')s.stats.failed++;if(state==='expired-with-consequence')s.stats.ignored++;const kind=state==='resolved'&&trust>0?'support':state==='resolved'?'assisted':'caution';s.consequences.unshift({id:e.id,kind,until:now(s)+(kind==='support'?1440:180),road:e.location.road});s.consequences=s.consequences.slice(0,48);this.syncClosures();this.note(e,`${state}: ${e.choice||'timed out'}. ${kind==='caution'?'Caution remains in the town ledger.':kind==='support'?'Community support may become available.':'Response recorded.'}`);return true;}
     generate(player,weather){const s=this.state,slot=Math.floor(now(s)/90);if(slot<=s.lastSlot)return;s.lastSlot=slot;const defs=catalog.filter(d=>eligible(d,s,weather));if(!defs.length)return;const r=random(hash(`${s.seed}:${slot}:${Math.floor(s.trust/10)}`));for(let k=0;k<3&&s.activeEvents.length<6;k++){const d=defs[Math.floor(r()*defs.length)],id=`t${s.seed}-${slot}-${k}-${d.type}`;if(s.activeEvents.some(e=>e.id===id)||s.resolvedEvents.some(e=>e.id===id))continue;const location=this.network.placement(d,hash(id),player,s.activeEvents,s.closures);if(!location)continue;const e={id,type:d.type,state:'scheduled',location,created:now(s),expires:now(s)+d.duration,actionAt:0,choice:'',impact:false};this.transition(e,'active');s.activeEvents.push(e);this.note(e,'Roadside incident active.');}this.syncClosures();}
-    scheduleActors(player){const s=this.state,slot=Math.floor(now(s)/30);if(slot<=s.lastActorSlot)return;s.lastActorSlot=slot;const b=band(s.minuteOfDay),kinds=b.includes('School')?['school-bus','commuter']:b.includes('Commute')?['commuter','commuter','delivery']:b==='Late Night'?['late-local']:b==='Early Morning'?['public-works','delivery']:['delivery','commuter','public-works'];if(s.activeEvents.some(e=>definitions.get(e.type).visual==='emergency'||e.state==='assistance-called'))kinds.push('emergency');const r=random(hash(`${s.seed}:actors:${slot}`));for(let k=0;k<kinds.length&&s.actors.length<12;k++){const pool=this.network.pools[kinds[k]==='school-bus'?'school':'local'];for(let tries=0;tries<24&&pool.length;tries++){const id=pool[Math.floor(r()*pool.length)],side=r()>.5?1:-1,p=this.network.point(id,side===1?.12:.88,side,true);if(s.closures.some(c=>c.roadId===id)||!this.network.valid(p,player,s.actors.map(a=>a.location).concat(s.activeEvents.map(e=>e.location)),80))continue;const route=this.network.route(id,side,hash(`${slot}:${k}`));s.actors.push({id:`a${s.seed}-${slot}-${k}`,kind:kinds[k],location:p,route,index:0,origin:route[0],destination:route.at(-1),expires:now(s)+60,speed:0});break;}}}
+    scheduleActors(player,weather){const s=this.state,slot=Math.floor(now(s)/30);if(slot<=s.lastActorSlot)return;s.lastActorSlot=slot;const b=band(s.minuteOfDay),kinds=b.includes('School')?['school-bus','commuter']:b.includes('Commute')?['commuter','commuter','delivery']:b==='Late Night'?['late-local']:b==='Early Morning'?['public-works','delivery']:['delivery','commuter','public-works'];if(weather?.needsPlow){const wi=kinds.indexOf('public-works');if(wi>=0)kinds[wi]='snowplow';else kinds.push('snowplow');}if(s.activeEvents.some(e=>definitions.get(e.type).visual==='emergency'||e.state==='assistance-called'))kinds.push('emergency');const r=random(hash(`${s.seed}:actors:${slot}`));for(let k=0;k<kinds.length&&s.actors.length<12;k++){const pool=this.network.pools[kinds[k]==='school-bus'?'school':'local'];for(let tries=0;tries<24&&pool.length;tries++){const id=pool[Math.floor(r()*pool.length)],side=r()>.5?1:-1,p=this.network.point(id,side===1?.12:.88,side,true);if(s.closures.some(c=>c.roadId===id)||!this.network.valid(p,player,s.actors.map(a=>a.location).concat(s.activeEvents.map(e=>e.location)),80))continue;const route=this.network.route(id,side,hash(`${slot}:${k}`));s.actors.push({id:`a${s.seed}-${slot}-${k}`,kind:kinds[k],location:p,route,index:0,origin:route[0],destination:route.at(-1),expires:now(s)+60,speed:0});break;}}}
     interact(id,choice,vehicle,player){const s=this.state,e=s.activeEvents.find(e=>e.id===id);if(!this.enabled||!e||!player||distance(player,e.location)>22||Math.hypot(player.vx||0,player.vz||0)>1.5)return {ok:false,reason:'Stop safely within 22 m of the incident.'};const option=choices(e,vehicle).find(c=>c.id===choice);if(!option||option.disabled)return {ok:false,reason:'This action is unavailable or the Jetta is unsafe.'};if(e.state==='active')this.transition(e,'acknowledged');
       if(choice==='continue'||choice==='detour'){if(e.state==='player-helping'){e.choice=choice;this.resolve(e,'failed',-1);}else{e.choice=choice;this.note(e,choice==='detour'?'Driver chose another route; incident remains.':'Driver continued; incident remains.');}return {ok:true};}
       e.choice=choice;
@@ -732,9 +932,9 @@ const Town = (() => {
           if(e.actionAt&&e.actionAt<=now(s)&&['player-helping','assistance-called','temporarily-stabilized'].includes(e.state)){if(e.state==='player-helping')s.stats.helped++;this.resolve(e,'resolved',e.choice==='unsafe'?0:e.state==='player-helping'?2:1);continue;}
           if(e.expires<=now(s)){this.resolve(e,['assistance-called','temporarily-stabilized'].includes(e.state)?'resolved':e.state==='player-helping'?'failed':'expired-with-consequence',e.state==='player-helping'?-1:0);continue;}
           if(!e.impact&&definitions.get(e.type).closure&&distance(e.location,player)<3&&Math.hypot(player.vx||0,player.vz||0)>5){e.impact=true;s.trust=clamp(s.trust-2,0,100);vehicle.tires=clamp(vehicle.tires-2,0,100);const f=vehicle.faults?.alignment;if(f){f.active=true;f.severity=clamp(f.severity+.08,0,1);f.occurrences=clamp(f.occurrences+1,0,1e6);}this.note(e,'Road-edge hazard struck: tires/alignment affected; trust -2.');}}
-        s.consequences=s.consequences.filter(c=>c.until>now(s));this.generate(player,weather);this.scheduleActors(player);this.syncClosures();
+        s.consequences=s.consequences.filter(c=>c.until>now(s));this.generate(player,weather);this.scheduleActors(player,weather);this.syncClosures();
       }
-      if(this.actorAccumulator>=.1){const delta=this.actorAccumulator;this.actorAccumulator=0;for(const a of s.actors){const p=a.location,previousIndex=a.index,r=this.network.roads.get(p.roadId);if(!r){a.expires=0;continue;}let speed=a.kind==='school-bus'?5:a.kind==='public-works'?4:8;const next=this.network.point(p.roadId,clamp(p.t+p.side*10/r.len,.001,.999),p.side,true);if(s.closures.some(c=>c.roadId===p.roadId)||distance(next,player)<9||s.actors.some(b=>b!==a&&distance(next,b.location)<8)||!this.network.valid(next,null))speed=0;a.speed=speed;let t=p.t+speed*delta/r.len*p.side;if(t>.999||t<.001){a.index++;const id=a.route[a.index];if(!id){a.expires=0;continue;}a.location=this.network.point(id,p.side===1?.001:.999,p.side,true);}else a.location=this.network.point(p.roadId,t,p.side,true);
+      if(this.actorAccumulator>=.1){const delta=this.actorAccumulator;this.actorAccumulator=0;for(const a of s.actors){const p=a.location,previousIndex=a.index,r=this.network.roads.get(p.roadId);if(!r){a.expires=0;continue;}let speed=a.kind==='school-bus'?5:['public-works','snowplow'].includes(a.kind)?4:8;speed*=num(weather?.trafficSpeed,1,.4,1);const next=this.network.point(p.roadId,clamp(p.t+p.side*10/r.len,.001,.999),p.side,true);if(s.closures.some(c=>c.roadId===p.roadId)||distance(next,player)<9||s.actors.some(b=>b!==a&&distance(next,b.location)<8)||!this.network.valid(next,null))speed=0;a.speed=speed;let t=p.t+speed*delta/r.len*p.side;if(t>.999||t<.001){a.index++;const id=a.route[a.index];if(!id){a.expires=0;continue;}a.location=this.network.point(id,p.side===1?.001:.999,p.side,true);}else a.location=this.network.point(p.roadId,t,p.side,true);
           if(s.closures.some(c=>c.roadId===a.location.roadId)||!this.network.valid(a.location,null)||s.actors.some(b=>b!==a&&distance(a.location,b.location)<4)){a.location=p;a.index=previousIndex;a.speed=0;}
           if(!this.contactCooldown&&distance(a.location,player)<2.6&&Math.hypot(player.vx||0,player.vz||0)>3){player.vx*=.4;player.vz*=.4;player.health=clamp(player.health-1,0,100);vehicle.body=player.health;this.contactCooldown=2;}}
         s.actors=s.actors.filter(a=>a.expires>now(s));}
@@ -745,7 +945,7 @@ const Town = (() => {
     // town incident can disconnect the road graph or trap the player.
     constrainInput(input,player){if(!this.enabled)return input;const close=this.state.activeEvents.find(e=>definitions.get(e.type).closure&&distance(e.location,player)<13);return close?{...input,throttle:Math.min(input.throttle||0,.35)}:input;}
     props(player,time=0){if(!this.enabled)return[];const out=[];const add=(mesh,p,x,y,z,w,h,d,color)=>{const co=Math.cos(p.yaw),si=Math.sin(p.yaw);out.push({mesh,x:p.x+co*x+si*z,y,z:p.z-si*x+co*z,w,h,d,color,yaw:p.yaw});};
-      const car=(p,kind)=>{const bus=kind==='bus'||kind==='school-bus',van=['van','delivery','works','public-works','utility','emergency'].includes(kind),color=bus?'#d5ac49':kind==='emergency'?'#c7d5d9':van?'#869d9c':'#6f8295';add('box',p,0,.8,0,1.8,.8,bus?6:van?4.5:3.8,color);add('box',p,0,van?1.65:1.3,.3,1.55,van?1.2:.6,bus?4.7:van?3:1.9,'#314754');for(const x of [-.9,.9])for(const z of [-1.25,1.25])add('box',p,x,.42,z,.26,.65,.7,'#252b2c');for(const x of [-.65,.65])add('box',p,x,1.05,1.95,.25,.18,.12,Math.floor(time*2)%2?'#efad55':'#614c36');if(kind==='emergency'||kind==='works'||kind==='utility'||kind==='public-works')add('box',p,0,2.35,0,.9,.16,.25,Math.floor(time*3)%2?'#ef8b52':'#729fc8');};
+      const car=(p,kind)=>{const bus=kind==='bus'||kind==='school-bus',van=['van','delivery','works','public-works','snowplow','utility','emergency'].includes(kind),color=bus?'#d5ac49':kind==='emergency'?'#c7d5d9':van?'#869d9c':'#6f8295';add('box',p,0,.8,0,1.8,.8,bus?6:van?4.5:3.8,color);add('box',p,0,van?1.65:1.3,.3,1.55,van?1.2:.6,bus?4.7:van?3:1.9,'#314754');for(const x of [-.9,.9])for(const z of [-1.25,1.25])add('box',p,x,.42,z,.26,.65,.7,'#252b2c');for(const x of [-.65,.65])add('box',p,x,1.05,1.95,.25,.18,.12,Math.floor(time*2)%2?'#efad55':'#614c36');if(kind==='snowplow')add('box',p,0,.42,-2.6,2.65,.8,.35,'#d4934f');if(kind==='emergency'||kind==='snowplow'||kind==='works'||kind==='utility'||kind==='public-works')add('box',p,0,2.35,0,.9,.16,.25,Math.floor(time*3)%2?'#ef8b52':'#729fc8');};
       for(const e of this.state.activeEvents){if(distance(e.location,player)>320)continue;const p=e.location,d=definitions.get(e.type);if(['branch','debris','water','animal'].includes(d.visual)){add('box',p,0,.4,0,d.visual==='animal'?.6:2.4,d.visual==='water'?.05:.6,1,d.visual==='water'?'#537683':d.visual==='animal'?'#9c8a6c':'#6d614c');}else if(d.visual!=='barrier')car(p,d.visual);
         for(const z of [-3.4,3.4]){add('cone',p,-1,.65,z,.45,1,.45,'#e2a15e');add('box',p,-1,.19,z,.7,.12,.7,'#d1d1b5');}if(d.closure)add('box',p,-1.4,.75,0,.18,.4,3.5,'#e3b477');add('box',p,1.3,2.4,0,.32,.6,.32,e.state==='player-helping'?'#8fddbc':'#e1c68d');}
       for(const a of this.state.actors)if(distance(a.location,player)<280)car(a.location,a.kind);return out;
@@ -780,15 +980,15 @@ const Town = (() => {
   function validateServiceHistory(raw){if(!Array.isArray(raw))return [];return raw.slice(0,40).filter(item=>item&&typeof item==='object').map((item,index)=>({id:String(item.id||('work-'+index)).slice(0,80),kind:['service','diagnostic','repair','roadside'].includes(item.kind)?item.kind:'service',at:String(item.at||'').slice(0,40),odometerMiles:finite(item.odometerMiles,0,0,1e7),component:String(item.component||'GENERAL').slice(0,70),action:String(item.action||'').slice(0,120),strategy:String(item.strategy||'').slice(0,60),result:String(item.result||'').slice(0,180),laborMinutes:Math.floor(finite(item.laborMinutes,0,0,10000)),originality:finite(item.originality,100,0,100)}));}
   function driverPreferences(s={}){return {units:s.units==='kph'?'kph':'mph',hudStyle:s.hudStyle==='minimal'?'minimal':'full',highContrast:s.highContrast===true,controlHints:s.controlHints!==false,tutorialSeen:s.tutorialSeen===true,volume:finite(s.volume,1,0,1)};}
   function validateSave(raw){
-    const defaults={version:1,bestRun:null,settings:{sound:true,autoThrottle:false,weather:'clear',quality:'auto',reducedMotion:false,...driverPreferences()},town:Town.defaults(),vehicle:defaultVehicle(),roadKnowledge:{},journal:[],serviceHistory:[],stats:{trips:0,totalMiles:0,roadsDiscovered:0,sequence:0}};
+    const defaults={version:1,bestRun:null,settings:{sound:true,autoThrottle:false,weather:'clear',quality:'auto',reducedMotion:false,...driverPreferences()},town:Town.defaults(),climate:MaineWeather.defaults(),vehicle:defaultVehicle(),roadKnowledge:{},journal:[],serviceHistory:[],stats:{trips:0,totalMiles:0,roadsDiscovered:0,sequence:0}};
     if(!raw||typeof raw!=='object'||raw.version!==1)return defaults;
     const s=raw.settings||{},knowledge=validateRoadKnowledge(raw.roadKnowledge),journal=validateJournal(raw.journal),stats=raw.stats&&typeof raw.stats==='object'?raw.stats:{};
     return {version:1,bestRun:Number.isFinite(raw.bestRun)&&raw.bestRun>0&&raw.bestRun<3600?raw.bestRun:null,settings:{
       sound:typeof s.sound==='boolean'?s.sound:true,autoThrottle:typeof s.autoThrottle==='boolean'?s.autoThrottle:false,
       weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion,...driverPreferences(s)},
-      town:Town.sanitize(raw.town),vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,serviceHistory:validateServiceHistory(raw.serviceHistory),stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
+      town:Town.sanitize(raw.town),climate:MaineWeather.sanitize(raw.climate,Town.now(Town.sanitize(raw.town)),Town.sanitize(raw.town).seed),vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,serviceHistory:validateServiceHistory(raw.serviceHistory),stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather};
 });
 
 </script>
@@ -1246,7 +1446,7 @@ uniform mat4 uVP; out vec3 vWorld; out vec3 vNormal; out vec4 vColor;
 void main(){vec4 p=aModel*vec4(aPos,1.);vWorld=p.xyz;vNormal=normalize(mat3(aModel)*aNormal);vColor=aColor;gl_Position=uVP*p;}`;
 const fs=`#version 300 es
 precision highp float;
-in vec3 vWorld;in vec3 vNormal;in vec4 vColor;uniform vec3 uEye;uniform vec3 uFog;uniform float uNight;uniform float uRain;uniform float uTime;out vec4 frag;
+in vec3 vWorld;in vec3 vNormal;in vec4 vColor;uniform vec3 uEye;uniform vec3 uFog;uniform float uNight;uniform float uRain;uniform float uWeatherFog;uniform float uCloud;uniform float uSnow;uniform float uTime;out vec4 frag;
 void main(){vec3 n=normalize(vNormal);vec3 sun=normalize(vec3(-.4,.75,-.25));float diffuse=max(dot(n,sun),0.);float emission=max(vColor.a,0.);vec3 col=vColor.rgb*(.56+diffuse*.55)*(1.-uNight*.57)+vColor.rgb*emission*(.32+uNight*.9);
 vec3 view=normalize(uEye-vWorld);float spec=pow(max(dot(n,normalize(sun+view)),0.),38.);col+=vec3(1.,.89,.68)*spec*(.08+uRain*.12)*(1.-uNight*.8);
 if(vColor.a<-.5){float waves=sin(vWorld.x*.08+uTime*.8)*sin(vWorld.z*.11+uTime*.3);col+=vec3(.16,.20,.17)*(waves*.12+spec*.8);}
@@ -1254,7 +1454,7 @@ float d=length(vWorld-uEye);float fog=smoothstep(90.,600.-uRain*160.,d);col=mix(
 const skyVS=`#version 300 es
 out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,.9999,1.);}`;
 const skyFS=`#version 300 es
-precision highp float;in vec2 uv;uniform float uNight;uniform float uRain;out vec4 frag;
+precision highp float;in vec2 uv;uniform float uNight;uniform float uRain;uniform float uWeatherFog;uniform float uCloud;uniform float uSnow;out vec4 frag;
 void main(){vec3 top=mix(vec3(.30,.48,.53),vec3(.035,.065,.12),uNight);vec3 bottom=mix(vec3(.84,.72,.54),vec3(.21,.28,.32),uNight);vec3 c=mix(bottom,top,smoothstep(.27,1.,uv.y));float glow=exp(-length((uv-vec2(.71,.40))*vec2(1.,1.4))*10.);c+=vec3(.21,.13,.04)*glow*(1.-uNight);c=mix(c,vec3(.36,.45,.46),uRain*.45);frag=vec4(c,1.);}`;
 class Renderer{
  constructor(canvas,world){
@@ -1313,6 +1513,7 @@ class Renderer{
     const dx=e.tx-e.x,dz=e.tz-e.z,colour=e.age<.4?'#c27b63':'#ffd1a5';add('box',(e.x+e.tx)/2,1,(e.z+e.tz)/2,e.age<.4?.06:.20,.06,Math.hypot(dx,dz),emissive(colour,.6),Math.atan2(dx,dz));
    }
   }
+  if(sim.world.northBerwick&&sim.mode==='free'&&sim.weatherDirector)for(const p of sim.weatherDirector.props(sim.car)){const o=object(p.mesh,p.x,p.y,p.z,p.w,p.h,p.d,p.color,p.yaw);o.surface=[p.material||0,p.rough??.9,0,0];objects.push(o);}
   if(sim.world.northBerwick&&sim.mode==='free'&&sim.townDirector)for(const p of sim.townDirector.props(sim.car,sim.time))objects.push(object(p.mesh,p.x,p.y,p.z,p.w,p.h,p.d,p.color,p.yaw));
   this.dynamic=objects;this.time=sim.time;
  }
@@ -1957,7 +2158,7 @@ vHandedness=sign(dot(cross(aModel[0].xyz,aModel[1].xyz),aModel[2].xyz));vNormal=
 const SCENE_FS=`#version 300 es
 precision highp float;
 in vec3 vWorld;in vec3 vNormal;in vec4 vColor;in vec4 vSurface;in vec3 vLocal;in vec4 vShadow;flat in float vHandedness;
-uniform vec3 uEye;uniform vec3 uFog;uniform float uNight;uniform float uRain;uniform float uTime;uniform vec2 uSize;
+uniform vec3 uEye;uniform vec3 uFog;uniform float uNight;uniform float uRain;uniform float uWeatherFog;uniform float uCloud;uniform float uSnow;uniform float uTime;uniform vec2 uSize;
 uniform int uMirror;uniform int uStudio;uniform float uWetPaint;uniform int uShadowOn;uniform float uShadowTexel;uniform float uExposure;
 uniform vec3 uCar;uniform float uYaw;uniform float uBrake;uniform vec3 uLights[8];uniform vec3 uLightColors[8];
 uniform samplerCube uLocalEnv;uniform float uProbeMix;uniform vec3 uProbeCenter;
@@ -2018,6 +2219,8 @@ void main(){
  }else if(mat==4){base*=.76+noise(vWorld.xy*95.)*.32;rough=.85;
  }else if(mat==10){float weave=sin(vLocal.x*110.)*sin(vLocal.z*110.);base*=.7+weave*.10;rough=.31;}
  if(mat==6){float a=sin(vWorld.x*.33+uTime*.8)*.023,b=cos(vWorld.z*.25+uTime*.6)*.027;n=normalize(vec3(a,1.,b));rough=.16;puddle=1.;}
+ // Restrained snow on upward-facing ground/roofs; lane state comes from road-zone dressing.
+ if(uStudio==0 && mat==0 && n.y>.60 && (vWorld.y<.10 || vWorld.y>3.)) {float cover=uSnow*(.75+noise(vWorld.xz*.65)*.25);base=mix(base,vec3(.70,.77,.80),cover);rough=mix(rough,.94,cover);}
  // The studio floor and cyclorama do not need the hero's eight-light BRDF.
  // Specializing these large surfaces keeps showroom quality without charging every pixel for car paint.
  if(uStudio==1 && mat==18){
@@ -2034,7 +2237,7 @@ void main(){
  vec3 sun=normalize(vec3(-.45,.80,.30));float shade=shadow(n);
  vec3 ambient=uStudio==1?vec3(.25,.31,.40):mix(vec3(.46,.56,.68),vec3(.16,.23,.34),uNight);float skyAccess=.48+.52*max(n.y,0.);
  vec3 col=base*ambient*skyAccess*(1.-metal*.5);
- col+=brdf(n,view,sun,base,rough,metal)*mix(vec3(2.5,1.95,1.40),vec3(.50,.73,1.15),uNight)*shade*(uStudio==1?.16:1.);
+ col+=brdf(n,view,sun,base,rough,metal)*mix(vec3(2.5,1.95,1.40),vec3(.50,.73,1.15),uNight)*shade*(uStudio==1?.16:1.-uCloud*.48);
  for(int i=0;i<8;i++){vec3 delta=uLights[i]-vWorld;float dd=dot(delta,delta);vec3 l=delta*inversesqrt(max(dd,.001));float fall=1./(1.+dd*.045);col+=brdf(n,view,l,base,rough,metal)*uLightColors[i]*fall*(.28+.72*uNight);if(mat==1){float cr=max(.15,rough*.70);col+=brdf(n,view,l,vec3(.04),cr,0.)*uLightColors[i]*fall*.15;}}
  // Two forward-facing headlights. They illuminate actual geometry and the wet road.
  vec3 forward=vec3(sin(uYaw),0.,-cos(uYaw)),right=vec3(cos(uYaw),0.,sin(uYaw));
@@ -2048,11 +2251,11 @@ void main(){
  // Soft contact occlusion at the four tyres, independent of shadow-map resolution.
  if(mat==5||mat==18){vec2 local=vec2(dot(vWorld-uCar,right),dot(vWorld-uCar,forward));float ao=exp(-pow(local.x/1.08,4.)-pow(local.y/2.14,4.));col*=1.-ao*.56;}
  if(mat==8)col+=base*em*2.0;else col+=base*em*2.;
- float distance=length(vWorld-uEye);float haze=1.-exp(-distance*(.0017+uNight*.00065+uRain*.00075));haze*=uStudio==1?0.:.97;col=mix(col,uFog,haze);
+ float distance=length(vWorld-uEye);float haze=1.-exp(-distance*(.0017+uNight*.00065+uRain*.00075+uWeatherFog*.026+uSnow*.002));haze*=uStudio==1?0.:.97;col=mix(col,uFog,haze);
  frag=vec4(max(col,vec3(0.)),glassAlpha);
 }`;
 const SKY_FS=`#version 300 es
-precision highp float;in vec2 uv;uniform mat4 uInvVP;uniform float uNight;uniform float uRain;uniform float uTime;uniform int uMirror;uniform int uStudio;out vec4 frag;
+precision highp float;in vec2 uv;uniform mat4 uInvVP;uniform float uNight;uniform float uRain;uniform float uWeatherFog;uniform float uCloud;uniform float uSnow;uniform float uTime;uniform int uMirror;uniform int uStudio;out vec4 frag;
 float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
 void main(){
  vec4 nearP=uInvVP*vec4(uv*2.-1.,-1.,1.),farP=uInvVP*vec4(uv*2.-1.,1.,1.);vec3 ray=normalize(farP.xyz/farP.w-nearP.xyz/nearP.w);
@@ -2061,7 +2264,8 @@ void main(){
  vec3 top=mix(vec3(.16,.28,.42),vec3(.012,.027,.051),uNight),bottom=mix(vec3(.67,.48,.30),vec3(.09,.135,.19),uNight);
  vec3 col=mix(bottom,top,smoothstep(-.03,.70,ray.y))*(.67+cloud*.45);
  float glow=pow(max(dot(ray,normalize(vec3(-.45,.80,.30))),0.),mix(32.,256.,uNight));
- col+=mix(vec3(.67,.37,.12),vec3(.24,.31,.40),uNight)*glow*(1.-uRain*.65);
+ col+=mix(vec3(.67,.37,.12),vec3(.24,.31,.40),uNight)*glow*(1.-uRain*.65)*(1.-uCloud*.82);
+ col=mix(col,mix(vec3(.35,.43,.49),vec3(.045,.065,.09),uNight),clamp(uCloud*.65+uWeatherFog*.2,0.,.92));
  frag=vec4(col,1.);
 }`;
 // Deliberately cheaper capture shader. The hero, particles and reflective surface
@@ -2154,7 +2358,7 @@ class PolishedRenderer extends R.Renderer{
  gl.bindRenderbuffer(gl.RENDERBUFFER,depth);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT16,size,size);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,depth);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_CUBE_MAP_POSITIVE_X,texture,0);
  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw new Error('Local reflection framebuffer unavailable');gl.bindFramebuffer(gl.FRAMEBUFFER,null);return {texture,fbo,depth,w:size,h:size};
  }
- drawSky(target,vp,mirror=0){const gl=this.gl;gl.disable(gl.DEPTH_TEST);gl.bindVertexArray(null);gl.useProgram(this.sky.p);gl.uniformMatrix4fv(this.sky.u('uInvVP'),false,Q.inverse(vp));gl.uniform1f(this.sky.u('uNight'),this.night);gl.uniform1f(this.sky.u('uRain'),this.rain);gl.uniform1f(this.sky.u('uTime'),this.time||0);gl.uniform1i(this.sky.u('uMirror'),mirror);gl.uniform1i(this.sky.u('uStudio'),this.presentation==='studio'?1:0);gl.drawArrays(gl.TRIANGLES,0,3);this.drawCalls++;gl.enable(gl.DEPTH_TEST);}
+ drawSky(target,vp,mirror=0){const gl=this.gl;gl.disable(gl.DEPTH_TEST);gl.bindVertexArray(null);gl.useProgram(this.sky.p);gl.uniformMatrix4fv(this.sky.u('uInvVP'),false,Q.inverse(vp));gl.uniform1f(this.sky.u('uNight'),this.night);gl.uniform1f(this.sky.u('uRain'),this.rain);gl.uniform1f(this.sky.u('uWeatherFog'),this.climate?.fog||0);gl.uniform1f(this.sky.u('uCloud'),this.climate?.cloud||0);gl.uniform1f(this.sky.u('uSnow'),this.climate?.groundSnow||0);gl.uniform1f(this.sky.u('uTime'),this.time||0);gl.uniform1i(this.sky.u('uMirror'),mirror);gl.uniform1i(this.sky.u('uStudio'),this.presentation==='studio'?1:0);gl.drawArrays(gl.TRIANGLES,0,3);this.drawCalls++;gl.enable(gl.DEPTH_TEST);}
  renderProbe(){const gl=this.gl,q=this.settings?.quality||'auto',size=Q.sizeFor(q),car=this.car||{x:300,z:315};
  this.probeState.invalidate([this.presentation,this.studioRig||0,size,this.settings?.weather||'rain'].join(':'));
  if(size===0)return;
@@ -2176,7 +2380,7 @@ class PolishedRenderer extends R.Renderer{
  if(samples>1){const fbo=gl.createFramebuffer(),color=gl.createRenderbuffer(),depth=gl.createRenderbuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.bindRenderbuffer(gl.RENDERBUFFER,color);gl.renderbufferStorageMultisample(gl.RENDERBUFFER,samples,format,cw,ch);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.RENDERBUFFER,color);gl.bindRenderbuffer(gl.RENDERBUFFER,depth);gl.renderbufferStorageMultisample(gl.RENDERBUFFER,samples,gl.DEPTH_COMPONENT24,cw,ch);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,depth);if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)===gl.FRAMEBUFFER_COMPLETE)this.msaa={fbo,color,depth,samples};else{gl.deleteFramebuffer(fbo);gl.deleteRenderbuffer(color);gl.deleteRenderbuffer(depth);}}
  gl.bindFramebuffer(gl.FRAMEBUFFER,null);}
  }
- update(sim,dt,settings){const n=this.night,r=this.rain;super.update(sim,dt,settings);this.night=C.approach(n,settings.weather==='clear'?0:1,2,dt);this.rain=C.approach(r,settings.weather==='rain'?1:0,2,dt);this.car=sim.car;this.settings=settings;this.brake=sim.car.braking?1:0;this.low=settings.quality==='low';if(this.presentation==='studio'&&this.gl){this.dynamic=V.objects(sim.car,sim.time);this.spray=[];this.particles=[];}
+ update(sim,dt,settings){const n=this.night,r=this.rain;super.update(sim,dt,settings);this.night=C.approach(n,settings.climate?1-settings.climate.daylight:settings.weather==='clear'?0:1,2,dt);this.rain=C.approach(r,settings.climate?Math.max(settings.climate.rain,settings.climate.freezing,settings.climate.wetness*.75):settings.weather==='rain'?1:0,2,dt);this.climate=settings.climate||null;this.car=sim.car;this.settings=settings;this.brake=sim.car.braking?1:0;this.low=settings.quality==='low';if(this.presentation==='studio'&&this.gl){this.dynamic=V.objects(sim.car,sim.time);this.spray=[];this.particles=[];}
  if(this.presentation!=='studio'&&this.storyGoal){const p=this.storyGoal;for(const side of [-1,1]){const o=R.object('box',p.x+side*6.8,2.8,p.z,.15,5.3,.15,'#ddba76');o.surface=[M.LAMP,.5,0,1.3];this.dynamic.push(o);}const bar=R.object('box',p.x,5.4,p.z,13.8,.13,.13,'#ddba76');bar.surface=[M.LAMP,.5,0,1.3];this.dynamic.push(bar);}
  // Coarse LOD keeps a bounded set of distant vehicles and buildings. The hero stays detailed.
  if(this.gl){
@@ -2189,11 +2393,11 @@ class PolishedRenderer extends R.Renderer{
  }
  this.carTriangleCount=0;for(const o of this.dynamic)if(o.hero)this.carTriangleCount+=(R.geometries[o.mesh]?.data.length||0)/18;
  }
- fogColor(){return [C.lerp(.40,.055,this.night),C.lerp(.39,.082,this.night),C.lerp(.33,.123,this.night)];}
+ fogColor(){const c=this.climate;return c?[C.lerp(.40+c.fog*.12,.055,this.night),C.lerp(.46+c.fog*.10,.082,this.night),C.lerp(.51+c.fog*.07,.123,this.night)]:[C.lerp(.40,.055,this.night),C.lerp(.39,.082,this.night),C.lerp(.33,.123,this.night)];}
  upload(){const gl=this.gl,eye=this.eye,byMesh=new Map();for(const o of this.dynamic){if(!byMesh.has(o.mesh))byMesh.set(o.mesh,[]);byMesh.get(o.mesh).push(o);}let instanceCount=0,triangles=0;for(const[name,b]of Object.entries(this.batches)){const all=(this.presentation==='studio'?b.studioStatics:b.statics).concat(byMesh.get(name)||[]).filter(o=>o.hero||o.studio||Math.hypot(o.x-eye[0],o.z-eye[2])<(o.x>440?1250:this.low?300:510)+o.radius);if(b.transparent)all.sort((a,b)=>Math.hypot(b.x-eye[0],b.y-eye[1],b.z-eye[2])-Math.hypot(a.x-eye[0],a.y-eye[1],a.z-eye[2]));b.depth=all.length?all.reduce((sum,o)=>sum+Math.hypot(o.x-eye[0],o.y-eye[1],o.z-eye[2]),0)/all.length:0;const data=new Float32Array(all.length*24);let i=0;for(const o of all){data.set(o.m,i);data.set(o.color,i+16);data.set(o.surface||[0,.63,.05,Math.max(0,o.color[3])],i+20);i+=24;}b.active=all.length;if(!b.active)continue;gl.bindVertexArray(b.vao);gl.bindBuffer(gl.ARRAY_BUFFER,b.instances);if(data.byteLength>b.capacity){b.capacity=Math.ceil(data.byteLength/65536)*65536;gl.bufferData(gl.ARRAY_BUFFER,b.capacity,gl.DYNAMIC_DRAW);}gl.bufferSubData(gl.ARRAY_BUFFER,0,data);instanceCount+=all.length;triangles+=b.active*b.count/3;}gl.bindVertexArray(null);this.instanceCount=instanceCount;this.triangleCount=triangles;}
  drawBatches(shadow=false){const gl=this.gl;gl.disable(gl.BLEND);gl.depthMask(true);const draw=b=>{gl.bindVertexArray(b.vao);gl.drawArraysInstanced(gl.TRIANGLES,0,b.count,b.active);this.drawCalls++;};for(const b of Object.values(this.batches)){if(!b.active||b.transparent)continue;draw(b);}if(!shadow){gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);for(const b of Object.values(this.batches).filter(b=>b.active&&b.transparent).sort((a,b)=>b.depth-a.depth))draw(b);gl.depthMask(true);gl.disable(gl.BLEND);}gl.bindVertexArray(null);}
  texture(unit,texture){const gl=this.gl;gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,texture);}
- uniforms(p,vp,mirror,target){const gl=this.gl;gl.useProgram(p.p);gl.uniformMatrix4fv(p.u('uVP'),false,vp);gl.uniformMatrix4fv(p.u('uLightVP'),false,this.lightVP);gl.uniform3fv(p.u('uEye'),target.probeEye||(mirror?[this.eye[0],.31-this.eye[1],this.eye[2]]:this.eye));gl.uniform3fv(p.u('uFog'),this.fogColor());gl.uniform1f(p.u('uNight'),this.presentation==='studio'?(this.studioRig===2?.25:.82):this.night);gl.uniform1f(p.u('uRain'),this.presentation==='studio'?0:this.rain);gl.uniform1f(p.u('uTime'),this.time||0);gl.uniform1i(p.u('uMirror'),mirror);gl.uniform1i(p.u('uStudio'),this.presentation==='studio'?1:0);gl.uniform1f(p.u('uWetPaint'),this.presentation==='studio'?(this.studioWet?1:0):this.rain);gl.uniform1i(p.u('uShadowOn'),this.low?0:1);gl.uniform1f(p.u('uShadowTexel'),1/1024);gl.uniform2f(p.u('uSize'),target.w,target.h);
+ uniforms(p,vp,mirror,target){const gl=this.gl;gl.useProgram(p.p);gl.uniformMatrix4fv(p.u('uVP'),false,vp);gl.uniformMatrix4fv(p.u('uLightVP'),false,this.lightVP);gl.uniform3fv(p.u('uEye'),target.probeEye||(mirror?[this.eye[0],.31-this.eye[1],this.eye[2]]:this.eye));gl.uniform3fv(p.u('uFog'),this.fogColor());gl.uniform1f(p.u('uNight'),this.presentation==='studio'?(this.studioRig===2?.25:.82):this.night);gl.uniform1f(p.u('uRain'),this.presentation==='studio'?0:this.rain);gl.uniform1f(p.u('uWeatherFog'),this.presentation==='studio'?0:this.climate?.fog||0);gl.uniform1f(p.u('uCloud'),this.presentation==='studio'?0:this.climate?.cloud||0);gl.uniform1f(p.u('uSnow'),this.presentation==='studio'?0:this.climate?.groundSnow||0);gl.uniform1f(p.u('uTime'),this.time||0);gl.uniform1i(p.u('uMirror'),mirror);gl.uniform1i(p.u('uStudio'),this.presentation==='studio'?1:0);gl.uniform1f(p.u('uWetPaint'),this.presentation==='studio'?(this.studioWet?1:0):this.rain);gl.uniform1i(p.u('uShadowOn'),this.low?0:1);gl.uniform1f(p.u('uShadowTexel'),1/1024);gl.uniform2f(p.u('uSize'),target.w,target.h);
  const car=this.car||{x:100,z:315,yaw:0};gl.uniform3f(p.u('uCar'),car.x,.134+(car.rallyBlend||0)*.15+(car.modeBlend||0)*.06,car.z);gl.uniform1f(p.u('uYaw'),car.yaw);gl.uniform1f(p.u('uBrake'),this.brake||0);
  const lamps=this.lamps.slice().sort((a,b)=>Math.hypot(a.x-car.x,a.z-car.z)-Math.hypot(b.x-car.x,b.z-car.z)).slice(0,8),positions=new Float32Array(24),colours=new Float32Array(24);for(let i=0;i<lamps.length;i++){positions.set([lamps[i].x,lamps[i].y,lamps[i].z],i*3);colours.set(i%3===0?[4.8,5.9,8.5]:[7.7,4.4,2.2],i*3);}if(this.presentation==='studio'){
  const rig=[[car.x-4,4.3,car.z-3],[car.x+4,3.6,car.z-1],[car.x,5.8,car.z+2.7],[car.x-4,2.2,car.z+4.8],[car.x+3.4,4.6,car.z+3],[car.x,5.2,car.z-4.0],[car.x-1,3,car.z+7],[car.x+5,3,car.z+5]];
@@ -2339,17 +2543,96 @@ let state='menu',selected='free',pausedFromMenu=false,accumulator=0,lastFrame=0,
 let fps=0,frameCounter=0,fpsClock=0,lowFpsSeconds=0,frameErrors=[];
 let activeTrip=null,lastCarDistance=0,currentRoadName='',lastRoadName='',systemPersistClock=0,systemAlerts=new Set(),journeyReturnState='menu';
 const input=new RebornInput(action);
-let townDirector=null,townEventId=null;
+let townDirector=null,townEventId=null,weatherDirector=null,roadWeather=null,weatherObserveDistance=0;
+/* WEATHER_UI_BEGIN */
+// Embedded in the application closure. All weather is local game state.
+const WX = C.MaineWeather;
+let weatherHazardName = '', weatherWarningUntil = 0;
+function weatherSnapshot(){return weatherDirector?{enabled:townAvailable(),current:{...weatherDirector.current},road:roadWeather?{...roadWeather}:null,mode:weatherDirector.state.mode,season:weatherDirector.current.season,cursor:weatherDirector.state.cursor,zoneCount:Object.keys(weatherDirector.state.zones).length,observations:weatherDirector.state.observations.length,history:weatherDirector.state.history.slice(0,8),props:weatherDirector.cachedProps.length}:null;}
+function applyWeatherRoad(dt){
+  const active=townAvailable()&&weatherDirector,c=sim.car;
+  if(!active){roadWeather=null;c.roadGrip=1;c.roadBrake=1;c.roadDrive=1;c.roadResponse=1;c.roadRolling=0;return;}
+  weatherDirector.enabled=true;roadWeather=weatherDirector.sample(c,vehicle);
+  // Blend at road boundaries; no random yaw kicks or unavoidable scripted spin-outs.
+  for(const [key,value] of [['roadGrip',roadWeather.grip],['roadBrake',roadWeather.braking],['roadDrive',roadWeather.drive],['roadResponse',roadWeather.response],['roadRolling',roadWeather.rolling]])c[key]=C.approach(Number.isFinite(c[key])?c[key]:(key==='roadRolling'?0:1),value,3,dt);
+}
+function recordWeatherKnowledge(distanceM){
+  if(!townAvailable()||!weatherDirector||!roadWeather)return;
+  weatherObserveDistance+=Math.max(0,distanceM);
+  if(weatherObserveDistance>=1){weatherDirector.observe(roadWeather,weatherObserveDistance);weatherObserveDistance=0;}
+}
+function weatherRenderSettings(){return townAvailable()&&weatherDirector?{...settings,climate:weatherDirector.scene(roadWeather||weatherDirector.sample(sim.car,vehicle))}:settings;}
+function updateWeatherHUD(){
+  const button=$('weather-chip');if(!button)return;const active=townAvailable()&&!!weatherDirector;button.hidden=!active;
+  if(!active)return;const w=weatherDirector.current,s=roadWeather||weatherDirector.sample(sim.car,vehicle),temp=Math.round(settings.units==='kph'?w.tempC:w.tempC*9/5+32)+(settings.units==='kph'?'°C':'°F');
+  button.textContent=WX.LABELS[w.kind]+' · '+temp+' · '+s.label;button.dataset.risk=s.grip<.6?'high':s.grip<.85?'caution':'normal';button.title='Open weather and remembered road conditions. Fictional simulation.';
+  $('surface').textContent=s.onRoad?s.label.toUpperCase():sim.car.surface.toUpperCase();
+  if(s.hazard!==weatherHazardName){weatherHazardName=s.hazard;if(state==='play'&&s.grip<.65&&clock>weatherWarningUntil){notify(s.label.toUpperCase()+' / LONGER STOPPING DISTANCE',3.5);weatherWarningUntil=clock+12;}}
+  if(s.hydro>.32){$('ux-alert').hidden=false;$('ux-alert').textContent=($('ux-alert').textContent?$('ux-alert').textContent+' · ':'')+'Standing water: ease off';}
+}
+function syncWeatherControls(){
+  if(!$('town-weather-setting'))return;const s=weatherDirector?.state||save.climate;
+  $('town-weather-setting').value=s.mode;$('town-season-setting').value=weatherDirector?.current.season||s.seasonBase;
+  $('weather-wipers').checked=s.wipers!==false;
+}
+function renderWeatherPanel(){
+  if(!$('weather-panel'))return;syncWeatherControls();
+  if(!weatherDirector){$('weather-summary').textContent='Loading the static North Berwick road network…';return;}
+  const d=weatherDirector,w=d.current,s=d.sample(sim.car,vehicle),time=d.time,unit=settings.units==='kph'?'°C':'°F',temperature=t=>Math.round(unit==='°C'?t:t*9/5+32)+unit;
+  $('weather-summary').replaceChildren();
+  const headline=document.createElement('p');headline.className='weather-headline';headline.textContent=WX.LABELS[w.kind]+' · '+temperature(w.tempC)+' · '+w.season;$('weather-summary').append(headline);
+  const note=document.createElement('p');note.textContent=(w.custom?'Selected weather scenario. ':'Seeded seasonal journey. ')+(townAvailable()?'Advances with the town clock; menus pause it.':'Weather resumes in North Berwick Free Drive.');$('weather-summary').append(note);
+  const values=[['Road',s.road||'Drive onto a named road'],['Surface',s.onRoad?s.label:'Off road / no sampled lane'],['Plow priority',s.priority?'Tier '+s.priority+' · fictional service schedule':'—'],['Last treatment',s.lastService>=0?Math.max(0,Math.floor(time-s.lastService))+' town minutes ago':'Not yet treated'],['Ground snow',Math.round(s.snowDepth*20)+' cm (game model)'],['Next front',w.custom?'Fixed scenario':Math.ceil(180-time%180)+' town minutes']];
+  const grid=document.createElement('dl');grid.className='weather-facts';for(const [label,value] of values){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;grid.append(dt,dd);}$('weather-summary').append(grid);
+  const list=$('weather-memory');list.replaceChildren();
+  for(const o of d.state.observations.slice(0,18)){const entry=document.createElement('li'),strong=document.createElement('strong'),small=document.createElement('span');strong.textContent=o.road;small.textContent=WX.SURFACE_LABELS[o.hazard]+' · observed '+Math.max(0,Math.floor(time-o.at))+' town minutes ago · '+o.hazards.filter(h=>h!=='dry').map(h=>WX.SURFACE_LABELS[h]).join(', ');entry.append(strong,small);list.append(entry);}
+  if(!list.children.length){const li=document.createElement('li');li.textContent='Drive to learn the surfaces. The map records only conditions you have actually encountered.';list.append(li);}
+  const history=$('weather-history');history.replaceChildren();for(const item of d.state.history.slice(0,8)){const li=document.createElement('li');li.textContent=item.text+' · '+Math.max(0,Math.floor(time-item.at))+' town minutes ago';history.append(li);}
+}
+function initWeatherUI(){
+  const panel=document.createElement('section');panel.id='weather-panel';panel.className='journey-panel';
+  panel.innerHTML='<h3>MAINE WEATHER / ROAD CONDITIONS</h3><div id="weather-summary"></div><p class="weather-disclaimer">Fictional weather, seasons and service schedules. Shade and drainage are seeded gameplay approximations, not surveys or forecasts.</p><h4>YOUR ROAD-SURFACE MEMORY</h4><ul id="weather-memory" class="weather-memory"></ul><h4>WEATHER / PUBLIC WORKS LOG</h4><ul id="weather-history" class="weather-memory"></ul>';
+  $('ux-panel-town').prepend(panel);
+  const settingsNode=document.querySelector('#pause .settings');settingsNode.insertAdjacentHTML('beforeend','<label><span>North Berwick weather<small>Simulation, not live weather</small></span><select id="town-weather-setting"><option value="dynamic">Seasonal journey</option>'+WX.KINDS.map(k=>'<option value="'+k+'">'+WX.LABELS[k]+' scenario</option>').join('')+'</select></label><label><span>North Berwick season<small>30 in-game days per season</small></span><select id="town-season-setting">'+WX.SEASONS.map(s=>'<option value="'+s+'">'+s[0].toUpperCase()+s.slice(1)+'</option>').join('')+'</select></label><label><span>Automatic cockpit wipers<small>Visual effect; reduced-motion respected</small></span><input id="weather-wipers" type="checkbox" checked></label>');
+  $('weather-setting').closest('label').querySelector('span').textContent='Other activities / lighting';
+  for(const id of ['town-weather-setting','town-season-setting'])$(id).addEventListener('change',()=>{
+    if(!weatherDirector){notify('NORTH BERWICK IS STILL LOADING');syncWeatherControls();return;}
+    if($('toast').textContent.includes('LONGER STOPPING DISTANCE')){toastUntil=0;$('toast').classList.remove('visible');}weatherHazardName='';weatherWarningUntil=0;
+    weatherDirector.select($('town-weather-setting').value,$('town-season-setting').value,C.Town.now(save.town));save.climate=weatherDirector.state;roadWeather=weatherDirector.sample(sim.car,vehicle);persist();renderWeatherPanel();
+  });
+  $('weather-wipers').addEventListener('change',()=>{save.climate.wipers=$('weather-wipers').checked;persist();});
+  const button=document.createElement('button');button.id='weather-chip';button.type='button';button.hidden=true;button.addEventListener('click',()=>{openJourney();selectDriverTab('town',true);renderWeatherPanel();});$('hud').append(button);
+  const legend=document.querySelector('.ux-map-legend');if(legend){const span=document.createElement('span');span.className='weather-legend';span.textContent='Blue / white / brown: observed water / ice & snow / leaves';legend.append(span);}
+  syncWeatherControls();renderWeatherPanel();
+}
+function drawWeatherMap(ctx,p){
+  if(!townAvailable()||!weatherDirector)return;const d=weatherDirector;ctx.save();ctx.lineWidth=2;ctx.setLineDash([4,4]);
+  for(const o of d.state.observations.slice(0,64)){if(o.hazard==='dry'||d.time-o.at>360)continue;ctx.strokeStyle=['black-ice','frost','snow','packed-snow','slush'].includes(o.hazard)?'#d2e4ef':o.hazard==='wet-leaves'?'#c39566':'#74b8d0';
+    ctx.beginPath();for(const r of (d.byName.get(o.road)||[]).slice(0,64)){ctx.moveTo(...p(r.x1,r.z1));ctx.lineTo(...p(r.x2,r.z2));}ctx.stroke();
+  }ctx.restore();
+}
+function drawMaineWeather(dt){
+  fxc.clearRect(0,0,fx.width,fx.height);if(renderer.presentation==='studio'||settings.reducedMotion)return;
+  const w=weatherDirector.current,rate=Math.max(w.rain,w.snow,w.sleet,w.freezing);if(rate<.03)return;
+  const isSnow=w.snow>.1,count=Math.floor(drops.length*rate);fxc.save();fxc.strokeStyle='rgba(206,225,238,.28)';fxc.fillStyle='rgba(224,234,243,.72)';fxc.lineWidth=1;
+  for(let i=0;i<count;i++){const a=drops[i];if(state==='play'){a.y=(a.y+dt*a.speed*(isSnow?.20:1))%1;a.x=(a.x+dt*(isSnow?Math.sin(clock*.7+i)*.008+w.wind*.02:.04))%1;if(a.x<0)a.x+=1;}
+    const x=a.x*fx.width,y=a.y*fx.height;if(isSnow){fxc.beginPath();fxc.arc(x,y,1+(i%3)*.6,0,Math.PI*2);fxc.fill();}else{fxc.beginPath();fxc.moveTo(x,y);fxc.lineTo(x-3,y+(w.sleet>0?5:16));fxc.stroke();}
+  }
+  if(cameraStyle===2&&save.climate.wipers!==false&&!isSnow){const swing=Math.sin(sim.time*(w.rain>.7?4:2.8))*.65;fxc.lineWidth=5;fxc.strokeStyle='rgba(13,23,31,.82)';for(const side of [.24,.61]){const x=fx.width*side,y=fx.height*1.03,length=fx.height*.44;fxc.beginPath();fxc.moveTo(x,y);fxc.lineTo(x+Math.sin(swing)*length,y-Math.cos(swing)*length);fxc.stroke();}}
+  fxc.restore();
+}
+
+/* WEATHER_UI_END */
 /* TOWN_UI_BEGIN */
 // Embedded in the existing application closure; no runtime imports.
 const townClockText=s=>'DAY '+(s.day+1)+' · '+String(Math.floor(s.minuteOfDay/60)).padStart(2,'0')+':'+String(Math.floor(s.minuteOfDay%60)).padStart(2,'0')+' · '+C.Town.band(s.minuteOfDay);
 function townAvailable(){return !!townDirector&&!!sim.world.northBerwick&&sim.mode==='free'&&!director.active;}
 function updateTownHUD(){const active=townAvailable();$('town-clock').hidden=!active;const e=active?townDirector.nearest(sim.car):null;$('town-interact').hidden=!e;if(active)$('town-clock').textContent=townClockText(townDirector.state);if(e)$('town-interact').textContent='F · '+C.Town.definitions.get(e.type).title+(Math.hypot(sim.car.vx,sim.car.vz)>1.5?' · STOP FIRST':' · INTERACT');}
 function townMessages(){const messages=townDirector.takeMessages();if(!messages.length)return;for(const m of messages)appendJournal({id:'town-'+(++save.stats.sequence),kind:'town',endedAt:new Date().toISOString(),mode:'free',world:'North Berwick',reason:m.title+': '+m.text,seconds:0,miles:0,roads:0,startRoad:m.road,endRoad:m.road,fuelUsed:0,bodyLoss:0,maxMph:0});persist();}
-function tickTown(dt){if(!townDirector)return;townDirector.tick(dt,{active:state==='play'&&townAvailable(),player:sim.car,vehicle,weather:settings.weather});townMessages();}
+function tickTown(dt){if(!townDirector)return;townDirector.tick(dt,{active:state==='play'&&townAvailable(),player:sim.car,vehicle,weather:weatherDirector?.context()||settings.weather});if(weatherDirector)weatherDirector.advanceTo(C.Town.now(townDirector.state),state==='play'&&townAvailable());townMessages();}
 function openTown(){if(state!=='play'||!townAvailable())return;const e=townDirector.nearest(sim.car);if(!e)return;if(Math.hypot(sim.car.vx,sim.car.vz)>1.5){notify('STOP SAFELY BEFORE INTERACTING');return;}townEventId=e.id;state='town';input.clear();accumulator=0;const d=C.Town.definitions.get(e.type);$('town-title').textContent=d.title;$('town-situation').textContent=d.description+' '+e.location.road+' · '+d.risk;$('town-choices').innerHTML=C.Town.choices(e,vehicle).map(c=>'<button type="button" class="secondary" data-town-choice="'+c.id+'" '+(c.disabled?'disabled':'')+'><strong>'+safeText(c.label)+'</strong><span>'+safeText(c.effect)+'</span></button>').join('');showState();$('town-choices').querySelector('button:not([disabled])')?.focus();}
 function closeTown(){if(state!=='town')return;state='play';input.clear();accumulator=0;townEventId=null;showState();updateHUD();}
-function renderTownLedger(){const s=townDirector?.state||save.town,html=['<p>'+safeText(townClockText(s))+' · TRUST '+Math.round(s.trust)+'/100</p><p>Fictional gameplay schedules, not real opening hours. Clock pauses in menus.</p>'];html.push('<p>Helped '+s.stats.helped+' · Calls '+s.stats.called+' · Ignored '+s.stats.ignored+' · Failed '+s.stats.failed+' · Assistance received '+s.stats.assistance+'</p>');html.push('<h4>ACTIVE INCIDENTS / AMBER MAP DOTS</h4>');for(const e of s.activeEvents)html.push('<p>'+safeText(C.Town.definitions.get(e.type).title)+' — '+safeText(e.location.road)+' · '+safeText(e.state)+' · '+Math.max(0,Math.ceil(e.expires-C.Town.now(s)))+' town minutes remaining</p>');if(!s.activeEvents.length)html.push('<p>No active incidents. Explore North Berwick Free Drive.</p>');html.push('<h4>REDUCED LANES / AMBER MAP LINES</h4>');for(const c of s.closures){const e=s.activeEvents.find(e=>e.id===c.id);html.push('<p>'+safeText(e?.location.road||'Road')+' · opposite lane remains open · clears in '+Math.ceil(c.until-C.Town.now(s))+' town minutes</p>');}if(!s.closures.length)html.push('<p>No reduced lanes.</p>');html.push('<h4>PUBLIC SERVICE / TRAFFIC</h4><p>'+safeText(s.actors.map(a=>a.kind+' on '+a.location.road).join(' · ')||'No scheduled actors nearby in town state.')+'</p><h4>UNRESOLVED CONSEQUENCES</h4>');for(const c of s.consequences)html.push('<p>'+safeText(c.kind)+' · '+safeText(c.road)+' · '+Math.ceil(c.until-C.Town.now(s))+' town minutes</p>');html.push('<h4>RECENT RESOLVED INCIDENTS</h4>');for(const e of s.resolvedEvents.slice(0,12))html.push('<p>'+safeText(C.Town.definitions.get(e.type).title)+' · '+safeText(e.state)+' · '+safeText(e.road)+'</p>');html.push('<h4>EVENT HISTORY / FUTURE SUPPORT</h4>');for(const e of s.history.slice(0,16))html.push('<p>'+safeText(e.road)+' · '+safeText(e.text)+'</p>');$('town-ledger').innerHTML=html.join('');}
+function renderTownLedger(){const s=townDirector?.state||save.town,html=['<p>'+safeText(townClockText(s))+' · TRUST '+Math.round(s.trust)+'/100</p><p>Fictional gameplay schedules, not real opening hours. Clock pauses in menus.</p>'];html.push('<p>Helped '+s.stats.helped+' · Calls '+s.stats.called+' · Ignored '+s.stats.ignored+' · Failed '+s.stats.failed+' · Assistance received '+s.stats.assistance+'</p>');html.push('<h4>ACTIVE INCIDENTS / AMBER MAP DOTS</h4>');for(const e of s.activeEvents)html.push('<p>'+safeText(C.Town.definitions.get(e.type).title)+' — '+safeText(e.location.road)+' · '+safeText(e.state)+' · '+Math.max(0,Math.ceil(e.expires-C.Town.now(s)))+' town minutes remaining</p>');if(!s.activeEvents.length)html.push('<p>No active incidents. Explore North Berwick Free Drive.</p>');html.push('<h4>REDUCED LANES / AMBER MAP LINES</h4>');for(const c of s.closures){const e=s.activeEvents.find(e=>e.id===c.id);html.push('<p>'+safeText(e?.location.road||'Road')+' · opposite lane remains open · clears in '+Math.ceil(c.until-C.Town.now(s))+' town minutes</p>');}if(!s.closures.length)html.push('<p>No reduced lanes.</p>');html.push('<h4>PUBLIC SERVICE / TRAFFIC</h4><p>'+safeText(s.actors.map(a=>a.kind+' on '+a.location.road).join(' · ')||'No scheduled actors nearby in town state.')+'</p><h4>UNRESOLVED CONSEQUENCES</h4>');for(const c of s.consequences)html.push('<p>'+safeText(c.kind)+' · '+safeText(c.road)+' · '+Math.ceil(c.until-C.Town.now(s))+' town minutes</p>');html.push('<h4>RECENT RESOLVED INCIDENTS</h4>');for(const e of s.resolvedEvents.slice(0,12))html.push('<p>'+safeText(C.Town.definitions.get(e.type).title)+' · '+safeText(e.state)+' · '+safeText(e.road)+'</p>');html.push('<h4>EVENT HISTORY / FUTURE SUPPORT</h4>');for(const e of s.history.slice(0,16))html.push('<p>'+safeText(e.road)+' · '+safeText(e.text)+'</p>');$('town-ledger').innerHTML=html.join('');renderWeatherPanel();}
 function drawTownMap(ctx,p){if(!townAvailable())return;ctx.save();ctx.strokeStyle='#ffc875';ctx.fillStyle='#ffc875';ctx.lineWidth=4;for(const c of townDirector.state.closures){const r=townDirector.network.roads.get(c.roadId);if(!r)continue;ctx.beginPath();ctx.moveTo(...p(r.x1,r.z1));ctx.lineTo(...p(r.x2,r.z2));ctx.stroke();}for(const e of townDirector.state.activeEvents){ctx.beginPath();ctx.arc(...p(e.location.x,e.location.z),5,0,Math.PI*2);ctx.fill();}ctx.restore();}
 $('town-interact').addEventListener('click',openTown);$('town-close').addEventListener('click',closeTown);
 $('town-choices').addEventListener('click',event=>{const b=event.target.closest('[data-town-choice]');if(!b||b.disabled)return;const result=townDirector.interact(townEventId,b.dataset.townChoice,vehicle,sim.car);if(!result.ok){notify(result.reason||'ACTION UNAVAILABLE');return;}townMessages();closeTown();});
@@ -2428,13 +2711,13 @@ function refreshFaults(){for(const [id,meta] of Object.entries(COMPONENTS)){cons
 function wearPart(id,amount){const part=vehicle.parts[id];if(part)part.condition=C.clamp(part.condition-Math.max(0,amount),0,100);}
 function applyVehicleCondition(initial=false){const weakest=Math.min(vehicle.oil,vehicle.coolant,vehicle.battery),thermal=vehicle.engineTempC>105?C.clamp(1-(vehicle.engineTempC-105)/58,.48,1):1,clutch=effectiveFault('clutch'),bearing=effectiveFault('bearing'),alignment=effectiveFault('alignment'),hydraulic=effectiveFault('brakeHydraulics'),tireLeak=effectiveFault('tireLeak'),limp=vehicle.diagnostics.limpMode?.58:1;sim.car.tireGrip=(.62+.38*vehicle.tires/100)*(1-bearing*.08-alignment*.06-tireLeak*.12);sim.car.brakeEffect=(.42+.58*vehicle.brakes/100)*(1-hydraulic*.46);sim.car.enginePower=(vehicle.fuel>.02&&vehicle.battery>2?1:0)*(.72+.28*weakest/100)*thermal*(1-clutch*.38)*limp;sim.car.steeringBias=vehicle.diagnostics.pullDirection*alignment*.085;sim.car.fuelAvailable=vehicle.fuel>.02&&vehicle.battery>2;sim.car.engineTempC=vehicle.engineTempC;if(initial)sim.car.health=C.clamp(vehicle.body,0,100);}
 function conditionDrivingInput(raw){const adjusted={...raw};adjusted.steer=C.clamp((Number(adjusted.steer)||0)+(sim.car.steeringBias||0)*(1-Math.min(1,Math.abs(Number(adjusted.steer)||0))*.5),-1,1);return adjusted;}
-function beginTrip(mode){save.stats.sequence++;vehicle.diagnostics.startCycles++;wearPart('starter',.035+Math.max(0,35-vehicle.battery)*.0015);refreshFaults();const starter=faultSeverity('starter');if(starter){vehicle.battery=C.clamp(vehicle.battery-starter*2.4,0,100);notify(vehicle.faults.starter.discovered?'STARTER FAULT / CRANK DRAW HIGH':'SLOW CRANK / DIAGNOSIS NEEDED',2.8);}activeTrip={id:'drive-'+save.stats.sequence,mode,world:sim.world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',startedAt:new Date().toISOString(),startClock:clock,startSimTime:sim.time,startOdometer:vehicle.odometerMiles,startVehicle:vehicleSnapshot(),startRoad:'',roads:new Set(),maxMph:0};lastCarDistance=sim.car.distance;lastRoadName='';currentRoadName='';systemAlerts.clear();systemPersistClock=0;applyVehicleCondition(true);}
+function beginTrip(mode){weatherObserveDistance=0;save.stats.sequence++;vehicle.diagnostics.startCycles++;wearPart('starter',.035+Math.max(0,35-vehicle.battery)*.0015);refreshFaults();const starter=faultSeverity('starter');if(starter){vehicle.battery=C.clamp(vehicle.battery-starter*2.4,0,100);notify(vehicle.faults.starter.discovered?'STARTER FAULT / CRANK DRAW HIGH':'SLOW CRANK / DIAGNOSIS NEEDED',2.8);}activeTrip={id:'drive-'+save.stats.sequence,mode,world:sim.world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',startedAt:new Date().toISOString(),startClock:clock,startSimTime:sim.time,startOdometer:vehicle.odometerMiles,startVehicle:vehicleSnapshot(),startRoad:'',roads:new Set(),maxMph:0};lastCarDistance=sim.car.distance;lastRoadName='';currentRoadName='';systemAlerts.clear();systemPersistClock=0;applyVehicleCondition(true);}
 function finishTrip(reason='RETURNED TO GARAGE'){if(!activeTrip){persist();return null;}vehicle.body=C.clamp(sim.car.health,0,100);const seconds=Math.max(0,sim.time-activeTrip.startSimTime),miles=Math.max(0,vehicle.odometerMiles-activeTrip.startOdometer),end=vehicleSnapshot(),entry={id:activeTrip.id,kind:'drive',endedAt:new Date().toISOString(),mode:activeTrip.mode,world:activeTrip.world,reason,seconds,miles,roads:activeTrip.roads.size,startRoad:activeTrip.startRoad,endRoad:currentRoadName||lastRoadName,fuelUsed:Math.max(0,activeTrip.startVehicle.fuel-end.fuel),bodyLoss:activeTrip.startVehicle.body-end.body,maxMph:activeTrip.maxMph};if(seconds>=4||miles>=.01){appendJournal(entry);save.stats.trips++;save.stats.totalMiles+=miles;}activeTrip=null;persist();return entry;}
 function recordRoadKnowledge(deltaM){if(!sim.world.northBerwick||deltaM<=0){if(!sim.world.northBerwick)currentRoadName='';return;}const near=C.nearestRoad(sim.world,sim.car.x,sim.car.z,34);if(!near||near.distance>(near.road.width||6)/2+7){currentRoadName='';return;}const name=String(near.road.name||'').trim();if(!name||name==='North Berwick road'){currentRoadName='';return;}currentRoadName=name;let entry=roadKnowledge[name],created=false;if(!entry){entry=roadKnowledge[name]={distanceM:0,entries:0,milestone:0,lastVisit:0};created=true;save.stats.roadsDiscovered=Object.keys(roadKnowledge).length;}if(name!==lastRoadName){entry.entries++;lastRoadName=name;if(activeTrip){activeTrip.roads.add(name);if(!activeTrip.startRoad)activeTrip.startRoad=name;}if(created)notify('ROAD REMEMBERED / '+name.toUpperCase(),2.6);}entry.distanceM+=deltaM;entry.lastVisit=Date.now();const score=roadMemoryScore(entry),milestone=[100,75,50,25].find(level=>score>=level)||0;if(milestone>entry.milestone){entry.milestone=milestone;if(milestone>=25)notify(name.toUpperCase()+' / ROAD MEMORY '+milestone+'%',2.2);}}
 function systemWarning(id,condition,text){if(condition&&!systemAlerts.has(id)){systemAlerts.add(id);notify(text,3.2);}}
-function tickLivingCar(dt,input){const c=sim.car,deltaM=Math.max(0,c.distance-lastCarDistance);lastCarDistance=c.distance;const miles=deltaM/1609.344,speed=Math.abs(c.forwardSpeed),load=C.clamp(Math.max(0,input?.throttle||0)+(c.boosting?.55:0),0,1.6),ambient=settings.weather==='night'?7:settings.weather==='rain'?13:21,electrical=settings.weather==='rain'||settings.weather==='night'?1:.35;vehicle.odometerMiles+=miles;vehicle.fuel=C.clamp(vehicle.fuel-deltaM*(.00012+load*.00009+(c.boosting?.00009:0)),0,100);vehicle.tires=C.clamp(vehicle.tires-deltaM*.000005-Math.abs(c.lateralSpeed)*dt*.00062-(input?.handbrake?speed*dt*.00038:0)-effectiveFault('tireLeak')*miles*.55,0,100);vehicle.brakes=C.clamp(vehicle.brakes-(input?.brake||0)*speed*dt*.00016,0,100);vehicle.oil=C.clamp(vehicle.oil-deltaM*.0000017-Math.max(0,vehicle.engineTempC-112)*dt*.00006,0,100);vehicle.coolant=C.clamp(vehicle.coolant-deltaM*.0000011-Math.max(0,vehicle.engineTempC-110)*dt*.00010-effectiveFault('cooling')*miles*.7,0,100);
+function tickLivingCar(dt,input){const c=sim.car,deltaM=Math.max(0,c.distance-lastCarDistance);lastCarDistance=c.distance;const miles=deltaM/1609.344,speed=Math.abs(c.forwardSpeed),load=C.clamp(Math.max(0,input?.throttle||0)+(c.boosting?.55:0),0,1.6),ambient=townAvailable()&&weatherDirector?weatherDirector.current.tempC:settings.weather==='night'?7:settings.weather==='rain'?13:21,electrical=townAvailable()&&roadWeather?roadWeather.electrical:settings.weather==='rain'||settings.weather==='night'?1:.35;vehicle.odometerMiles+=miles;vehicle.fuel=C.clamp(vehicle.fuel-deltaM*(.00012+load*.00009+(c.boosting?.00009:0)),0,100);vehicle.tires=C.clamp(vehicle.tires-deltaM*.000005-Math.abs(c.lateralSpeed)*dt*.00062-(input?.handbrake?speed*dt*.00038:0)-effectiveFault('tireLeak')*miles*.55,0,100);vehicle.brakes=C.clamp(vehicle.brakes-(input?.brake||0)*speed*dt*.00016,0,100);vehicle.oil=C.clamp(vehicle.oil-deltaM*.0000017-Math.max(0,vehicle.engineTempC-112)*dt*.00006,0,100);vehicle.coolant=C.clamp(vehicle.coolant-deltaM*.0000011-Math.max(0,vehicle.engineTempC-110)*dt*.00010-effectiveFault('cooling')*miles*.7,0,100);
  wearPart('alternator',miles*(.004+electrical*.006)+Math.max(0,20-vehicle.battery)*dt*.00005);wearPart('coolingSystem',miles*.003+Math.max(0,vehicle.engineTempC-103)*dt*.0008);wearPart('clutch',miles*(.002+load*.006)+(load>.8&&speed<7?dt*.006:0));wearPart('wheelBearing',miles*(c.surface==='asphalt'?.0025:.008)+Math.abs(c.lateralSpeed)*dt*.00015);wearPart('alignment',miles*(c.surface==='asphalt'?.0015:.008)+Math.max(0,vehicle.body-c.health)*.002);wearPart('brakeHydraulics',miles*.0015+(input?.brake||0)*speed*dt*.00004);
- refreshFaults();const coolingFault=effectiveFault('cooling'),chargingFault=effectiveFault('charging');const targetTemp=vehicle.fuel<=.02?ambient:78+load*19+(c.boosting?12:0)+(speed<2&&load>.35?8:0)+(vehicle.coolant<40?(40-vehicle.coolant)*.30:0)+coolingFault*23;vehicle.engineTempC=C.approach(vehicle.engineTempC,targetTemp,targetTemp>vehicle.engineTempC?.035:.018,dt);const batteryTarget=(vehicle.fuel>.02&&speed>3?92-electrical*5:78-electrical*13)-chargingFault*68;vehicle.battery=C.clamp(C.approach(vehicle.battery,batteryTarget,speed>3?.020:.007,dt)-chargingFault*dt*.035,0,100);if(vehicle.engineTempC>116){const loss=(vehicle.engineTempC-116)*.0035*dt;c.health=C.clamp(c.health-loss,0,100);}vehicle.body=C.clamp(c.health,0,100);applyVehicleCondition();recordRoadKnowledge(deltaM);if(activeTrip)activeTrip.maxMph=Math.max(activeTrip.maxMph,speed*2.236936);systemWarning('fuel-low',vehicle.fuel<=15&&vehicle.fuel>.02,'LOW FUEL / RETURN TO MOTORWORKS');systemWarning('fuel-empty',vehicle.fuel<=.02,'OUT OF FUEL / THE JETTA CAN ONLY COAST');systemWarning('temp',vehicle.engineTempC>=108,'COOLANT TEMP HIGH / REDUCE LOAD');systemWarning('tires',vehicle.tires<=30,'TIRE WEAR CRITICAL / GRIP REDUCED');systemWarning('brakes',vehicle.brakes<=30,'BRAKE WEAR CRITICAL / STOPPING DISTANCE INCREASED');systemWarning('battery',vehicle.battery<=18,'CHARGING SYSTEM LOW');for(const [id,meta] of Object.entries(COMPONENTS)){const sev=faultSeverity(id),fault=vehicle.faults[id];if(sev>.20)systemWarning('fault-'+id,true,(fault.discovered?meta.label+' FAULT':'NEW SYMPTOM')+' / OPEN JETTA STATUS');}systemPersistClock+=dt;if(systemPersistClock>=8){systemPersistClock=0;persist();}}
+ refreshFaults();const coolingFault=effectiveFault('cooling'),chargingFault=effectiveFault('charging');const targetTemp=vehicle.fuel<=.02?ambient:78+load*19+(townAvailable()?C.clamp((ambient-15)*.14,-5,4):0)+(c.boosting?12:0)+(speed<2&&load>.35?8:0)+(vehicle.coolant<40?(40-vehicle.coolant)*.30:0)+coolingFault*23;vehicle.engineTempC=C.approach(vehicle.engineTempC,targetTemp,targetTemp>vehicle.engineTempC?.035:.018,dt);const batteryTarget=(vehicle.fuel>.02&&speed>3?92-electrical*5:78-electrical*13)-chargingFault*68;vehicle.battery=C.clamp(C.approach(vehicle.battery,batteryTarget,speed>3?.020:.007,dt)-chargingFault*dt*.035-(townAvailable()?Math.max(0,4-ambient)*dt*.00035:0),0,100);if(vehicle.engineTempC>116){const loss=(vehicle.engineTempC-116)*.0035*dt;c.health=C.clamp(c.health-loss,0,100);}vehicle.body=C.clamp(c.health,0,100);applyVehicleCondition();recordRoadKnowledge(deltaM);recordWeatherKnowledge(deltaM);if(activeTrip)activeTrip.maxMph=Math.max(activeTrip.maxMph,speed*2.236936);systemWarning('fuel-low',vehicle.fuel<=15&&vehicle.fuel>.02,'LOW FUEL / RETURN TO MOTORWORKS');systemWarning('fuel-empty',vehicle.fuel<=.02,'OUT OF FUEL / THE JETTA CAN ONLY COAST');systemWarning('temp',vehicle.engineTempC>=108,'COOLANT TEMP HIGH / REDUCE LOAD');systemWarning('tires',vehicle.tires<=30,'TIRE WEAR CRITICAL / GRIP REDUCED');systemWarning('brakes',vehicle.brakes<=30,'BRAKE WEAR CRITICAL / STOPPING DISTANCE INCREASED');systemWarning('battery',vehicle.battery<=18,'CHARGING SYSTEM LOW');for(const [id,meta] of Object.entries(COMPONENTS)){const sev=faultSeverity(id),fault=vehicle.faults[id];if(sev>.20)systemWarning('fault-'+id,true,(fault.discovered?meta.label+' FAULT':'NEW SYMPTOM')+' / OPEN JETTA STATUS');}systemPersistClock+=dt;if(systemPersistClock>=8){systemPersistClock=0;persist();}}
 
 function applySettings(){
  applyDriverPreferences();
@@ -2451,6 +2734,7 @@ function applySettings(){
 function showState(){
  $('town-dialog').hidden=state!=='town';
  if(townDirector)townDirector.enabled=sim.world.northBerwick&&sim.mode==='free'&&!director.active;
+ if(weatherDirector)weatherDirector.enabled=townAvailable();
  $('intro').hidden=state!=='menu' && !(state==='pause'&&pausedFromMenu);
  $('hud').hidden=state==='menu'||state==='inspect'||state==='story'||state==='journey'||(state==='pause'&&pausedFromMenu);
  $('inspection').hidden=state!=='inspect';$('story').hidden=state!=='story';$('journey').hidden=state!=='journey';
@@ -2489,6 +2773,7 @@ async function loadNorthBerwick(){
   if(!response.ok)throw new Error('world asset '+response.status);
   northBerwickWorld=C.createNorthBerwickWorld(await response.json());
   townDirector=new C.Town.Director(save.town,northBerwickWorld);save.town=townDirector.state;sim.townDirector=townDirector;
+  weatherDirector=new C.MaineWeather.Director(save.climate,northBerwickWorld,save.town);save.climate=weatherDirector.state;sim.weatherDirector=weatherDirector;
   $('free-drive-caption').textContent='Your car. Your North Berwick roads.';
  }catch(error){
   // Free Drive still has the existing reconstruction if a partial static host omits the optional map.
@@ -2525,7 +2810,8 @@ function action(name){
  if(name==='transform')sim.transform();else if(name==='pulse')sim.pulse();else if(name==='recover')sim.recover();else if(name==='camera'){cameraStyle=(cameraStyle+1)%3;cameraEye=null;cameraTarget=null;updateCameraChoice();notify(cameraNames[cameraStyle]);}
 }
 for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{selected=b.dataset.mode;for(const card of document.querySelectorAll('[data-mode]')){const active=card===b;card.classList.toggle('selected',active);card.setAttribute('aria-pressed',String(active));}});
-$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('journey-open').addEventListener('click',openJourney);$('journey-hud').addEventListener('click',openJourney);$('journey-pause').addEventListener('click',openJourney);$('journey-close').addEventListener('click',closeJourney);$('journey-refuel').addEventListener('click',()=>serviceVehicle(false));$('journey-service').addEventListener('click',()=>serviceVehicle(true));$('diagnostic-tests').addEventListener('click',event=>{const button=event.target.closest('[data-diagnostic]');if(button)runDiagnostic(button.dataset.diagnostic);});$('parts-grid').addEventListener('click',event=>{const button=event.target.closest('[data-repair]');if(button)repairFault(button.dataset.repair,button.dataset.strategy);});$('roadside-actions').addEventListener('click',event=>{const button=event.target.closest('[data-triage]');if(button)roadsideTriage(button.dataset.triage);});$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('minimap').addEventListener('wheel',mapWheel,{passive:false});$('expanded-map').addEventListener('wheel',mapWheel,{passive:false});$('map-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('map-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('minimap-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('minimap-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;vehicle=save.vehicle=defaults.vehicle;roadKnowledge=save.roadKnowledge=defaults.roadKnowledge;driveJournal=save.journal=defaults.journal;serviceHistory=save.serviceHistory=defaults.serviceHistory;save.stats=defaults.stats;save.town=defaults.town;if(northBerwickWorld){townDirector=new C.Town.Director(save.town,northBerwickWorld);save.town=townDirector.state;sim.townDirector=townDirector;}activeTrip=null;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();updateJourneyPanel();garage();}else{btn.textContent='CONFIRM RESET?';}});
+$('drive').addEventListener('click',()=>start());$('pause-button').addEventListener('click',pause);$('intro-help').addEventListener('click',pause);$('resume').addEventListener('click',resume);$('garage').addEventListener('click',garage);$('recover').addEventListener('click',()=>{sim.recover();resume();});$('retry').addEventListener('click',()=>start(selected,director.active?.index??null));$('result-garage').addEventListener('click',garage);$('journey-open').addEventListener('click',openJourney);$('journey-hud').addEventListener('click',openJourney);$('journey-pause').addEventListener('click',openJourney);$('journey-close').addEventListener('click',closeJourney);$('journey-refuel').addEventListener('click',()=>serviceVehicle(false));$('journey-service').addEventListener('click',()=>serviceVehicle(true));$('diagnostic-tests').addEventListener('click',event=>{const button=event.target.closest('[data-diagnostic]');if(button)runDiagnostic(button.dataset.diagnostic);});$('parts-grid').addEventListener('click',event=>{const button=event.target.closest('[data-repair]');if(button)repairFault(button.dataset.repair,button.dataset.strategy);});$('roadside-actions').addEventListener('click',event=>{const button=event.target.closest('[data-triage]');if(button)roadsideTriage(button.dataset.triage);});$('map-resume').addEventListener('click',closeMap);$('minimap').addEventListener('click',()=>{if(state==='play')openMap();});$('minimap').addEventListener('wheel',mapWheel,{passive:false});$('expanded-map').addEventListener('wheel',mapWheel,{passive:false});$('map-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('map-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('minimap-zoom-in').addEventListener('click',()=>changeMapZoom(1));$('minimap-zoom-out').addEventListener('click',()=>changeMapZoom(-1));$('reset-progress').addEventListener('click',()=>{const btn=$('reset-progress');if(btn.textContent==='CONFIRM RESET?'){localStorage.removeItem('995.reborn.save.v1');localStorage.removeItem('995.reborn.story.v1');const defaults=C.validateSave(null);Object.assign(settings,defaults.settings);settings.weather='rain';settings.autoThrottle=false;settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;save.bestRun=defaults.bestRun;vehicle=save.vehicle=defaults.vehicle;roadKnowledge=save.roadKnowledge=defaults.roadKnowledge;driveJournal=save.journal=defaults.journal;serviceHistory=save.serviceHistory=defaults.serviceHistory;save.stats=defaults.stats;save.town=defaults.town;save.climate=defaults.climate;if(northBerwickWorld){townDirector=new C.Town.Director(save.town,northBerwickWorld);save.town=townDirector.state;sim.townDirector=townDirector;
+  weatherDirector=new C.MaineWeather.Director(save.climate,northBerwickWorld,save.town);save.climate=weatherDirector.state;sim.weatherDirector=weatherDirector;}activeTrip=null;director.progress=S.validateProgress(null);viewingChapter=S.nextIndex(director.progress);applySettings();updateJourneyPanel();garage();}else{btn.textContent='CONFIRM RESET?';}});
 $('inspect-car').addEventListener('click',()=>{state='inspect';input.clear();inspectAngle=-2.34;inspectHeight=.20;inspectDistance=5.8;inspectDragged=false;inspectTarget=[0,.84,0];inspectFocus='front';updateInspect();showState();});
 $('inspect-close').addEventListener('click',garage);
 for(const b of document.querySelectorAll('[data-inspect]'))b.addEventListener('click',()=>{for(let i=0;i<3&&sim.car.mode!==b.dataset.inspect;i++)C.changeMode(sim.car);updateInspect();});
@@ -2660,7 +2946,7 @@ function drawExpandedMap(){
  for(const building of world.buildings){const [x,z]=p(building.x,building.z);ctx.save();ctx.translate(x,z);ctx.rotate(-(building.yaw||0));ctx.fillStyle=building.landmarkId?'#b88b61':'#425a55';ctx.fillRect(-Math.max(.7,building.w*scale)/2,-Math.max(.7,building.d*scale)/2,Math.max(.7,building.w*scale),Math.max(.7,building.d*scale));ctx.restore();}
  ctx.lineCap='round';for(const road of world.roads){ctx.beginPath();ctx.moveTo(...p(road.x1,road.z1));ctx.lineTo(...p(road.x2,road.z2));ctx.lineWidth=Math.max(1.2,road.width*scale*.82);const memory=roadMemoryScore(roadKnowledge[road.name]||{});ctx.strokeStyle=road.surface==='gravel'?(memory?'#d2b77e':'#8e8269'):(memory>=75?'#c8ead9':memory?'#9fc2b2':'#6f8b80');ctx.stroke();}
  if(world.northBerwick)drawDriverMapLabels(ctx,p,world,w,h,pad);
- drawTownMap(ctx,p);drawDriverMap(ctx,p);
+ drawWeatherMap(ctx,p);drawTownMap(ctx,p);drawDriverMap(ctx,p);
  const [x,z]=p(car.x,car.z);ctx.save();ctx.translate(x,z);ctx.rotate(-car.yaw);ctx.fillStyle='#f5dfaa';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(7,8);ctx.lineTo(0,4);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();ctx.restore();ctx.restore();
  ctx.fillStyle='#c2d9d0';ctx.font='600 16px Arial';ctx.fillText(world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',pad,28);ctx.font='12px Arial';ctx.fillStyle='#91aba3';ctx.fillText('DRAG / ARROWS TO PAN · SCROLL / +/- TO ZOOM · M TO RETURN',pad,h-19);
  $('map-title').textContent=world.northBerwick?'North Berwick Free Drive':'Blackwater County';$('map-subtitle').textContent=(world.northBerwick?'Data-derived roads and footprint placement':'Activity map')+' · '+Math.round(mapZoom*100)+'% · you are here';
@@ -2672,7 +2958,7 @@ function drawMap(){
  for(const b of sim.world.buildings){const [x,z]=p(b.x,b.z);ctx.save();ctx.translate(x,z);ctx.rotate(-(b.yaw||0));ctx.fillStyle=b.landmarkId?'#9b7254':'#38504b';ctx.fillRect(-b.w*scale/2,-b.d*scale/2,b.w*scale,b.d*scale);ctx.restore();}
  for(const r of sim.world.roads){ctx.beginPath();ctx.moveTo(...p(r.x1,r.z1));ctx.lineTo(...p(r.x2,r.z2));ctx.lineWidth=r.width*scale*.6;const memory=roadMemoryScore(roadKnowledge[r.name]||{});ctx.strokeStyle=r.surface==='gravel'?(memory?'#a89164':'#6f6955'):(memory>=75?'#b8ddca':memory?'#7c9485':'#526a63');ctx.stroke();}
  if(sim.world.northBerwick){const nearby=C.nearestRoad(sim.world,c.x,c.z,45);if(nearby){ctx.font='bold 11px Arial';ctx.fillStyle='#d8e9d4';ctx.fillText(nearby.road.name,10,20);}}
- drawTownMap(ctx,p);drawDriverMap(ctx,p);
+ drawWeatherMap(ctx,p);drawTownMap(ctx,p);drawDriverMap(ctx,p);
  if(sim.mode==='run'&&sim.mission.status==='active'){
   const remaining=C.ROUTE.slice(sim.mission.checkpoint);ctx.strokeStyle='#eac68b';ctx.lineWidth=3;ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(...p(c.x,c.z));for(const cp of remaining)ctx.lineTo(...p(cp.x,cp.z));ctx.stroke();ctx.setLineDash([]);
   const cp=remaining[0];if(cp){ctx.fillStyle='#ffdc98';const[x,z]=p(cp.x,cp.z);ctx.beginPath();ctx.arc(x,z,8,0,Math.PI*2);ctx.fill();}
@@ -2701,7 +2987,7 @@ function updateHUD(){
  if(radio){$('radio-speaker').textContent=radio.speaker;$('radio-text').textContent=radio.text;}
  $('objective').textContent=title;$('objective-detail').textContent=detail;$('mission-progress').querySelector('span').style.width=(progress*100)+'%';
  if(touch&&input.padConnected)document.body.classList.remove('touch');else document.body.classList.toggle('touch',touch);
- updateDriverHUD();drawMap();
+ updateDriverHUD();updateWeatherHUD();drawMap();
 }
 function updateWaypoint(){
  const cp=sim.mode==='run'&&sim.mission.status==='active'?C.ROUTE[sim.mission.checkpoint]:director.objective(sim)?.destination;
@@ -2710,7 +2996,7 @@ function updateWaypoint(){
 }
 const fx=$('weather-fx'),fxc=fx.getContext('2d');const random=C.rng(295);const drops=Array.from({length:110},()=>({x:random(),y:random(),speed:.3+random()*.6}));
 function resizeFX(){fx.width=innerWidth;fx.height=innerHeight;}
-function drawWeather(dt){fxc.clearRect(0,0,fx.width,fx.height);if(renderer.rain<.02||renderer.presentation==='studio')return;fxc.strokeStyle='rgba(204,225,212,'+renderer.rain*.21+')';fxc.lineWidth=1;fxc.beginPath();for(const p of drops){if(!settings.reducedMotion){p.y=(p.y+dt*p.speed)%1;p.x=(p.x+dt*.035)%1;}const x=p.x*fx.width,y=p.y*fx.height;fxc.moveTo(x,y);fxc.lineTo(x-3,y+15);}fxc.stroke();}
+function drawWeather(dt){if(townAvailable()&&weatherDirector){drawMaineWeather(dt);return;}fxc.clearRect(0,0,fx.width,fx.height);if(renderer.rain<.02||renderer.presentation==='studio')return;fxc.strokeStyle='rgba(204,225,212,'+renderer.rain*.21+')';fxc.lineWidth=1;fxc.beginPath();for(const p of drops){if(!settings.reducedMotion){p.y=(p.y+dt*p.speed)%1;p.x=(p.x+dt*.035)%1;}const x=p.x*fx.width,y=p.y*fx.height;fxc.moveTo(x,y);fxc.lineTo(x-3,y+15);}fxc.stroke();}
 function updateBest(){if(save.bestRun)$('best-menu').textContent='LOCAL BEST '+formatTime(save.bestRun);}
 function frame(timestamp){
  try{
@@ -2721,20 +3007,20 @@ function frame(timestamp){
   if(state==='play'){
    accumulator=Math.min(accumulator+dt,.12);let steps=0;
    while(accumulator>=C.DT&&steps<15&&state==='play'){
-    lastInput=conditionDrivingInput(input.sample(sim.car,C.DT,settings.autoThrottle));if(state!=='play')break;if(townDirector?.enabled)lastInput=townDirector.constrainInput(lastInput,sim.car);applyVehicleCondition();sim.step(lastInput,C.DT,settings.weather==='rain');tickLivingCar(C.DT,lastInput);tickTown(C.DT);director.tick(C.DT,sim);accumulator-=C.DT;steps++;consumeEvents();
+    lastInput=conditionDrivingInput(input.sample(sim.car,C.DT,settings.autoThrottle));if(state!=='play')break;if(townDirector?.enabled)lastInput=townDirector.constrainInput(lastInput,sim.car);applyVehicleCondition();applyWeatherRoad(C.DT);sim.step(lastInput,C.DT,!townAvailable()&&settings.weather==='rain');tickLivingCar(C.DT,lastInput);tickTown(C.DT);director.tick(C.DT,sim);accumulator-=C.DT;steps++;consumeEvents();
    }
    if(sim.car.health<lastHealth-.5){audio.event('hit');$('damage-flash').style.opacity=settings.reducedMotion?'0':'.7';}
    else $('damage-flash').style.opacity='0';lastHealth=sim.car.health;
   }else if(state==='menu'||state==='inspect'||state==='story'){sim.time+=dt;if(state==='inspect'){sim.car.modeBlend=C.approach(sim.car.modeBlend,sim.car.mode==='reborn'?1:0,3,dt);sim.car.rallyBlend=C.approach(sim.car.rallyBlend,sim.car.mode==='rally'?1:0,3,dt);}}
   audio.update(sim.car,lastInput,state==='play');
-  updateCamera(dt);renderer.storyGoal=director.objective(sim)?.destination||null;renderer.update(sim,dt,settings);renderer.render();renderer.drawPlate(sim.car,$('plate'));drawWeather(dt);updateWaypoint();
+  updateCamera(dt);renderer.storyGoal=director.objective(sim)?.destination||null;renderer.update(sim,dt,weatherRenderSettings());renderer.render();renderer.drawPlate(sim.car,$('plate'));drawWeather(dt);updateWaypoint();
   uiClock+=dt;if(uiClock>=.10){uiClock=0;if(state==='play')updateHUD();}
   if(clock>toastUntil)$('toast').classList.remove('visible');
  }catch(e){frameErrors.push(String(e));if(frameErrors.length===1){state='error';input.clear();$('fatal-message').textContent='The drive stopped safely: '+e.message;$('fatal').hidden=false;console.error(e);}return;}
  requestAnimationFrame(frame);
 }
 // Read-only diagnostics are useful for regression tests and issue reports. No remote endpoint.
-window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,graphics:renderer.diagnostics?.()||{},story:director.snapshot(),town:townDirector?JSON.parse(JSON.stringify(townDirector.state)):null,livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,serviceHistory:serviceHistory.length,activeFaults:activeFaults().map(([id,fault])=>({id,severity:fault.severity,discovered:fault.discovered})),activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
+window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,graphics:renderer.diagnostics?.()||{},story:director.snapshot(),town:townDirector?JSON.parse(JSON.stringify(townDirector.state)):null,weather:weatherSnapshot(),livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,serviceHistory:serviceHistory.length,activeFaults:activeFaults().map(([id,fault])=>({id,severity:fault.severity,discovered:fault.discovered})),activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
 $('input-caption').innerHTML=touch?'LANDSCAPE TOUCH · LEFT STICK = ARROW KEYS<br><span>Third person default · tap CAM for driver view.</span>':'WASD / ARROWS · CONTROLLER READY<br><span>Third person default · C changes camera.</span>';
 /* DRIVER_UX_BEGIN */
 // Presentation and navigation only. Fixed-step simulation and save identity stay intact.
@@ -2788,7 +3074,7 @@ function drawDriverMapLabels(ctx,p,world,w,h,pad){
 }
 
 /* DRIVER_UX_END */
-initDriverUX();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
+initDriverUX();initWeatherUI();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
 if(location.protocol.startsWith('http')&&window.isSecureContext&&'serviceWorker'in navigator&&!document.body.dataset.standalone){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
 })();
 

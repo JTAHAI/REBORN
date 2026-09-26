@@ -86,3 +86,25 @@ An interface polish release on Build 012, not another gameplay pass:
 - compact landscape touch controls retaining the single manual-throttle joystick and portrait rotation guard.
 
 Run `npm test` for simulation, persistence and UX invariants; `npm run test:ux` runs isolated desktop/touch-emulated browser checks using the locally cached agent-browser CLI. See [`docs/DRIVER_EXPERIENCE_POLISH.md`](docs/DRIVER_EXPERIENCE_POLISH.md) for scope and validation limits.
+
+## Build 013 — Maine weather and remembered surfaces
+
+Gameplay Pass 4 adds local seeded seasons and weather, persistent named-road
+surfaces, condition-sensitive traction/braking, fog and precipitation, snow/ice
+dressing, public-works treatment, plow traffic and observed hazard memory.
+Settings offers Seasonal Journey or explicitly labelled weather scenarios.
+J → Living Town shows the weather and road-surface ledger. Existing story/modes,
+modern UX, saved condition and town history remain. **4 gameplay passes remain.**
+
+The full memorial website now has maintained source instead of depending on
+manual edits to an old ZIP. `npm run package:site` produces the full website
+(`/play/` inside) and its matching standalone game in `packages/`. It requires
+Node and Python 3 for standard-library ZIP creation; no runtime server is added.
+Run `npm run test:site` after the site build. Browser-only acceptance is available
+through `npm run test:site:browser` and `npm run test:weather:browser`.
+
+No build command deploys production. The recorded host uses Workers Static
+Assets; preserve the existing deployment configuration. Never replace the
+memorial homepage with game-only `dist/`. See
+[`docs/MAINE_WEATHER_ROADS_PASS_013.md`](docs/MAINE_WEATHER_ROADS_PASS_013.md) for
+model assumptions, bounds, migration, packaging and verification details.

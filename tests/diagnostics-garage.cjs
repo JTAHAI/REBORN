@@ -6,7 +6,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const root=path.resolve(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-for(const token of ['0.9.1-pass012','diagnostic-tests','symptom-list','parts-grid','repair-history','roadside-actions','runDiagnostic','repairFault','roadsideTriage','conditionDrivingInput','DIAGNOSTIC BAY','REBUILD / PRESERVE'])assert.ok(html.includes(token),`Missing diagnostics token: ${token}`);
+for(const token of ['0.10.0-maine-weather-p013','diagnostic-tests','symptom-list','parts-grid','repair-history','roadside-actions','runDiagnostic','repairFault','roadsideTriage','conditionDrivingInput','DIAGNOSTIC BAY','REBUILD / PRESERVE'])assert.ok(html.includes(token),`Missing diagnostics token: ${token}`);
 for(const forbidden of ['North Berwick Grand Prix','Procedural Grand Prix','GRID READY'])assert.ok(!html.includes(forbidden),`Separate-project token leaked: ${forbidden}`);
 const core=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).find(code=>code.includes('else root.RebornCore = api'));
 assert.ok(core,'Production simulation missing');
