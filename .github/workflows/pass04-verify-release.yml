@@ -22,8 +22,8 @@ jobs:
           set -euo pipefail
           test "$(git ls-remote origin refs/heads/codex/reborn-modern-driving-ux | cut -f1)" = '863dfdb8d475c2714c1702c387bc9abf464f8b2e'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass04-weather-release)"
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-f648-81f5-ac95-b7c6042308bb/raw?se=2026-09-26T07%3A26%3A22Z&sp=r&sv=2026-02-06&sr=b&scid=69d17b34-6372-5c32-871e-e2f52a67b3bf&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T19%3A37%3A10Z&ske=2026-09-26T19%3A37%3A10Z&sks=b&skv=2026-02-06&sig=hjxbhQdYe8TcoDgRT6QOEtR6sfFW7lkCYH0Emz5ajAE%3D' -o /tmp/release.zip
-          echo '16bbc91cdc12573ac9784ba99af5653b7566e418666726919957cdd496ea5ac1  /tmp/release.zip' | sha256sum -c -
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-0b18-81f5-a5ad-bd97cc89b1d1/raw?se=2026-09-26T15%3A58%3A44Z&sp=r&sv=2026-02-06&sr=b&scid=fcc71d69-4cb4-5125-8ac3-e18c6500f53f&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T15%3A18%3A16Z&ske=2026-09-27T15%3A18%3A16Z&sks=b&skv=2026-02-06&sig=2F55nayTG7IqZH7xTYoGfPQnU8gCw595388zftxAvGE%3D' -o /tmp/release.zip
+          echo 'eb6c51421fd9494724edf9f4f4931d3f679b08690728ebe8cce12b4179eda875  /tmp/release.zip' | sha256sum -c -
           git switch -c chatgpt/reborn-pass04-weather-release
           unzip -o /tmp/release.zip
           mkdir -p /tmp/pass04-release-evidence
