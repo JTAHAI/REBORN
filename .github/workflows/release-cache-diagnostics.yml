@@ -19,26 +19,34 @@ jobs:
       - name: Recover candidate and instrument failed acceptance
         run: |
           set -euo pipefail
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-2978-81f5-a00d-2fe45d7e7588/raw?se=2026-09-26T09%3A32%3A52Z&sp=r&sv=2026-02-06&sr=b&scid=f8e64a50-3645-5d23-a155-430f0c03d46a&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T19%3A35%3A24Z&ske=2026-09-26T19%3A35%3A24Z&sks=b&skv=2026-02-06&sig=UfnoQCMzrg7dmzlVJsAppvoa9pmUeCT/e266K8ehclA%3D' -o /tmp/candidate.zip
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-e76c-81f5-952d-876a6c8ee7c5/raw?se=2026-09-26T09%3A38%3A18Z&sp=r&sv=2026-02-06&sr=b&scid=c99389e0-ebb4-5c3b-87d2-881b96687ee1&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T19%3A42%3A53Z&ske=2026-09-26T19%3A42%3A53Z&sks=b&skv=2026-02-06&sig=Jm7BlJb2OLZAFWFrASph0dyYru/wIloWV/c1aSUi2XA%3D' -o /tmp/candidate.zip
           echo '16bbc91cdc12573ac9784ba99af5653b7566e418666726919957cdd496ea5ac1  /tmp/candidate.zip' | sha256sum -c -
           unzip -o /tmp/candidate.zip
           mkdir -p /tmp/cache-evidence
           python3 - <<'PY'
           from pathlib import Path
           p=Path('tests/website-browser.py');s=p.read_text()
-          s=s.replace('page.set_default_timeout(30000)', 'page.set_default_timeout(30000);page.on("pageerror",lambda e:print("PAGE_ERROR",str(e),flush=True));page.on("console",lambda e:print("CONSOLE",e.type,e.text[:300],flush=True))')
-          s=s.replace("finally:\n server.shutdown();old.cleanup()", '''except Exception:
-           try:
-            print("DIAG",page.evaluate("({version:window.REBORN?.version, fatal:document.getElementById('fatal-message')?.textContent, loading:document.getElementById('loading')?.hidden, url:location.href})"),flush=True)
-            print("CACHES",page.evaluate("caches.keys()"),flush=True)
-            print("SW",page.evaluate("navigator.serviceWorker.getRegistrations().then(rs=>rs.map(r=>({active:r.active?.scriptURL,installing:r.installing?.state,waiting:r.waiting?.state})))"),flush=True)
+          s=s.replace('page.set_default_timeout(30000)', 'page.set_default_timeout(30000);page.on("pageerror",lambda e:print("PAGE_ERROR",str(e),flush=True));page.on("console",lambda e:print("CONSOLE",e.type,e.text[:300],flush=True));page.on("response",lambda r:print("RESPONSE",r.status,r.url,flush=True) if r.request.resource_type in ["document","script"] else None)')
+          start=s.index("  phase['root']=site;page.reload();")
+          end=s.index("  page.wait_for_function(\"navigator.serviceWorker.controller",start)
+          s=s[:start]+'''  phase['root']=site;page.reload()
+            for i in range(8):
+             page.wait_for_timeout(1500)
+             print("STATE",page.evaluate("({version:window.REBORN?.version, core:window.RebornCore?.VERSION, fatal:document.getElementById('fatal-message')?.textContent, loading:document.getElementById('loading')?.hidden, url:location.href, scripts:[...document.scripts].map(s=>s.src).filter(Boolean), title:document.title})"),flush=True)
+             print("CACHES",page.evaluate("caches.keys()"),flush=True)
+             print("SW",page.evaluate("navigator.serviceWorker.getRegistrations().then(rs=>rs.map(r=>({active:r.active?.scriptURL,installing:r.installing?.state,waiting:r.waiting?.state})))"),flush=True)
             page.screenshot(path=str(evidence/'cache-failure.png'))
-           except Exception as diagnostic: print("DIAG_ERROR",str(diagnostic),flush=True)
-           raise
-          finally:
-           server.shutdown();old.cleanup()''')
-          p.write_text(s)
+            (evidence/'upgrade.html').write_text(page.content())
+            page.wait_for_function("window.REBORN?.version==='0.10.0-maine-weather-p013'",timeout=10000)
+          '''.replace('\n  ','\n')+s[end:]
+          # Keep the replacement inside the existing browser context (two spaces).
+          lines=s.splitlines();a=next(i for i,l in enumerate(lines) if "phase['root']=site;page.reload()" in l)
+          b=next(i for i in range(a+1,len(lines)) if 'navigator.serviceWorker.controller && caches.keys()' in lines[i])
+          replacement=lines[a:b]
+          replacement=[line if n==0 else ('  '+line.lstrip() if not line.lstrip().startswith(('page.wait_for_timeout(1500)','print(')) else '   '+line.lstrip()) for n,line in enumerate(replacement) if line.strip()]
+          lines[a:b]=replacement;p.write_text('\n'.join(lines)+'\n')
           PY
+          python3 -m py_compile tests/website-browser.py
           npm run build:site
       - name: Install isolated test browser
         run: |
