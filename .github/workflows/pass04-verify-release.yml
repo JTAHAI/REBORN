@@ -1,0 +1,90 @@
+name: Verify and package REBORN Pass 4
+on:
+  push:
+    branches: ['chatgpt/pass04-verify-release']
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass04-release-evidence/screenshots
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 863dfdb8d475c2714c1702c387bc9abf464f8b2e
+          fetch-depth: 0
+      - name: Apply checksum-verified release candidate
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/codex/reborn-modern-driving-ux | cut -f1)" = '863dfdb8d475c2714c1702c387bc9abf464f8b2e'
+          test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass04-weather-release)"
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-f648-81f5-ac95-b7c6042308bb/raw?se=2026-09-26T07%3A26%3A22Z&sp=r&sv=2026-02-06&sr=b&scid=69d17b34-6372-5c32-871e-e2f52a67b3bf&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T19%3A37%3A10Z&ske=2026-09-26T19%3A37%3A10Z&sks=b&skv=2026-02-06&sig=hjxbhQdYe8TcoDgRT6QOEtR6sfFW7lkCYH0Emz5ajAE%3D' -o /tmp/release.zip
+          echo '16bbc91cdc12573ac9784ba99af5653b7566e418666726919957cdd496ea5ac1  /tmp/release.zip' | sha256sum -c -
+          git switch -c chatgpt/reborn-pass04-weather-release
+          unzip -o /tmp/release.zip
+          mkdir -p /tmp/pass04-release-evidence
+          npm run build
+      - name: Install test-only browser
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: State, driving, asset and package regressions
+        run: |
+          set -euo pipefail
+          {
+            npm test
+            npm run validate:assets
+            npm run test:http
+            node tests/controls-acceptance.cjs
+            node tests/driving-behavior.cjs
+            node tests/readability-acceptance.cjs
+            node tests/vehicle-shell-acceptance.cjs
+            node tests/town-packaging.cjs
+            npm run build:site
+            npm run test:site
+            node --check standalone-dist/sw.js
+            git diff --check
+          } 2>&1 | tee /tmp/pass04-release-evidence/regressions.log
+      - name: Existing desktop and touch UX assertions
+        run: |
+          set -o pipefail
+          npm run test:ux 2>&1 | tee /tmp/pass04-release-evidence/ux.log
+      - name: Weather interaction and mode isolation
+        if: always()
+        run: |
+          set -o pipefail
+          npm run test:weather:browser 2>&1 | tee /tmp/pass04-release-evidence/weather.log
+      - name: Complete website, offline and previous-cache upgrade
+        if: always()
+        run: |
+          set -o pipefail
+          npm run test:site:browser 2>&1 | tee /tmp/pass04-release-evidence/website.log
+      - name: Commit verified source to integration branch only
+        run: |
+          set -euo pipefail
+          git config user.name 'ChatGPT'
+          git config user.email 'chatgpt@users.noreply.github.com'
+          git add .gitignore README.md package.json package-lock.json index.html dist src tests tools docs website website-game-shell
+          git diff --cached --check
+          git commit -m 'Add Maine weather, road surfaces and current memorial release packaging'
+          git push origin HEAD:refs/heads/chatgpt/reborn-pass04-weather-release
+          git rev-parse HEAD | tee /tmp/pass04-release-evidence/source-commit.txt
+          npm run package:site 2>&1 | tee /tmp/pass04-release-evidence/packages.log
+          npm run test:site
+          git diff --exit-code
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass04-release-evidence
+          path: /tmp/pass04-release-evidence/
+          retention-days: 7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass04-deployment-packages
+          path: packages/
+          retention-days: 7
