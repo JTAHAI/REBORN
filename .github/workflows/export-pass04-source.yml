@@ -1,0 +1,22 @@
+name: Export verified Pass 4 baseline
+on:
+  push:
+    branches: ['chatgpt/pass04-source-export']
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 863dfdb8d475c2714c1702c387bc9abf464f8b2e
+      - run: |
+          mkdir -p /tmp/reborn-source
+          git archive HEAD | tar -x -C /tmp/reborn-source
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass04-baseline-863dfdb
+          path: /tmp/reborn-source/
+          include-hidden-files: true
+          retention-days: 3
