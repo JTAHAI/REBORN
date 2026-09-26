@@ -1,0 +1,10 @@
+/* Pass 4: readable conditions, not a racing overlay. */
+#weather-chip{position:absolute;right:38px;top:114px;max-width:min(390px,38vw);min-height:40px;padding:10px 14px;background:#111d25ee;color:#dce6e8;border:1px solid #9cb7c94d;border-radius:8px;font-size:12px;letter-spacing:.2px;text-align:left;pointer-events:auto}
+#weather-chip[data-risk=high]{border-left:3px solid #f0bd83}#weather-chip[data-risk=caution]{border-left:3px solid #83b7d5}
+#weather-panel p{font-size:13px;line-height:1.55;color:#b9cbd1}#weather-panel .weather-headline{font-size:21px;color:#efdfba;margin:3px 0 10px}#weather-panel .weather-disclaimer{font-size:12px;border-top:1px solid #ffffff20;padding-top:12px;color:#a4b7bb}
+.weather-facts{display:grid;grid-template-columns:minmax(100px,1fr) minmax(130px,1.6fr);gap:8px 12px;font-size:13px;line-height:1.45;margin:15px 0}.weather-facts dt{color:#a4b7bb}.weather-facts dd{margin:0;color:#e4e7dc;overflow-wrap:anywhere}
+.weather-memory{list-style:none;padding:0;margin:0;max-height:220px;overflow:auto;font-size:12px;line-height:1.5}.weather-memory li{border-left:2px solid #789cb0;background:#ffffff05;padding:9px 11px;margin:6px 0;overflow-wrap:anywhere}.weather-memory li strong,.weather-memory li span{display:block}.weather-memory li span{color:#a9bfc4;font-size:12px;margin-top:3px}.weather-legend{color:#a8cbdc}
+#pause #town-weather-setting,#pause #town-season-setting{max-width:52%;font-size:12px}#pause .settings label small{display:block;font-size:11px;color:#a5b9bf;margin-top:3px}
+body.touch #weather-chip{top:51px;right:auto;left:50%;transform:translateX(-50%);max-width:42vw;min-height:30px;padding:6px 10px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-size:11px}body.touch #ux-navigation{top:86px}
+@media(max-height:570px) and (orientation:landscape){#weather-chip{top:105px;right:22px;min-height:32px;font-size:11px;padding:7px 10px}.weather-facts{font-size:12px}#weather-panel .weather-headline{font-size:18px}}
+@media(max-width:680px){.weather-facts{grid-template-columns:1fr 1.3fr}}

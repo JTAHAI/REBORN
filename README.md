@@ -62,4 +62,49 @@ Gameplay pass 2 of 8 adds symptom-driven mechanical faults and a permanent repai
 - rebuilds retain component originality while replacements restore maximum condition;
 - every diagnostic, roadside action, service and repair enters a permanent garage ledger.
 
-Pass 2 is complete. **6 gameplay passes remain.** See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).
+Pass 2 is complete. See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).
+
+## Build 012 — Living Town Director
+
+Gameplay pass 3 adds 31 persistent incident definitions, fictional town schedules, bounded lane-following traffic, town trust and follow-up assistance. North Berwick Free Drive shows a clock; amber map dots mark incidents and amber road segments mark temporary reduced lanes. The opposite lane remains available.
+
+Stop near an incident and press **F**, or tap the contextual roadside button. Tab selects a choice, Enter confirms, and Escape returns to driving. Helping takes time and can consume battery, coolant or fuel; unsafe withdrawal calls assistance without a trust penalty. **E remains pulse**, M/minimap opens the paused map, and **J** opens diagnostics plus the Town Ledger. The clock pauses in all blocking menus and outside North Berwick Free Drive.
+
+The existing version-1 save migrates in place. No runtime service, account or map API is added. Generic town vehicles and fictional schedules are gameplay approximations, not current real operating hours. See [`docs/LIVING_TOWN_DIRECTOR_PASS_012.md`](docs/LIVING_TOWN_DIRECTOR_PASS_012.md).
+
+**5 gameplay passes remain.** Pass 4 has not been started.
+
+## Driver Experience — 0.9.1
+
+An interface polish release on Build 012, not another gameplay pass:
+
+- redesigned garage activity cards, clearer instruments and a four-tab Jetta hub;
+- searchable road/landmark pins, map dragging and pinch/scroll/keyboard zoom, My Car and Whole Town views;
+- independent minimap zoom and a pinned-place distance/bearing indicator (not turn-by-turn navigation);
+- persisted MPH/KM/H, full/minimal HUD, high contrast, control hints and effects-volume preferences;
+- keyboard-friendly dialogs, first-drive guidance, fullscreen and downloadable save backups;
+- compact landscape touch controls retaining the single manual-throttle joystick and portrait rotation guard.
+
+Run `npm test` for simulation, persistence and UX invariants; `npm run test:ux` runs isolated desktop/touch-emulated browser checks using the locally cached agent-browser CLI. See [`docs/DRIVER_EXPERIENCE_POLISH.md`](docs/DRIVER_EXPERIENCE_POLISH.md) for scope and validation limits.
+
+## Build 013 — Maine weather and remembered surfaces
+
+Gameplay Pass 4 adds local seeded seasons and weather, persistent named-road
+surfaces, condition-sensitive traction/braking, fog and precipitation, snow/ice
+dressing, public-works treatment, plow traffic and observed hazard memory.
+Settings offers Seasonal Journey or explicitly labelled weather scenarios.
+J → Living Town shows the weather and road-surface ledger. Existing story/modes,
+modern UX, saved condition and town history remain. **4 gameplay passes remain.**
+
+The full memorial website now has maintained source instead of depending on
+manual edits to an old ZIP. `npm run package:site` produces the full website
+(`/play/` inside) and its matching standalone game in `packages/`. It requires
+Node and Python 3 for standard-library ZIP creation; no runtime server is added.
+Run `npm run test:site` after the site build. Browser-only acceptance is available
+through `npm run test:site:browser` and `npm run test:weather:browser`.
+
+No build command deploys production. The recorded host uses Workers Static
+Assets; preserve the existing deployment configuration. Never replace the
+memorial homepage with game-only `dist/`. See
+[`docs/MAINE_WEATHER_ROADS_PASS_013.md`](docs/MAINE_WEATHER_ROADS_PASS_013.md) for
+model assumptions, bounds, migration, packaging and verification details.

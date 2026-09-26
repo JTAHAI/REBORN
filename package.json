@@ -1,13 +1,19 @@
 {
   "name": "99-5-reborn",
-  "version": "0.8.0-diagnostics-p011",
+  "version": "0.10.0-maine-weather-p013",
   "private": true,
-  "description": "99\u00bd REBORN static WebGL2 living-car and hometown driving game",
+  "description": "99½ REBORN static WebGL2 living-car and hometown driving game",
   "scripts": {
     "start": "node tools/serve.cjs",
     "build": "node tools/bundle.cjs",
-    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs",
+    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs && node tests/town-director.cjs && node tests/driver-ux.cjs && node tests/maine-weather.cjs",
+    "test:ux": "node tests/garage-browser-check.cjs && node tests/driver-ux-browser.cjs && node tests/driver-touch-browser.cjs",
     "test:http": "node tests/http-smoke.cjs",
-    "validate:assets": "node tools/assets/validate-vehicle.cjs"
+    "validate:assets": "node tools/assets/validate-vehicle.cjs",
+    "build:site": "node tools/build-site.cjs",
+    "package:site": "node tools/package-site.cjs",
+    "test:weather:browser": "node tests/weather-browser.cjs",
+    "test:site": "node tests/site-test.cjs",
+    "test:site:browser": "node tests/site-browser.cjs"
   }
 }

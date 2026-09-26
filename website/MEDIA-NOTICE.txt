@@ -1,0 +1,51 @@
+# Buttercup media permission — separate from the software license
+
+The code in this release is licensed under CPAL-1.0. This notice covers the accompanying original tribute text, standalone project icons, and supplied promotional artwork, only to the extent Justin Tahai holds licensable rights in them. It is a separate project-specific media permission, not an OSI-approved software license or a Creative Commons license.
+
+Permission is granted, free of charge, to copy, modify, display, perform, and redistribute those materials, including in commercial works, provided that:
+
+1. This permission and applicable third-party notices accompany copies or are made reasonably available with them.
+2. A game using those materials displays the following exact credit in a reasonably prominent opening screen or credits view:
+
+   In loving memory — Buttercup, Justin Tahai's 99.5 mkIV
+
+3. For non-game uses, the same credit appears in an appropriate visible attribution location. Do not imply endorsement by Justin Tahai or a third-party rights holder.
+
+No guarantee of title, noninfringement, merchantability, or fitness is offered. The materials are provided “as is”; to the extent permitted by law, the licensor is not liable for damages arising from their use. No third-party trademark, publicity, or other rights are granted. Nothing here restricts rights that exist independently of this permission, including applicable exceptions or use of unprotectable material.
+
+## Provenance and limitations
+
+- The tribute in content/tribute.json is Justin's supplied text, including “I drove my son home for the first time in that car.” Its wording is preserved.
+- buttercup-art-*.webp and social-card.jpg derive from the previously supplied neon_reborn_midnight_jetta_legends.png. It is AI-generated concept artwork, not an actual-car photograph.
+- harbor-target-*.webp derives from the previously supplied rainy_harbor_night_drift.png. It is AI-generated concept artwork, not gameplay. These files are retained as references and are not loaded by the game.
+- build004-gameplay.webp is an optimized copy of game/evidence/004-driving-webgl.png in the supplied Build 004 ZIP: a prior runtime capture, not evidence of this pass's hardware performance.
+- Project icons and the procedural model/material/audio code originate in the supplied game. Procedural generation code is covered by the software license; this notice does not pretend to claim ownership of any third-party trademark or unprotectable output.
+- No original personal photos or third-party music are included. The website uses system fonts; no font binaries are included.
+
+This release does not assert exclusive copyright in purely AI-generated material. The visual targets include unverified styling and badges and must not be treated as evidence of Buttercup's exact historical trim. Audit replacement models, textures, audio, and photographs before adding them. Have the code and media rights checked before a public launch.
+
+
+## Third-party Mk IV model (Build 008)
+
+`play/assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb` (and the same path under `game/assets/` in source) is a separately licensed third-party asset. It is not covered by the project-specific promotional-art permission above.
+
+# Volkswagen Bora/Jetta MK4 2005 model credit
+
+This project includes `volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb` as the factory Mk IV body reference and runtime vehicle mesh.
+
+- Title: **Volkswagen Bora/Jetta MK4 2005**
+- Author: **szymonpasterczyk734** (Sketchfab profile listed inside the downloaded GLB metadata)
+- Source: https://sketchfab.com/3d-models/volkswagen-borajetta-mk4-2005-cd7b81c9b9434216ab27d1ea198f236e
+- Licence: [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/)
+- Local file SHA-256: `AC9F1D907807E5CDB0CB02BEEB676F2F4EBE6C53F363D5FEC3CBE183604D2E3F`
+
+Changes in this project: the model is presented as a black, lowered Mk IV with the owner-specific front-only lower bumper, central mesh intake, lower lip, silver mirrors, owner wheel treatment, and `9855 MD` plate overlay. Those additions are not represented as original work by the model author.
+
+The CPAL software license does not replace this model’s CC BY 4.0 license. Model metadata and the supplied author/source notice are retained.
+
+
+## North Berwick facade atlas (Build 009)
+
+`play/assets/worlds/north-berwick/facades-atlas.webp` is a cropped and color-normalized derivative atlas made from openly licensed Wikimedia Commons photographs. It is not covered by the project-specific media permission above. Exact source pages, authors and source licenses are retained in `play/assets/worlds/north-berwick/facades-atlas.json` and the world `CREDITS.md`.
+
+The combined atlas is distributed under CC BY-SA 4.0 while retaining each source image's attribution and license obligations. In-game use presently includes attributed reference cells for North Berwick Town Hall, the Mary R. Hurd House/Hurd Manor, and the Olde Woolen Mill. No Google Street View imagery is included.
