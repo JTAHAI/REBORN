@@ -19,14 +19,14 @@ require('./garage-browser-check.cjs').withBrowser(async browser => {
     await browser('snapshot','-i');
     const paused=JSON.parse(await browser('eval',readState));
     assert.equal(paused.state,'pause');
-    assert.equal(paused.active,'auto-setting','Pause should focus the first setting');
+    assert.equal(paused.active,'sound-setting','Pause should focus the first enabled setting');
     assert.ok(paused.recover && paused.returnToGarage,'Driving recovery actions must be available');
     await browser('press','Shift+Tab');
     await browser('snapshot','-i');
-    assert.equal(JSON.parse(await browser('eval',readState)).active,'reset-progress','Reverse focus wraps to the final accessible driving action');
+    assert.equal(JSON.parse(await browser('eval',readState)).active,'ux-close-settings','Reverse focus wraps to the final accessible driving action');
     await browser('press','Tab');
     await browser('snapshot','-i');
-    assert.equal(JSON.parse(await browser('eval',readState)).active,'auto-setting','Forward focus wraps back inside dialog');
+    assert.equal(JSON.parse(await browser('eval',readState)).active,'sound-setting','Forward focus wraps back inside dialog');
     await browser('click','#recover');
     await browser('snapshot','-i');
     const recovered=JSON.parse(await browser('eval',readState));

@@ -15,9 +15,30 @@ assert.ok(args.length === 0 || (args.length === 2 && args[0] === '--action' && O
   'Usage: node tests/garage-browser-check.cjs [--action story|drive|inspect|controls]');
 const selectedAction = args.length ? actionIds[args[1]] : null;
 const npxCli = path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npx-cli.js');
-assert.ok(fs.existsSync(npxCli), 'Verification requires the installed Node/npm toolchain');
-const session = 'reborn-layout-' + process.pid;
+const portable = process.env.REBORN_BROWSER_DRIVER === 'playwright';
+if (!portable) assert.ok(fs.existsSync(npxCli), 'Verification requires Node/npm with cached agent-browser, or REBORN_BROWSER_DRIVER=playwright');
+let transport, pending = [], transportBuffer = '';
+function portableBrowser(args) {
+  if (!transport) {
+    transport = spawn(process.env.PYTHON || 'python3', [path.join(__dirname, 'playwright-bridge.py')], {stdio:['pipe','pipe','pipe']});
+    transport.stdout.on('data', data => {
+      transportBuffer += data;
+      let end;
+      while ((end=transportBuffer.indexOf('\n')) >= 0) {
+        const line=transportBuffer.slice(0,end);transportBuffer=transportBuffer.slice(end+1);
+        const next=pending.shift();if(!next)continue;
+        try {const value=JSON.parse(line);value.ok?next.resolve(JSON.stringify(value.result)):next.reject(new Error(value.error));} catch(error){next.reject(error);}
+      }
+    });
+    transport.stderr.on('data', data=>process.stderr.write(data));
+    const fail=error=>{for(const item of pending.splice(0))item.reject(error);};
+    transport.on('error',fail);transport.on('exit',code=>fail(new Error('Playwright transport exited '+code)));
+  }
+  return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{transport.kill();reject(new Error('Browser command timed out: '+args[0]));},60000);pending.push({resolve:value=>{clearTimeout(timer);resolve(value);},reject:error=>{clearTimeout(timer);reject(error);}});transport.stdin.write(JSON.stringify(args)+'\n');});
+}
+const session = 'reborn-layout-' + process.pid + '-' + Date.now();
 async function browser(...args) {
+  if (portable) return portableBrowser(args);
   const input = args[0] === 'eval' ? args[1] : null;
   if (input !== null) args = ['eval', '--stdin'];
   return new Promise((resolve,reject) => {
@@ -41,6 +62,7 @@ async function browser(...args) {
   });
 }
 const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.css':'text/css','.glb':'model/gltf-binary'};
+let browserInitScript='';
 const server = http.createServer((request, response) => {
   let filename;
   try {
@@ -51,7 +73,7 @@ const server = http.createServer((request, response) => {
   fs.readFile(filename, (error, data) => {
     if (error) { response.writeHead(404); return response.end(); }
     response.writeHead(200, {'Content-Type':mime[path.extname(filename)] || 'application/octet-stream','Cache-Control':'no-store'});
-    response.end(data);
+    response.end(browserInitScript && filename===path.join(root,'index.html') ? data.toString('utf8').replace('<head>','<head><script>'+browserInitScript+'</script>') : data);
   });
 });
 const measure = `(() => {
@@ -59,7 +81,7 @@ const measure = `(() => {
   if(!menu || menu.hidden) throw new Error('Garage not visible');
   const a=menu.querySelector('.intro-copy').getBoundingClientRect(), b=menu.querySelector('.launch-panel').getBoundingClientRect();
   const overlap=Math.min(a.right,b.right)-Math.max(a.left,b.left)>1 && Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
-  const actions=[...menu.querySelectorAll('.mode-card,#drive,#intro-help,#inspect-car,#story-open')].map(e=>{const r=e.getBoundingClientRect();const label=e.querySelector('strong')||e;const range=document.createRange();range.selectNodeContents(label);const tops=[...range.getClientRects()].filter(rect=>rect.width>0&&rect.height>0).map(rect=>Math.round(rect.top));return {id:e.id,text:e.innerText,fontSize:parseFloat(getComputedStyle(label).fontSize),labelLines:new Set(tops).size,height:r.height,visible:r.width>0&&r.height>0&&r.top>=-1&&r.bottom<=innerHeight+1&&r.left>=-1&&r.right<=innerWidth+1};});
+  const actions=[...menu.querySelectorAll('.mode-card,#drive,#intro-help,#inspect-car,#story-open,#passenger-open')].map(e=>{const r=e.getBoundingClientRect();const label=e.querySelector('strong')||e;const range=document.createRange();range.selectNodeContents(label);const tops=[...range.getClientRects()].filter(rect=>rect.width>0&&rect.height>0).map(rect=>Math.round(rect.top));return {id:e.id,text:e.innerText,fontSize:parseFloat(getComputedStyle(label).fontSize),labelLines:new Set(tops).size,height:r.height,visible:r.width>0&&r.height>0&&r.top>=-1&&r.bottom<=innerHeight+1&&r.left>=-1&&r.right<=innerWidth+1};});
   const copyVisible=a.width>0 && a.height>0 && a.top>=-1 && a.left>=-1 && a.bottom<=innerHeight+1 && a.right<=innerWidth+1;
   const titleDirection=getComputedStyle(menu.querySelector('.intro-copy h1')).flexDirection;
   return {viewport:[innerWidth,innerHeight],overlap,copyVisible,titleDirection,copyBottom:a.bottom,panelTop:b.top,actions};
@@ -102,10 +124,12 @@ async function run(action = selectedAction, compactSecondaryLabels = false) {
   }
   if(failure) { console.error(failure.message); process.exitCode=1; }
 }
-async function withBrowser(check) {
+async function withBrowser(check, {initScript='',viewport=null}={}) {
+  browserInitScript=initScript;
   let failure;
   try {
     await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+    if(viewport){await browser('open','about:blank');await browser('set','viewport','1366','900');await browser('set','viewport',...viewport.map(String));}
     await browser('open','http://127.0.0.1:'+server.address().port);
     await check(browser);
   } catch(error) {failure=error;}
