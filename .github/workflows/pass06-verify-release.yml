@@ -22,8 +22,8 @@ jobs:
           set -euo pipefail
           test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass05-drive-stories | cut -f1)" = '708ce1719d4ca66efbc09e2e857245757fcf372c'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass06-echo-roads)"
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-afec-81f5-83c3-dcde43e94331/raw?se=2026-09-26T22%3A48%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=cc1c710c-a858-5a87-a790-f00979642e8a&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T20%3A57%3A01Z&ske=2026-09-27T20%3A57%3A01Z&sks=b&skv=2026-02-06&sig=hjbnMmQ7BTakjI4crXdNQj0XRciBwx6xetjyc3nH42k%3D' -o /tmp/candidate.zip
-          echo 'cd5a1ac973732faf7bad646e6a606e50126f10efed603957551f7e52c4a2f894  /tmp/candidate.zip' | sha256sum -c -
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-7ccc-81f5-af75-7f10461a8152/raw?se=2026-09-26T22%3A55%3A47Z&sp=r&sv=2026-02-06&sr=b&scid=75824b24-dbd9-5b3e-bd5d-c7aa7fe6b0d9&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T13%3A38%3A20Z&ske=2026-09-27T13%3A38%3A20Z&sks=b&skv=2026-02-06&sig=2AbgT1UZDu9n7iViopw80ozT1gMRWiencPTz7USuumI%3D' -o /tmp/candidate.zip
+          echo '292d9250292630cbd9565348c9496df7320b9a163327aa8607b53acd3d15e833  /tmp/candidate.zip' | sha256sum -c -
           unzip -o /tmp/candidate.zip
           git switch -c chatgpt/reborn-pass06-echo-roads
           mkdir -p /tmp/pass06-evidence
@@ -54,6 +54,12 @@ jobs:
         run: |
           set -o pipefail
           npm run test:echo:browser 2>&1 | tee /tmp/pass06-evidence/echo-browser.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass06-echo-checkpoint
+          path: /tmp/pass06-evidence/
+          retention-days: 3
       - name: Existing desktop and touch UX
         if: always()
         run: |
