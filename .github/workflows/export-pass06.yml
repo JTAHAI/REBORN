@@ -1,0 +1,23 @@
+name: Export Echo Roads baseline
+on:
+  push:
+    branches: ['chatgpt/pass06-export']
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 708ce1719d4ca66efbc09e2e857245757fcf372c
+          fetch-depth: 0
+          persist-credentials: false
+      - run: git bundle create /tmp/reborn-pass06-baseline.bundle HEAD
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass06-baseline
+          path: /tmp/reborn-pass06-baseline.bundle
+          retention-days: 3
+          if-no-files-found: error
