@@ -1,0 +1,57 @@
+name: REBORN release cache diagnostics
+on:
+  push:
+    branches: ['chatgpt/reborn-gameplay-validation']
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/cache-evidence
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 863dfdb8d475c2714c1702c387bc9abf464f8b2e
+      - name: Recover candidate and instrument failed acceptance
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-2978-81f5-a00d-2fe45d7e7588/raw?se=2026-09-26T09%3A32%3A52Z&sp=r&sv=2026-02-06&sr=b&scid=f8e64a50-3645-5d23-a155-430f0c03d46a&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T19%3A35%3A24Z&ske=2026-09-26T19%3A35%3A24Z&sks=b&skv=2026-02-06&sig=UfnoQCMzrg7dmzlVJsAppvoa9pmUeCT/e266K8ehclA%3D' -o /tmp/candidate.zip
+          echo '16bbc91cdc12573ac9784ba99af5653b7566e418666726919957cdd496ea5ac1  /tmp/candidate.zip' | sha256sum -c -
+          unzip -o /tmp/candidate.zip
+          mkdir -p /tmp/cache-evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/website-browser.py');s=p.read_text()
+          s=s.replace('page.set_default_timeout(30000)', 'page.set_default_timeout(30000);page.on("pageerror",lambda e:print("PAGE_ERROR",str(e),flush=True));page.on("console",lambda e:print("CONSOLE",e.type,e.text[:300],flush=True))')
+          s=s.replace("finally:\n server.shutdown();old.cleanup()", '''except Exception:
+           try:
+            print("DIAG",page.evaluate("({version:window.REBORN?.version, fatal:document.getElementById('fatal-message')?.textContent, loading:document.getElementById('loading')?.hidden, url:location.href})"),flush=True)
+            print("CACHES",page.evaluate("caches.keys()"),flush=True)
+            print("SW",page.evaluate("navigator.serviceWorker.getRegistrations().then(rs=>rs.map(r=>({active:r.active?.scriptURL,installing:r.installing?.state,waiting:r.waiting?.state})))"),flush=True)
+            page.screenshot(path=str(evidence/'cache-failure.png'))
+           except Exception as diagnostic: print("DIAG_ERROR",str(diagnostic),flush=True)
+           raise
+          finally:
+           server.shutdown();old.cleanup()''')
+          p.write_text(s)
+          PY
+          npm run build:site
+      - name: Install isolated test browser
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Reproduce real cache upgrade
+        run: |
+          set -o pipefail
+          npm run test:site:browser 2>&1 | tee /tmp/cache-evidence/browser.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-cache-diagnostics
+          path: /tmp/cache-evidence/
+          retention-days: 7
