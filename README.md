@@ -72,7 +72,7 @@ Stop near an incident and press **F**, or tap the contextual roadside button. Ta
 
 The existing version-1 save migrates in place. No runtime service, account or map API is added. Generic town vehicles and fictional schedules are gameplay approximations, not current real operating hours. See [`docs/LIVING_TOWN_DIRECTOR_PASS_012.md`](docs/LIVING_TOWN_DIRECTOR_PASS_012.md).
 
-**5 gameplay passes remain.** Pass 4 has not been started.
+Pass 3 is complete. Later passes are documented below.
 
 ## Driver Experience — 0.9.1
 
@@ -94,7 +94,7 @@ surfaces, condition-sensitive traction/braking, fog and precipitation, snow/ice
 dressing, public-works treatment, plow traffic and observed hazard memory.
 Settings offers Seasonal Journey or explicitly labelled weather scenarios.
 J → Living Town shows the weather and road-surface ledger. Existing story/modes,
-modern UX, saved condition and town history remain. **4 gameplay passes remain.**
+modern UX, saved condition and town history remain. Pass 5 continues below.
 
 The full memorial website now has maintained source instead of depending on
 manual edits to an old ZIP. `npm run package:site` produces the full website
@@ -108,3 +108,33 @@ Assets; preserve the existing deployment configuration. Never replace the
 memorial homepage with game-only `dist/`. See
 [`docs/MAINE_WEATHER_ROADS_PASS_013.md`](docs/MAINE_WEATHER_ROADS_PASS_013.md) for
 model assumptions, bounds, migration, packaging and verification details.
+
+
+## Build 014 — Drive stories and passengers
+
+Gameplay Pass 5 adds three complete fictional North Berwick passenger drives:
+
+- **The Long Way Home** — honor or break a request to avoid the mill corridor;
+- **The Last Part Before Closing** — protect the Jetta, beat a fictional handoff window, or make no promise;
+- **First Snow** — choose treated main roads or accept a winter shortcut.
+
+The conversations happen while the car remains under player control. `1`, `2`,
+or `3` selects a response; silence is a visible choice and also the bounded
+timeout response. Named roads, weather, braking, grip, body condition, engine
+temperature and elapsed town time influence relationship outcomes. Active trips,
+trust and commitments persist across reloads and appear in the Passenger Drives
+tab and Road Journal. All passengers and personal situations are fictional.
+
+The existing version-1 save key remains unchanged. No runtime account, server,
+map API, telemetry or generated-dialogue service is added. Run
+`npm run test:stories:browser` for the passenger UI acceptance in addition to
+the normal test and full-site gates. See
+[`docs/DRIVE_STORIES_PASS_014.md`](docs/DRIVE_STORIES_PASS_014.md).
+
+**3 gameplay passes remain.**
+
+### Pass 5 interaction and reliability
+
+Open **Passenger Drives** from the garage, or `J` → **Passenger Drives**. The first response appears at pickup; `1`/`2`/`3`, touch buttons, or silence choose the reply. Unanswered questions retain their deadlines through reloads. Stops, final dialogue and a parked arrival gate each ending; the garage asks before abandoning a commitment. An unsafe-car onward-transport option avoids unfair trust loss. The fictional parts handoff uses five active-driving minutes rather than the town clock. Authored weather preferences restore after the trip without erasing accumulated road surfaces.
+
+Packaged-browser ending checks use explicit saved-position fixtures. They supplement—not replace—production route/choice tests, ordinary launch/input tests, and real-device review.

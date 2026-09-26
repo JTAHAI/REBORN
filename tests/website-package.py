@@ -25,7 +25,7 @@ for f in site.rglob('*.html'):
   if not target.is_file():errors.append((str(f.relative_to(site)),url))
 assert not errors,errors
 release=json.loads((site/'release.json').read_text());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-assert release['pass']==4 and release['remainingPasses']==4
+assert release['pass']==5 and release['remainingPasses']==3
 assert sha(site/'play/index.html')==release['packagedPlayIndexSha256']
 assert sha(site/'play/index.html')==sha(game/'index.html')
 assert sha(site/'play/assets/worlds/north-berwick/world.json')==release['northBerwickWorldSha256']
@@ -36,7 +36,7 @@ with zipfile.ZipFile(archive) as z:
   if p.is_file():assert z.read(p.relative_to(game).as_posix())==p.read_bytes(),p
  assert not any(n.startswith('dist/') for n in z.namelist())
 html=(site/'play/index.html').read_text()
-for text in ['MAINE WEATHER','weather-chip','buttercup-dedication','memorial-credits-open','town-ledger','995.reborn.save.v1','9855','MaineWeather']:
+for text in ['PASSENGER DRIVES','DriveStories','passenger-open','MAINE WEATHER','weather-chip','buttercup-dedication','memorial-credits-open','town-ledger','995.reborn.save.v1','9855','MaineWeather']:
  assert text in html,text
 assert html.count('id="buttercup-dedication"')==1
 assert html.count('src="./memorial.js')==1
@@ -47,4 +47,4 @@ assert (game/'sw.js').read_text().count('__BUILD_ID__')==0
 assert not (site/'sw.js').exists(),'No root worker should compete with the game scope'
 assert all(p.stat().st_size<25*1024*1024 for p in site.rglob('*') if p.is_file())
 assert 'immutable' not in (site/'_headers').read_text()
-print(json.dumps({'siteHtmlPages':html_count,'brokenLocalLinks':len(errors),'siteFiles':sum(p.is_file() for p in site.rglob('*')),'matchingDownloadFiles':sum(p.is_file() for p in game.rglob('*')),'matchingWorldAndGLB':True,'pass':4,'remaining':4}))
+print(json.dumps({'siteHtmlPages':html_count,'brokenLocalLinks':len(errors),'siteFiles':sum(p.is_file() for p in site.rglob('*')),'matchingDownloadFiles':sum(p.is_file() for p in game.rglob('*')),'matchingWorldAndGLB':True,'pass':5,'remaining':3}))

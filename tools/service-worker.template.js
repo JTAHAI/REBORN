@@ -1,7 +1,7 @@
 /* Browser-only cache. This is NOT a server-side Cloudflare Worker. */
 'use strict';
 const PREFIX='995-reborn-'+encodeURIComponent(self.registration.scope)+'-';
-const CACHE=PREFIX+'pass04-__BUILD_ID__';
+const CACHE=PREFIX+'pass05-__BUILD_ID__';
 const SHELL=__SHELL__;
 const SCOPE=new URL(self.registration.scope),ENTRY=new URL('./index.html',SCOPE).href;
 const URLS=new Set(SHELL.map(p=>new URL(p,SCOPE).href));

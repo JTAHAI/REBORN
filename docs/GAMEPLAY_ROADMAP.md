@@ -20,9 +20,9 @@ Persistent roadside incidents, scheduled town traffic, emergency responses, stor
 
 Rain, fog, frost, snow, slush, black ice, wet leaves, puddles, salt, plowing, and road-specific hazard memory.
 
-## Pass 5 — Drive stories and passengers
+## Pass 5 — Drive stories and passengers — complete (Build 014)
 
-Three complete trips with in-car dialogue, route-sensitive choices, silence as a choice, commitments, and relationship consequences.
+Three complete fictional passenger trips with in-car dialogue, route-sensitive commitments, silence as a choice, persistent relationships, Road Journal entries, and weather/mechanical consequences.
 
 ## Pass 6 — Echo Roads timeline prototype
 
@@ -38,4 +38,4 @@ System integration, balancing, accessibility, performance tiers, save migration,
 
 The remaining-pass count is reduced only after a pass is implemented, tested, packaged, and committed.
 
-After Build 013: **4 passes remaining**. Weather and full-site packaging are documented in `MAINE_WEATHER_ROADS_PASS_013.md`.
+After Build 014: **3 passes remaining**. Passenger drives are documented in `DRIVE_STORIES_PASS_014.md`; Pass 4 weather and full-site packaging remain documented in `MAINE_WEATHER_ROADS_PASS_013.md`.
