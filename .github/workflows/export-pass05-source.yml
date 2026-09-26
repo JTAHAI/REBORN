@@ -1,0 +1,45 @@
+name: Export REBORN Pass 5 baseline
+
+on:
+  push:
+    branches: ['chatgpt/pass05-source-export']
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3
+          fetch-depth: 0
+      - name: Verify baseline and stage source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3'
+          test "$(node -p "require('./package.json').version")" = '0.10.0-maine-weather-p013'
+          rm -rf /tmp/reborn-pass05-source
+          mkdir -p /tmp/reborn-pass05-source
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='node_modules/' \
+            --exclude='packages/' \
+            --exclude='site-dist/' \
+            --exclude='standalone-dist/' \
+            --exclude='.wrangler/' \
+            ./ /tmp/reborn-pass05-source/
+          test -f /tmp/reborn-pass05-source/index.html
+          test -f /tmp/reborn-pass05-source/src/maine-weather.js
+          test -f /tmp/reborn-pass05-source/src/town-director.js
+          test -f /tmp/reborn-pass05-source/assets/worlds/north-berwick/world.json
+          sha256sum \
+            assets/worlds/north-berwick/world.json \
+            assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb \
+            > /tmp/reborn-pass05-source/BASELINE-SHA256.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass05-baseline-e0fb07a
+          path: /tmp/reborn-pass05-source/
+          if-no-files-found: error
+          retention-days: 3
