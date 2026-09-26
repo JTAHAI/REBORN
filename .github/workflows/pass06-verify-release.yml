@@ -7,7 +7,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       REBORN_BROWSER_DRIVER: playwright
       REBORN_BROWSER_LOW: '1'
@@ -22,8 +22,8 @@ jobs:
           set -euo pipefail
           test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass05-drive-stories | cut -f1)" = '708ce1719d4ca66efbc09e2e857245757fcf372c'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass06-echo-roads)"
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-6ac8-81f5-85d3-6dea11016004/raw?se=2026-09-26T23%3A35%3A02Z&sp=r&sv=2026-02-06&sr=b&scid=31dd0498-a4bd-59b2-9b07-c2bc0405476b&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T12%3A34%3A12Z&ske=2026-09-27T12%3A34%3A12Z&sks=b&skv=2026-02-06&sig=2dq%2BDXeqedoaYs1Qz68CJKSyzO8nMuyIJZJ5BQpEfx0%3D' -o /tmp/candidate.zip
-          echo 'c083ef25db567d61011206c5ad053b89a4879c2af3d473319fd96037d6913f73  /tmp/candidate.zip' | sha256sum -c -
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-f0e0-81f5-929c-a4190f6c1b61/raw?se=2026-09-26T23%3A56%3A14Z&sp=r&sv=2026-02-06&sr=b&scid=20c50bdf-0565-5137-971a-dd03ff6f3fbd&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T17%3A08%3A34Z&ske=2026-09-27T17%3A08%3A34Z&sks=b&skv=2026-02-06&sig=z/WyJNCB0xklYGlfImN5IwMfS8vyb%2BDRag9ExbmapaY%3D' -o /tmp/candidate.zip
+          echo 'e3da0493d28077ff355486ca7a0f51321dcc7d66986077f31042be47610db3e2  /tmp/candidate.zip' | sha256sum -c -
           unzip -o /tmp/candidate.zip
           git switch -c chatgpt/reborn-pass06-echo-roads
           mkdir -p /tmp/pass06-evidence
