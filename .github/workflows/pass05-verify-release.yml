@@ -1,0 +1,127 @@
+name: Verify and package REBORN Pass 5
+
+on:
+  push:
+    branches: ['chatgpt/pass05-verify-release']
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass05-release-evidence/screenshots
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3
+          fetch-depth: 0
+
+      - name: Apply checksum-verified Pass 5 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3'
+          test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass04-weather-release | cut -f1)" = 'e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3'
+          test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass05-drive-stories)"
+          curl -fL --retry 4 --retry-delay 2 \
+            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-d948-81f5-a70e-54718ef991f9/raw?se=2026-09-26T17%3A02%3A56Z&sp=r&sv=2026-02-06&sr=b&scid=23b20357-a2a5-5cbe-90b7-e74f12613529&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T16%3A21%3A09Z&ske=2026-09-27T16%3A21%3A09Z&sks=b&skv=2026-02-06&sig=fuKnZGcEhk61diPeYawSxYqJ9aYyEcJQRxgdAzcwvww%3D' \
+            -o /tmp/pass05.zip
+          echo '2a072d9d361629038cbebd0c4020b9cbc3a9dad0a7d9301aa13437575159f557  /tmp/pass05.zip' | sha256sum -c -
+          unzip -t /tmp/pass05.zip
+          git switch -c chatgpt/reborn-pass05-drive-stories
+          unzip -o /tmp/pass05.zip
+          rm -rf tests/__pycache__
+          mkdir -p /tmp/pass05-release-evidence
+          sha256sum \
+            assets/worlds/north-berwick/world.json \
+            assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb \
+            | tee /tmp/pass05-release-evidence/immutable-before.txt
+          npm run build
+
+      - name: Install test-only browser
+        shell: bash
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+
+      - name: Static, state, driving and asset regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            npm test
+            npm run validate:assets
+            npm run test:http
+            node tests/controls-acceptance.cjs
+            node tests/driving-behavior.cjs
+            node tests/readability-acceptance.cjs
+            node tests/vehicle-shell-acceptance.cjs
+            node tests/town-packaging.cjs
+            npm run build:site
+            npm run test:site
+            node --check standalone-dist/sw.js
+            git diff --check
+            git diff --exit-code -- \
+              legacy/99-5-REBORN-Build-004-PLAY.html \
+              assets/worlds/north-berwick/world.json \
+              assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb
+          } 2>&1 | tee /tmp/pass05-release-evidence/regressions.log
+
+      - name: Existing desktop and touch UX assertions
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:ux 2>&1 | tee /tmp/pass05-release-evidence/ux.log
+
+      - name: Weather and passenger-drive browser assertions
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:weather:browser 2>&1 | tee /tmp/pass05-release-evidence/weather.log
+          npm run test:stories:browser 2>&1 | tee /tmp/pass05-release-evidence/passenger-stories.log
+
+      - name: Complete website, offline and previous-cache upgrade
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:site:browser 2>&1 | tee /tmp/pass05-release-evidence/website.log
+
+      - name: Commit verified Pass 5 source to integration branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'ChatGPT'
+          git config user.email 'chatgpt@users.noreply.github.com'
+          git add README.md package.json package-lock.json index.html dist src tests tools docs website website-game-shell
+          git diff --cached --check
+          git commit -m 'Add route-sensitive passenger drives and relationships'
+          git push origin HEAD:refs/heads/chatgpt/reborn-pass05-drive-stories
+          git rev-parse HEAD | tee /tmp/pass05-release-evidence/source-commit.txt
+          sha256sum \
+            assets/worlds/north-berwick/world.json \
+            assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb \
+            | tee /tmp/pass05-release-evidence/immutable-after.txt
+          diff -u /tmp/pass05-release-evidence/immutable-before.txt /tmp/pass05-release-evidence/immutable-after.txt
+          npm run package:site 2>&1 | tee /tmp/pass05-release-evidence/packages.log
+          npm run test:site
+          git diff --exit-code
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass05-release-evidence
+          path: /tmp/pass05-release-evidence/
+          retention-days: 7
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass05-deployment-packages
+          path: packages/
+          if-no-files-found: error
+          retention-days: 7
