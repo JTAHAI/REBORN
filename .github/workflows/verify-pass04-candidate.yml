@@ -1,0 +1,48 @@
+name: Verify Pass 4 candidate
+on:
+  push:
+    branches: ['chatgpt/pass04-source-export']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_SCREENSHOTS: /tmp/pass04-evidence/screenshots
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 863dfdb8d475c2714c1702c387bc9abf464f8b2e
+      - name: Apply candidate only in isolated runner
+        run: |
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-5a50-81f5-b47e-a33c26810615/raw?se=2026-09-26T07%3A15%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=79500765-05f2-5178-9194-663c68d8a058&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T19%3A42%3A29Z&ske=2026-09-26T19%3A42%3A29Z&sks=b&skv=2026-02-06&sig=RlzUbgyFHpKiiScxnExF1nq6bVNaNGk7%2BFTsglof4eU%3D' -o /tmp/candidate.zip
+          echo 'b10aad0ff1099e9f41a550f9cbd9e6acc6e311fc8e492a16acb1c4e32a2f6f7c  /tmp/candidate.zip' | sha256sum -c -
+          unzip -o /tmp/candidate.zip
+          mkdir -p /tmp/pass04-evidence
+          npm run build
+      - name: Install test-only browser
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Production state regressions
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee /tmp/pass04-evidence/unit.log
+      - name: Existing browser acceptance without changing assertions
+        run: |
+          set -o pipefail
+          npm run test:ux 2>&1 | tee /tmp/pass04-evidence/ux.log
+      - name: Weather browser acceptance
+        if: always()
+        run: |
+          set -o pipefail
+          node tests/weather-browser.cjs 2>&1 | tee /tmp/pass04-evidence/weather-browser.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: pass04-candidate-evidence
+          path: /tmp/pass04-evidence/
+          retention-days: 3
