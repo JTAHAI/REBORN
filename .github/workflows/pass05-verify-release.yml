@@ -24,8 +24,8 @@ jobs:
           test "$(git rev-parse HEAD)" = 'e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3'
           test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass04-weather-release | cut -f1)" = 'e0fb07ab5ceb2d5a50266aa339ba5420b5772ab3'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass05-drive-stories)"
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-c61c-81f5-b2f2-aa39d6705f99/raw?se=2026-09-26T19%3A35%3A54Z&sp=r&sv=2026-02-06&sr=b&scid=0b66db05-c90e-5c50-81d4-01f442043d64&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T17%3A29%3A02Z&ske=2026-09-27T17%3A29%3A02Z&sks=b&skv=2026-02-06&sig=Bpyk6OnXJ3JhaltNnAV7sbOEDYs4F23U/lpwl4RPoGI%3D' -o /tmp/pass05.zip
-          echo '40aee933ba6a4e988ee918c60abd0d08772d1cadf194aa0ad8773e95cfd7d6cb  /tmp/pass05.zip' | sha256sum -c -
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-2650-81f5-ad5a-0017256b5afc/raw?se=2026-09-26T19%3A48%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=702c58c8-fa79-540b-96cc-a807b91d75d4&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T10%3A27%3A05Z&ske=2026-09-27T10%3A27%3A05Z&sks=b&skv=2026-02-06&sig=3QAvg/kOTs8auzDx1iD20UDYqwbB74zRomDZjqY6F%2Bo%3D' -o /tmp/pass05.zip
+          echo 'd05856c42a04e193d0fb2ea1fdd4e42c158a2aee4b6634bdcb9f189be64bb499  /tmp/pass05.zip' | sha256sum -c -
           unzip -t /tmp/pass05.zip
           git switch -c chatgpt/reborn-pass05-drive-stories
           mkdir -p /tmp/pass05-release-evidence
@@ -57,6 +57,11 @@ jobs:
             git diff --check
             git diff --exit-code -- legacy/99-5-REBORN-Build-004-PLAY.html assets/worlds/north-berwick/world.json assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb
           } 2>&1 | tee /tmp/pass05-release-evidence/regressions.log
+      - name: Packaged passenger endings and safe exit
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:stories:packaged 2>&1 | tee /tmp/pass05-release-evidence/passenger-packaged.log
       - name: Existing desktop and touch UX assertions
         shell: bash
         run: |
@@ -68,11 +73,6 @@ jobs:
           set -euo pipefail
           npm run test:weather:browser 2>&1 | tee /tmp/pass05-release-evidence/weather.log
           npm run test:stories:browser 2>&1 | tee /tmp/pass05-release-evidence/passenger-stories.log
-      - name: Packaged passenger endings and safe exit
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm run test:stories:packaged 2>&1 | tee /tmp/pass05-release-evidence/passenger-packaged.log
       - name: Complete website offline and previous-cache upgrade
         shell: bash
         run: |
