@@ -5,9 +5,11 @@ on:
 jobs:
   debug:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     env:
+      REBORN_BROWSER_DRIVER: playwright
       REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass07-debug/screenshots
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -15,40 +17,23 @@ jobs:
       - name: Apply candidate
         run: |
           set -euo pipefail
-          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-aa90-81f5-a487-0734ae5190c2/raw?se=2026-09-27T07%3A40%3A51Z&sp=r&sv=2026-02-06&sr=b&scid=6bff8967-7c3b-52ae-8a88-ee2b2bfc7cd6&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T05%3A43%3A38Z&ske=2026-09-28T05%3A43%3A38Z&sks=b&skv=2026-02-06&sig=IEZi3ZtVAaa61lORsOQa30Yhy6kxarbY6odBEeGNrGw%3D' -o /tmp/pass07.zip
-          echo 'f8c28be409e3321e7d0a1e813f1ccfdf2d0365aad571419059a71fcd2e9bf189  /tmp/pass07.zip' | sha256sum -c -
+          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-c730-81f5-9401-e18104df7031/raw?se=2026-09-27T07%3A43%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=b8534296-6611-5506-8e79-fb8b13b11aac&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T06%3A37%3A11Z&ske=2026-09-28T06%3A37%3A11Z&sks=b&skv=2026-02-06&sig=C/X9ExGDJbGn1Zx9IPMJntXbMV0xmXiSXOA6HBh/Ono%3D' -o /tmp/pass07.zip
+          echo '212475d8e825a945e864b4ea3ce39fd57e7ddac33dd2976f9aea870e9e630c08  /tmp/pass07.zip' | sha256sum -c -
           unzip -o /tmp/pass07.zip
+          mkdir -p /tmp/pass07-debug/screenshots
           npm run build:site
       - name: Install browser
         run: |
           python3 -m pip install playwright==1.55.0
           python3 -m playwright install --with-deps chromium
           python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
-      - name: Inspect ghost lifecycle
+      - name: Run focused acceptance
         run: |
-          cat > /tmp/ghost_debug.py <<'PY'
-          import json,os,threading,time
-          from pathlib import Path
-          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
-          from playwright.sync_api import sync_playwright
-          root=Path.cwd()/'site-dist'
-          class H(SimpleHTTPRequestHandler):
-           def __init__(self,*a,**k):super().__init__(*a,directory=str(root),**k)
-           def log_message(self,*a):pass
-          srv=ThreadingHTTPServer(('127.0.0.1',0),H);threading.Thread(target=srv.serve_forever,daemon=True).start()
-          samples=[[0,4070,4380,1.8,2,.4,0,90,70,.5,.4,.3,.2,.1],[1,4072,4381,1.8,3,.4,0,91,69,.5,.4,.3,.2,.1],[2,4074,4382,1.8,3,.4,0,92,68,.5,.4,.3,.2,.1],[4,4078,4384,1.8,3,.4,0,93,67,.5,.4,.3,.2,.1]]
-          seed={'version':1,'settings':{'quality':'low','tutorialSeen':True,'sound':False},'town':{'schemaVersion':1},'memories':{'schemaVersion':1,'enabled':True,'diagnosticAudio':False,'selectedId':'m1','recordings':[{'id':'m1','title':'Debug drive','createdAt':'2026-09-27T00:00:00Z','world':'NORTH BERWICK, MAINE','mode':'free','duration':4,'distanceM':10,'samples':samples,'markers':[],'diagnostics':{'bearing':.5,'charging':.4,'cooling':.3,'clutch':.2,'brakes':.1}}]}}
-          with sync_playwright() as p:
-           b=p.chromium.launch(executable_path=os.environ['REBORN_CHROMIUM'],headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
-           c=b.new_context(viewport={'width':1366,'height':900});c.add_init_script("localStorage.setItem('995.reborn.save.v1',"+json.dumps(json.dumps(seed))+')')
-           pg=c.new_page();pg.set_default_timeout(60000);pg.on('pageerror',lambda e:print('PAGEERROR',e,flush=True));pg.on('console',lambda e:print('CONSOLE',e.type,e.text,flush=True) if e.type=='error' else None)
-           pg.goto(f'http://127.0.0.1:{srv.server_port}/play/');pg.wait_for_function("window.REBORN?.version==='0.13.0-memory-replay-p016'")
-           if pg.locator('#buttercup-continue').is_visible():pg.locator('#buttercup-continue').click()
-           pg.locator('#journey-open').click();pg.locator('#ux-tab-memories').click();pg.locator('[data-memory-action="ghost"]').click();pg.wait_for_function("REBORN.snapshot().memories.ghost")
-           for i in range(12):
-            time.sleep(.25)
-            print('STATE',i,pg.evaluate("(()=>{const s=REBORN.snapshot();return {app:s.appState,ghost:s.memories.ghost?.time,paused:s.memories.ghost?.paused,errors:s.errors,fps:s.fps,hidden:document.hidden,focus:document.hasFocus(),fatal:document.getElementById('fatal-message')?.textContent}})()"),flush=True)
-           b.close()
-          srv.shutdown()
-          PY
-          python3 /tmp/ghost_debug.py
+          set -o pipefail
+          npm run test:memory:browser 2>&1 | tee /tmp/pass07-debug/memory.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass07-memory-debug
+          path: /tmp/pass07-debug/
+          retention-days: 3
