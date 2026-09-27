@@ -23,8 +23,8 @@ jobs:
           set -euo pipefail
           test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass06-echo-roads | cut -f1)" = 'fdd6b07436ced68ea9a2e70b0891abb1752e4270'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass07-memory-replay)"
-          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-c730-81f5-9401-e18104df7031/raw?se=2026-09-27T07%3A43%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=b8534296-6611-5506-8e79-fb8b13b11aac&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T06%3A37%3A11Z&ske=2026-09-28T06%3A37%3A11Z&sks=b&skv=2026-02-06&sig=C/X9ExGDJbGn1Zx9IPMJntXbMV0xmXiSXOA6HBh/Ono%3D' -o /tmp/pass07.zip
-          echo '212475d8e825a945e864b4ea3ce39fd57e7ddac33dd2976f9aea870e9e630c08  /tmp/pass07.zip' | sha256sum -c -
+          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-f9e0-81f5-863e-bb1058a22294/raw?se=2026-09-27T15%3A08%3A43Z&sp=r&sv=2026-02-06&sr=b&scid=86656336-3d08-50aa-be3d-e5187d0c2af6&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T14%3A14%3A07Z&ske=2026-09-28T14%3A14%3A07Z&sks=b&skv=2026-02-06&sig=/oCEKI8SQRR33Au4wHeKX5OY4LxcSZviHMD8aeLWnB4%3D' -o /tmp/pass07.zip
+          echo 'e69d053ad7f441015bf68d24eff8474f5c8cd2d8822bdff316977dcb8945791a  /tmp/pass07.zip' | sha256sum -c -
           unzip -t /tmp/pass07.zip
           git switch -c chatgpt/reborn-pass07-memory-replay
           unzip -o /tmp/pass07.zip
@@ -92,7 +92,7 @@ jobs:
           git config user.email 'chatgpt@users.noreply.github.com'
           git add README.md index.html dist docs package.json package-lock.json src tests tools website website-game-shell
           git diff --cached --check
-          git commit -m 'Add local drive memories, route ghosts and diagnostic replay'
+          git commit -m 'Add local drive memories, route ghosts and read-only diagnostic replay'
           git push origin HEAD:refs/heads/chatgpt/reborn-pass07-memory-replay
           git rev-parse HEAD | tee /tmp/pass07-evidence/source-commit.txt
           npm run package:site 2>&1 | tee /tmp/pass07-evidence/packages.log
