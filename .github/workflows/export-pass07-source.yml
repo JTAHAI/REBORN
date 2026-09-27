@@ -1,0 +1,27 @@
+name: Export REBORN Pass 7 baseline
+on:
+  push:
+    branches: ['chatgpt/pass07-source-export']
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: fdd6b07436ced68ea9a2e70b0891abb1752e4270
+      - name: Stage exact source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/reborn-pass07-source
+          mkdir -p /tmp/reborn-pass07-source
+          rsync -a --exclude='.git/' --exclude='packages/' --exclude='site-dist/' --exclude='standalone-dist/' ./ /tmp/reborn-pass07-source/
+          test -f /tmp/reborn-pass07-source/index.html
+          test -f /tmp/reborn-pass07-source/src/echo-roads.js
+          test -f /tmp/reborn-pass07-source/assets/worlds/north-berwick/world.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass07-baseline-fdd6b07
+          path: /tmp/reborn-pass07-source/
+          if-no-files-found: error
+          retention-days: 3
