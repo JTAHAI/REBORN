@@ -188,3 +188,16 @@ See [`docs/MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md`](docs/MEMORY_GHOSTS_REPLAY_AU
 
 **Pass 7 of 8: 1 gameplay pass remaining.** Final integration, balancing,
 performance tiers, accessibility and release hardening remain Pass 8.
+
+## From Justin's driveway — optional workshop recollection
+
+**J → Workshop → Remember the install.** The red AEM intake, one mount underneath
+the engine, the other on the opposite side, and a driveway-sized vocabulary lesson.
+All choices succeed. Skip or close at any time. No repair timer, penalty, cost or
+performance upgrade. Mild by default; **Memory options → Sailor vocabulary**
+enables stronger dramatized language for this story only. Completed memories add
+optional quiet callbacks after diagnostics, repairs and routine service.
+
+Workshop menus now remain accessible in portrait; the landscape guard is reserved
+for driving and replay. Hub headings follow the selected task. Replay starts paused
+so a short memory cannot end while the player is choosing a camera.

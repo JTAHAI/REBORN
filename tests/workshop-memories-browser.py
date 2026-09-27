@@ -16,7 +16,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('REBORN_CHROMIUM','/usr/bin/chromium'),headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
   ctx=browser.new_context(viewport={'width':1366,'height':900})
-  seed={'version':1,'settings':{'quality':'low','sound':False,'tutorialSeen':True},'vehicle':{'fuel':47,'odometerMiles':995}}
+  seed={'version':1,'settings':{'quality':'low','sound':False,'tutorialSeen':True},'vehicle':{'fuel':47,'odometerMiles':995,'faults':{'charging':{'active':True,'severity':.4}}}}
   ctx.add_init_script("if(!localStorage.getItem('995.reborn.save.v1'))localStorage.setItem('995.reborn.save.v1',"+json.dumps(json.dumps(seed))+')')
   page=ctx.new_page();page.set_default_timeout(60000);page.on('pageerror',lambda e:errors.append(str(e)))
   def ready(pg):
@@ -34,7 +34,7 @@ try:
   page.locator('[data-driveway-action="optimist"]').click()
   assert 'first mount' in page.locator('#driveway-title').inner_text().lower()
   assert 'fucking' not in page.locator('#driveway-quote').inner_text()
-  page.locator('#driveway-language').check()
+  page.locator('.driveway-options summary').click();page.locator('#driveway-language').check()
   assert 'fucking' in page.locator('#driveway-quote').inner_text()
   page.screenshot(path=str(OUT/'driveway-sailor-memory.png'))
   page.locator('[data-driveway-action="sailor"]').click()
@@ -49,9 +49,16 @@ try:
   assert 'cold air' in page.locator('#driveway-quote').inner_text()
   assert before==protected(page)
   log('close and skip remain immediate, no missed reward or repair penalty')
+  page.locator('[data-driveway-action="close"]').click()
+  page.locator('[data-diagnostic="charging"]').click()
+  assert 'stern talking-to' in page.locator('#driveway-aside').inner_text()
+  page.locator('[data-repair="charging"][data-strategy="rebuild"]').click()
+  assert 'peace treaty' in page.locator('#driveway-aside').inner_text()
+  assert page.evaluate('REBORN.snapshot().livingCar.vehicle.faults.charging.active') is False
+  log('real charging diagnosis and rebuild keep their normal results and gain quiet story callbacks')
   page.reload();ready(page)
   assert page.locator('#driveway-language').is_checked();assert 'MEMORY WORTH KEEPING' in page.locator('#driveway-step').inner_text()
-  page.locator('#driveway-asides').uncheck();page.reload();ready(page);assert not page.locator('#driveway-asides').is_checked()
+  page.locator('.driveway-options summary').click();page.locator('#driveway-asides').uncheck();page.reload();ready(page);assert not page.locator('#driveway-asides').is_checked()
   log('memory completion and independent language/asides preferences survive reload')
   page.locator('#ux-tab-stories').click();assert page.locator('#journey-title').inner_text()=='Someone needs a ride.'
   page.locator('#ux-tab-memories').click();assert page.locator('#journey-title').inner_text()=='Your drives, kept.'
@@ -67,6 +74,7 @@ try:
    sizes=page.locator('#driveway-actions button').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
    assert all(x['height']>=44 and x['left']>=0 and x['right']<=w for x in sizes),sizes
    page.locator('[data-driveway-action="toolbox"]').tap();page.locator('[data-driveway-action="negotiate"]').tap();page.locator('[data-driveway-action="keep"]').tap()
+   page.locator('#driveway-actions').scroll_into_view_if_needed()
    if w==844:page.screenshot(path=str(OUT/'driveway-touch-workshop.png'))
    mobile.close();log(f'{w}×{h}: tap-only story completes with 44px-plus buttons, no horizontal clipping')
   browser.close()

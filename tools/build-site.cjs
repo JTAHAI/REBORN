@@ -37,7 +37,7 @@ for(const n of ['LICENSE.txt','EXHIBIT-B.txt','NOTICE.txt','MEDIA-NOTICE.txt'])w
 const credits=['# 99½ REBORN — Build 016','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
 const release={game:pkg.version,runtime:'0.13.0-memory-replay-p016',pass:7,remainingPasses:1,sourceCommit:sha,baselineCommit:'fdd6b07436ced68ea9a2e70b0891abb1752e4270',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
 write(path.join(game,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 7 of 8. 1 gameplay pass remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
+write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 7 of 8. 1 gameplay pass remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
 const shell=files(game).map(f=>'./'+path.relative(game,f).replaceAll(path.sep,'/')).filter(n=>!n.endsWith('.txt'));
 const sw=read('tools/service-worker.template.js').replace('__BUILD_ID__',hash(JSON.stringify(release)).slice(0,16)).replace('__SHELL__',JSON.stringify(shell));write(path.join(game,'sw.js'),sw);
 fs.cpSync(game,path.join(out,'play'),{recursive:true});
@@ -48,6 +48,12 @@ release.standaloneZip=download;release.standaloneZipSha256=hash(fs.readFileSync(
 write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 016 / Pass 7 of 8
 1 gameplay pass remaining
 Source: ${sha}
+
+New: optional driveway Workshop story, based on Justin's red AEM intake install.
+The intake got cold air. The driveway got hot language. All choices work; no
+precision puzzle, repair gate, delay or penalty. Stronger language is opt-in under
+Memory options. Quiet diagnostic/service/repair callbacks can be switched off.
+Portrait workshop menus and contextual hub headings are included.
 
 New: local Drive Memories. Eligible North Berwick Free Drives create bounded
 route recordings in the existing browser save. Re-run a route beside a spectral

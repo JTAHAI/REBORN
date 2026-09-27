@@ -33,3 +33,8 @@ malformed saves, skip parity, preference persistence and zero mechanical effects
 closing, unchanged live state, reload and three touch viewport sizes.
 
 Browser verification is a release gate; a source checkpoint is not a release.
+
+The recollection collapses to a compact entry when it is not being played, so
+ordinary diagnostics stay close. Language and attribution context live in a
+keyboard-accessible details section. Callbacks remain outside that collapsed
+section and do not interrupt the driving view or force the user to read them.

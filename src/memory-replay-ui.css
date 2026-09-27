@@ -6,3 +6,5 @@ body[data-contrast=high] .memory-card,body[data-contrast=high] #memory-ghost-str
 @media(max-width:900px){#memory-cards{grid-template-columns:1fr}.memory-stats{grid-template-columns:repeat(2,1fr)}.memory-options strong{width:100%;margin-left:0}.memory-replay-controls{grid-template-columns:repeat(4,auto);bottom:10px}.memory-replay-controls label{grid-column:1/-1;grid-row:1;min-width:0}.memory-replay-top h2{font-size:22px}}
 @media(orientation:landscape) and (max-height:520px){#memory-ghost-strip{top:72px;left:275px;right:168px;transform:none;width:auto;padding:5px}#memory-ghost-title{font-size:9px}.memory-replay-top{top:10px;left:16px}.memory-replay-top h2{font-size:18px}.memory-replay-controls{bottom:8px;padding:7px}.memory-replay-controls button{min-height:44px;font-size:9px}}
 @media(orientation:landscape) and (max-width:900px){body.touch #memory-ghost-strip{left:268px;right:164px;width:auto;transform:none}body.touch #memory-ghost-strip button{min-width:65px}.memory-replay-controls{width:calc(100vw - 28px)}}
+
+.memory-status{font-size:13px;line-height:1.5;color:#c8dcd5;margin:12px 0}#memory-cards .memory-card-actions button{font-size:12px}

@@ -134,3 +134,32 @@ Final balancing, performance tiers, accessibility review,
 real-device testing and release hardening remain Pass 8.
 
 **Pass 7 of 8 complete after verification. One gameplay pass remains.**
+
+## Recovered validation and workshop integration
+
+The checkpoint probe recorded 1 FPS software WebGL while both the simulation and
+recorder advanced together from 4.00 to 15.325 seconds over the 120-second wait.
+The page remained visible, focused and in play, with no JavaScript exceptions.
+The previous 16-second assertion conflated rendering speed and driving-clock
+progress; it was not evidence that the recorder stopped after key release.
+
+Browser acceptance now retains a genuine manually accelerated short recording,
+checks continued coasting progress against the simulation clock, archives it, and
+uses that same real recording for ghost and replay tests. A separate production
+recorder test verifies more than 16 simulated seconds in slow-frame partitions
+and pause behavior. No physics clock, save threshold, or recording duration is
+artificially advanced by the browser test.
+
+Replay starts paused, making camera/seek controls usable even for very short
+recordings. Deletion requires confirmation. The new lightweight recorder snapshot
+reports phase, eligibility, duration, sample count, distance and simulation time.
+The failure handler writes diagnostics before the browser context closes.
+
+The optional red AEM driveway recollection and quiet garage callbacks are covered
+by `WORKSHOP_DRIVEWAY_MEMORY.md`. Hub headings are task-specific; their opaque
+sticky wrapper keeps text from showing through. Portrait menus no longer have the
+driving orientation guard over the Workshop. The duplicated touch map shortcut is
+hidden while the minimap retains its tap-to-open behavior.
+
+These are focused U0/U1 recovery and usability changes, not completion of the
+entire UX roadmap or Pass 8 performance and accessibility acceptance.

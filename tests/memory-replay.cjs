@@ -73,16 +73,16 @@ function adapterHarness(){
 }
 test('production replay is read-only for live mechanics, saves and simulation time',()=>{
  const h=adapterHarness(),before=clone(h.vehicle),pose=clone(h.sim.car),world=h.sim.world;
- assert.equal(h.startMemoryReplay('read-only'),true);assert.deepEqual(clone(h.vehicle),before);assert.deepEqual(h.persisted.vehicle,before);assert.equal(h.persisted.time,57);
+ assert.equal(h.startMemoryReplay('read-only'),true);assert.equal(vm.runInContext('memoryReplay.paused',h),true);vm.runInContext('memoryReplay.toggle()',h);assert.deepEqual(clone(h.vehicle),before);assert.deepEqual(h.persisted.vehicle,before);assert.equal(h.persisted.time,57);
  h.tickMemoryReplay(1);h.persist();assert.deepEqual(h.persisted.vehicle,before);assert.equal(h.sim.time,57);
  h.exitMemoryReplay();assert.deepEqual(clone(h.sim.car),pose);assert.strictEqual(h.sim.world,world);assert.deepEqual(clone(h.vehicle),before);assert.equal(h.focused,'ux-tab-memories');
 });
 test('production roadside camera remains anchored while the replayed car moves',()=>{
- const h=adapterHarness();h.startMemoryReplay('read-only');vm.runInContext('memoryReplay.camera=1;memoryReplay.seek(1)',h);h.tickMemoryReplay(.1);h.updateMemoryReplayCamera(.1);h.tickMemoryReplay(1);h.updateMemoryReplayCamera(.1);
+ const h=adapterHarness();h.startMemoryReplay('read-only');vm.runInContext('memoryReplay.toggle();memoryReplay.camera=1;memoryReplay.seek(1)',h);h.tickMemoryReplay(.1);h.updateMemoryReplayCamera(.1);h.tickMemoryReplay(1);h.updateMemoryReplayCamera(.1);
  assert.deepEqual(h.renderCalls[0].eye,h.renderCalls[1].eye);assert.notDeepEqual(h.renderCalls[0].target,h.renderCalls[1].target);
 });
 test('paused and background replay silence diagnostics and freeze cinematic time',()=>{
- const h=adapterHarness();h.startMemoryReplay('read-only');h.tickMemoryReplay(1);h.updateDiagnosticAudio();assert.equal(h.audioContext.active,true);h.pauseMemoryReplay();assert.equal(h.audioContext.active,false);const before=vm.runInContext('memoryReplayClock',h);h.tickMemoryReplay(10);assert.equal(vm.runInContext('memoryReplayClock',h),before);
+ const h=adapterHarness();h.startMemoryReplay('read-only');vm.runInContext('memoryReplay.toggle()',h);h.tickMemoryReplay(1);h.updateDiagnosticAudio();assert.equal(h.audioContext.active,true);h.pauseMemoryReplay();assert.equal(h.audioContext.active,false);const before=vm.runInContext('memoryReplayClock',h);h.tickMemoryReplay(10);assert.equal(vm.runInContext('memoryReplayClock',h),before);
 });
 test('interrupted drives are archived separately rather than joined to a fresh spawn',()=>{
  const h=adapterHarness();h.sim.world=h.northBerwickWorld;h.sim.mode='free';h.state='play';h.activeTrip={id:'new',startedAt:'2026-09-27T00:00:00Z',world:'NORTH BERWICK, MAINE'};
@@ -102,4 +102,11 @@ test('diagnostic sound channels allocate once, stay bounded, and mute when disab
  a.updateDiagnostics({active:true,enabled:false,levels:{bearing:1}});assert.ok(Object.values(a.diagnosticSnapshot().levels).every(v=>v===0));
 });
 
+test('coasting recorder clock stays equal to simulated time across slow rendering and pause',()=>{
+ const r=new M.Recorder();r.begin({id:'slow-frames',car:car()});let simulated=0;
+ for(let frame=0;frame<320;frame++){for(let i=0;i<9;i++){const dt=1/120;simulated+=dt;r.sample(dt,{...context(simulated),input:{throttle:0,brake:0},distanceM:.01});}}
+ assert.ok(r.draft.duration>16);assert.ok(Math.abs(r.draft.duration-simulated)<1e-10);
+ const before=r.draft.duration;r.sample(120,{running:false,car:car()});assert.equal(r.draft.duration,before);
+ const rec=r.finish();assert.ok(rec.duration>16);assert.ok(rec.samples.length>16);
+});
 console.log(JSON.stringify({pass:7,tests,recordingLimit:M.LIMITS.recordings,sampleLimit:M.LIMITS.samples,markers:M.LIMITS.markers,remainingPasses:1}));
