@@ -17,8 +17,8 @@ jobs:
       - name: Apply candidate
         run: |
           set -euo pipefail
-          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-4a40-81f5-ad17-1683c3f884bf/raw?se=2026-09-27T07%3A31%3A41Z&sp=r&sv=2026-02-06&sr=b&scid=4b33ea8c-cc88-5c09-9b55-4d9c391443c8&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T12%3A03%3A11Z&ske=2026-09-27T12%3A03%3A11Z&sks=b&skv=2026-02-06&sig=md9zOdNKhOAPjorMjLORhNFL068cW7Y44r/AkgTMrtg%3D' -o /tmp/pass07.zip
-          echo '5006c49f58474f4331b73728b7c455af1a0fd2b13b0f85386a9f2cf23299fb91  /tmp/pass07.zip' | sha256sum -c -
+          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-3f84-81f5-98f2-fdb577e6c651/raw?se=2026-09-27T07%3A35%3A53Z&sp=r&sv=2026-02-06&sr=b&scid=5cb64149-b0f9-5daf-9457-cc1c9a214b64&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T21%3A05%3A40Z&ske=2026-09-27T21%3A05%3A40Z&sks=b&skv=2026-02-06&sig=1f9UooYunppYaQzA8aO1j3mqhzypNeY8Vbu3qqCppds%3D' -o /tmp/pass07.zip
+          echo 'f8c28be409e3321e7d0a1e813f1ccfdf2d0365aad571419059a71fcd2e9bf189  /tmp/pass07.zip' | sha256sum -c -
           unzip -o /tmp/pass07.zip
           mkdir -p /tmp/pass07-debug/screenshots
           npm run build:site
