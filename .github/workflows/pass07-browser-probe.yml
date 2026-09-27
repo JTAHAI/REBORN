@@ -1,0 +1,65 @@
+name: Diagnose Pass 7 browser acceptance
+on:
+  push:
+    branches: ['chatgpt/pass07-browser-probe']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REBORN_SCREENSHOTS: /tmp/memory-probe
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: fdd6b07436ced68ea9a2e70b0891abb1752e4270
+          persist-credentials: false
+      - name: Recover identical candidate and trace browser waits
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-b30c-81f5-b08b-f9df1320416b/raw?se=2026-09-27T15%3A18%3A32Z&sp=r&sv=2026-02-06&sr=b&scid=16e4eb46-4209-50a8-a91c-aca69c84d235&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T11%3A38%3A26Z&ske=2026-09-28T11%3A38%3A26Z&sks=b&skv=2026-02-06&sig=cVOYB1p9Ec0Xq9r%2BUmowgN/S56sffAuuq5rxaqp3efw%3D' -o /tmp/probe.zip
+          echo 'e69d053ad7f441015bf68d24eff8474f5c8cd2d8822bdff316977dcb8945791a  /tmp/probe.zip' | sha256sum -c -
+          unzip -oq /tmp/probe.zip
+          mkdir -p /tmp/memory-probe
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/memory-replay-browser.py');s=p.read_text()
+          needle='  page.goto(url);ready()'
+          trace='''  raw_wait=page.wait_for_function
+            def traced_wait(expression,*args,**kwargs):
+             print('WAIT',expression,flush=True)
+             try: return raw_wait(expression,*args,**kwargs)
+             except Exception:
+              try:
+               state=snap();print('FAILURE_STATE',json.dumps(state),flush=True)
+               print('PAGE_ERRORS',errors,flush=True)
+               page.screenshot(path=str(evidence/'failure.png'))
+              except Exception as diagnostic: print('DIAGNOSTIC_ERROR',str(diagnostic),flush=True)
+              raise
+            page.wait_for_function=traced_wait
+          '''
+          lines=trace.splitlines();lines=[line[2:] if i>0 and line.startswith('  ') else line for i,line in enumerate(lines)]
+          assert s.count(needle)==1
+          s=s.replace(needle,'\n'.join(lines)+'\n'+needle)
+          p.write_text(s)
+          PY
+          python3 -m py_compile tests/memory-replay-browser.py
+          npm run build:site
+      - name: Install test browser
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Trace packaged recording and replay
+        run: |
+          set -o pipefail
+          npm run test:memory:browser 2>&1 | tee /tmp/memory-probe/probe.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: pass07-browser-probe
+          path: /tmp/memory-probe/
+          retention-days: 3
