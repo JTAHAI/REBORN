@@ -1,0 +1,23 @@
+/* The intake is a red accent, not another glowing dashboard. */
+.driveway-memory{grid-column:1/-1!important;background:linear-gradient(125deg,#241c20,#101d27 65%)!important;border-color:#91685e77!important;padding:24px!important}
+.driveway-topline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.driveway-red{height:5px;width:42px;background:#c95146;border-radius:2px}.driveway-topline small{font-size:11px;letter-spacing:1.5px;color:#dfbdaa}.driveway-tag{margin-left:auto;font-size:10px;letter-spacing:1px;color:#b5c6c8}
+#driveway-title{font-size:clamp(23px,2.6vw,32px)!important;letter-spacing:-.4px!important;margin:20px 0 10px!important;line-height:1.2;color:#f4ebe0}
+#driveway-title:focus-visible{outline:2px solid #d4aa82;outline-offset:5px}#driveway-text{max-width:760px;font-size:16px;line-height:1.65;color:#ced8d5}
+#driveway-quote{margin:20px 0;padding:13px 18px;border-left:3px solid #c95146;font-size:clamp(17px,1.8vw,22px);line-height:1.5;color:#f1d2b6;background:#fff4e506}
+#driveway-feedback{padding:12px 14px;border:1px solid #89b5a344;color:#bfd9c9;font-size:14px;line-height:1.5;border-radius:5px}
+#driveway-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}#driveway-actions button{min-height:48px;font-size:13px;letter-spacing:.1px;text-transform:none;line-height:1.4;padding:12px 17px;white-space:normal}
+.driveway-preferences{display:flex;gap:22px;flex-wrap:wrap;padding-top:16px;border-top:1px solid #bec9c225;margin-top:18px}.driveway-preferences label{font-size:13px;display:grid;grid-template-columns:24px 1fr;column-gap:8px;align-items:center;min-height:44px}.driveway-preferences input{width:20px;height:20px;grid-row:1/3;accent-color:#d4a383}.driveway-preferences small{grid-column:2;font-size:11px;color:#9eb5b8;line-height:1.5}
+.driveway-note{display:block;font-size:12px!important;color:#a1b6b8!important;line-height:1.6!important;margin-top:17px;max-width:850px}#driveway-aside{font-size:14px;font-style:italic;color:#dcc2a4;border-top:1px solid #c9b49c33;padding-top:13px}
+body[data-contrast=high] .driveway-memory{background:#0a131b!important;border-color:#e9d3b6!important}body[data-contrast=high] .driveway-note,body[data-contrast=high] .driveway-preferences small{color:#e4eeee!important}
+@media(max-width:760px){.driveway-memory{padding:17px!important}#driveway-actions{display:grid;grid-template-columns:1fr}.driveway-tag{margin-left:0}#driveway-text{font-size:15px}.driveway-preferences{gap:10px;flex-direction:column}}
+
+.driveway-options{margin-top:12px}.driveway-options summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:13px;color:#bed0cd;list-style:revert}
+.driveway-options .driveway-preferences{margin-top:0;padding-top:8px}
+.driveway-memory[data-playing=false]{padding:16px 20px!important;display:grid;grid-template-columns:1fr auto;gap:4px 16px;align-items:center}
+.driveway-memory[data-playing=false] .driveway-topline{grid-column:1/-1}
+.driveway-memory[data-playing=false] #driveway-title{font-size:21px!important;margin:8px 0!important;grid-column:1}
+.driveway-memory[data-playing=false] #driveway-text,.driveway-memory[data-playing=false] #driveway-quote{display:none}
+.driveway-memory[data-playing=false] #driveway-actions{grid-column:2;grid-row:2;margin:0}
+.driveway-memory[data-playing=false] .driveway-options,.driveway-memory[data-playing=false] #driveway-feedback,.driveway-memory[data-playing=false] #driveway-aside{grid-column:1/-1}
+.driveway-memory [hidden]{display:none!important}
+@media(max-width:760px){.driveway-memory[data-playing=false]{display:block}.driveway-memory[data-playing=false] #driveway-actions{display:flex;flex-wrap:wrap;margin-top:12px}.driveway-memory[data-playing=false] #driveway-actions button{flex:1}}

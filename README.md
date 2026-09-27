@@ -62,4 +62,142 @@ Gameplay pass 2 of 8 adds symptom-driven mechanical faults and a permanent repai
 - rebuilds retain component originality while replacements restore maximum condition;
 - every diagnostic, roadside action, service and repair enters a permanent garage ledger.
 
-Pass 2 is complete. **6 gameplay passes remain.** See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).
+Pass 2 is complete. See [`docs/DIAGNOSTICS_GARAGE_PASS_011.md`](docs/DIAGNOSTICS_GARAGE_PASS_011.md).
+
+## Build 012 — Living Town Director
+
+Gameplay pass 3 adds 31 persistent incident definitions, fictional town schedules, bounded lane-following traffic, town trust and follow-up assistance. North Berwick Free Drive shows a clock; amber map dots mark incidents and amber road segments mark temporary reduced lanes. The opposite lane remains available.
+
+Stop near an incident and press **F**, or tap the contextual roadside button. Tab selects a choice, Enter confirms, and Escape returns to driving. Helping takes time and can consume battery, coolant or fuel; unsafe withdrawal calls assistance without a trust penalty. **E remains pulse**, M/minimap opens the paused map, and **J** opens diagnostics plus the Town Ledger. The clock pauses in all blocking menus and outside North Berwick Free Drive.
+
+The existing version-1 save migrates in place. No runtime service, account or map API is added. Generic town vehicles and fictional schedules are gameplay approximations, not current real operating hours. See [`docs/LIVING_TOWN_DIRECTOR_PASS_012.md`](docs/LIVING_TOWN_DIRECTOR_PASS_012.md).
+
+Pass 3 is complete. Later passes are documented below.
+
+## Driver Experience — 0.9.1
+
+An interface polish release on Build 012, not another gameplay pass:
+
+- redesigned garage activity cards, clearer instruments and a four-tab Jetta hub;
+- searchable road/landmark pins, map dragging and pinch/scroll/keyboard zoom, My Car and Whole Town views;
+- independent minimap zoom and a pinned-place distance/bearing indicator (not turn-by-turn navigation);
+- persisted MPH/KM/H, full/minimal HUD, high contrast, control hints and effects-volume preferences;
+- keyboard-friendly dialogs, first-drive guidance, fullscreen and downloadable save backups;
+- compact landscape touch controls retaining the single manual-throttle joystick and portrait rotation guard.
+
+Run `npm test` for simulation, persistence and UX invariants; `npm run test:ux` runs isolated desktop/touch-emulated browser checks using the locally cached agent-browser CLI. See [`docs/DRIVER_EXPERIENCE_POLISH.md`](docs/DRIVER_EXPERIENCE_POLISH.md) for scope and validation limits.
+
+## Build 013 — Maine weather and remembered surfaces
+
+Gameplay Pass 4 adds local seeded seasons and weather, persistent named-road
+surfaces, condition-sensitive traction/braking, fog and precipitation, snow/ice
+dressing, public-works treatment, plow traffic and observed hazard memory.
+Settings offers Seasonal Journey or explicitly labelled weather scenarios.
+J → Living Town shows the weather and road-surface ledger. Existing story/modes,
+modern UX, saved condition and town history remain. Pass 5 continues below.
+
+The full memorial website now has maintained source instead of depending on
+manual edits to an old ZIP. `npm run package:site` produces the full website
+(`/play/` inside) and its matching standalone game in `packages/`. It requires
+Node and Python 3 for standard-library ZIP creation; no runtime server is added.
+Run `npm run test:site` after the site build. Browser-only acceptance is available
+through `npm run test:site:browser` and `npm run test:weather:browser`.
+
+No build command deploys production. The recorded host uses Workers Static
+Assets; preserve the existing deployment configuration. Never replace the
+memorial homepage with game-only `dist/`. See
+[`docs/MAINE_WEATHER_ROADS_PASS_013.md`](docs/MAINE_WEATHER_ROADS_PASS_013.md) for
+model assumptions, bounds, migration, packaging and verification details.
+
+
+## Build 014 — Drive stories and passengers
+
+Gameplay Pass 5 adds three complete fictional North Berwick passenger drives:
+
+- **The Long Way Home** — honor or break a request to avoid the mill corridor;
+- **The Last Part Before Closing** — protect the Jetta, beat a fictional handoff window, or make no promise;
+- **First Snow** — choose treated main roads or accept a winter shortcut.
+
+The conversations happen while the car remains under player control. `1`, `2`,
+or `3` selects a response; silence is a visible choice and also the bounded
+timeout response. Named roads, weather, braking, grip, body condition, engine
+temperature and elapsed town time influence relationship outcomes. Active trips,
+trust and commitments persist across reloads and appear in the Passenger Drives
+tab and Road Journal. All passengers and personal situations are fictional.
+
+The existing version-1 save key remains unchanged. No runtime account, server,
+map API, telemetry or generated-dialogue service is added. Run
+`npm run test:stories:browser` for the passenger UI acceptance in addition to
+the normal test and full-site gates. See
+[`docs/DRIVE_STORIES_PASS_014.md`](docs/DRIVE_STORIES_PASS_014.md).
+
+**3 gameplay passes remain.**
+
+### Pass 5 interaction and reliability
+
+Open **Passenger Drives** from the garage, or `J` → **Passenger Drives**. The first response appears at pickup; `1`/`2`/`3`, touch buttons, or silence choose the reply. Unanswered questions retain their deadlines through reloads. Stops, final dialogue and a parked arrival gate each ending; the garage asks before abandoning a commitment. An unsafe-car onward-transport option avoids unfair trust loss. The fictional parts handoff uses five active-driving minutes rather than the town clock. Authored weather preferences restore after the trip without erasing accumulated road surfaces.
+
+Packaged-browser ending checks use explicit saved-position fixtures. They supplement—not replace—production route/choice tests, ordinary launch/input tests, and real-device review.
+
+## Echo Roads — Build 015 / Pass 6
+
+Open **J → Echo Roads → Begin a memory drive**. Six copper markers trace a quiet
+North Berwick loop. Slow below 6 mph near a marker and notice the place today.
+Press **V**, or tap **Enter Memory**, to compare an imagined 1999½ layer. After
+both views, use J to keep the place, keep the feeling, or leave it unspoken.
+Return to Today after all six reflections for the homecoming. No score or timer.
+
+Mapped landmark shells remain authoritative. Earlier furniture, facade finishes,
+traffic dressing and sound are authored memory cues, **not a verified 1999 town
+survey**. No historical photos, private residents or commercial music were added.
+Progress and the active view survive reload; ending the drive preserves discoveries.
+Passenger commitments must end before beginning a memory drive.
+
+`npm run package:site` builds the full memorial website and matching standalone
+from the same commit. `npm run test:echo:browser` exercises the packaged experience.
+See `docs/ECHO_ROADS_PASS_015.md` for boundaries and verification.
+
+**Pass 6 of 8: 2 gameplay passes remaining.** This is a prototype milestone, not
+physical-device acceptance, final historical accuracy or production deployment.
+
+
+## Drive Memories — Build 016 / Pass 7
+
+Eligible North Berwick Free Drives can now become bounded local route memories.
+Open **J → Drive Memories** to select a recording, inspect its route and mechanical
+summary, run a spectral Jetta ghost, or watch a cinematic replay. **G** pauses or
+resumes the active ghost and **Shift+G** stops it. Replays support pause/play,
+timeline seeking, 0.5×–2× speed and chase, roadside, orbit and driver cameras.
+
+The recorder stores a compact route trace, speed/input state, temperature,
+battery and five diagnostic-severity channels. It keeps no more than five drives
+with bounded samples, markers and history. Data remains in `995.reborn.save.v1`;
+there is no upload, account, telemetry, live map service, microphone recording or
+cloud database. The player can disable recording or diagnostic audio at any time.
+
+Diagnostic audio is synthesized locally with Web Audio from the Jetta's existing
+fault state. Wheel-bearing hum, charging whine, cooling strain, clutch slip and
+brake symptoms can be heard during ordinary driving and replay without bundling
+commercial music or external sound files. These cues support diagnosis; they do
+not claim physically exact acoustic modeling.
+
+`npm run test:memory:browser` exercises recording, Road Journal linkage, ghost
+controls, map route, replay cameras/seek/speed, audio nodes and touch layout. The
+normal full-site, offline, historical-cache, vehicle and world gates remain.
+See [`docs/MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md`](docs/MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md).
+
+**Pass 7 of 8: 1 gameplay pass remaining.** Final integration, balancing,
+performance tiers, accessibility and release hardening remain Pass 8.
+
+## From Justin's driveway — optional workshop recollection
+
+**J → Workshop → Remember the install.** The red AEM intake, one mount underneath
+the engine, the other on the opposite side, and a driveway-sized vocabulary lesson.
+All choices succeed. Skip or close at any time. No repair timer, penalty, cost or
+performance upgrade. Mild by default; **Memory options → Sailor vocabulary**
+enables stronger dramatized language for this story only. Completed memories add
+optional quiet callbacks after diagnostics, repairs and routine service.
+
+Workshop menus now remain accessible in portrait; the landscape guard is reserved
+for driving and replay. Hub headings follow the selected task. Replay starts paused
+so a short memory cannot end while the player is choosing a camera.
