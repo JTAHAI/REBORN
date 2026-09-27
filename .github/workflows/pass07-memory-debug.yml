@@ -1,0 +1,39 @@
+name: Focused REBORN Pass 7 browser diagnostics
+on:
+  push:
+    branches: ['chatgpt/pass07-memory-debug']
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass07-debug/screenshots
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: fdd6b07436ced68ea9a2e70b0891abb1752e4270
+      - name: Apply candidate
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-59ac-81f5-af90-f474b9a8fb21/raw?se=2026-09-27T07%3A26%3A12Z&sp=r&sv=2026-02-06&sr=b&scid=6011f69b-24b9-543c-8537-42bab46334c9&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T14%3A28%3A11Z&ske=2026-09-27T14%3A28%3A11Z&sks=b&skv=2026-02-06&sig=f0uXRxG6bbjS/Eie1zmvYgMwVXgmm%2BetjKzDvFvygxk%3D' -o /tmp/pass07.zip
+          echo '8c4ee44d842cd93a64d75ce1aa74d1603bf4efd2d1ca2e1bc56706254118bdfd  /tmp/pass07.zip' | sha256sum -c -
+          unzip -o /tmp/pass07.zip
+          mkdir -p /tmp/pass07-debug/screenshots
+          npm run build:site
+      - name: Install browser
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Run focused acceptance
+        run: |
+          set -o pipefail
+          npm run test:memory:browser 2>&1 | tee /tmp/pass07-debug/memory.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass07-memory-debug
+          path: /tmp/pass07-debug/
+          retention-days: 3
