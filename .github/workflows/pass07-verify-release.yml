@@ -23,8 +23,8 @@ jobs:
           set -euo pipefail
           test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass06-echo-roads | cut -f1)" = 'fdd6b07436ced68ea9a2e70b0891abb1752e4270'
           test -z "$(git ls-remote origin refs/heads/chatgpt/reborn-pass07-memory-replay)"
-          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-3f84-81f5-98f2-fdb577e6c651/raw?se=2026-09-27T07%3A35%3A53Z&sp=r&sv=2026-02-06&sr=b&scid=5cb64149-b0f9-5daf-9457-cc1c9a214b64&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T21%3A05%3A40Z&ske=2026-09-27T21%3A05%3A40Z&sks=b&skv=2026-02-06&sig=1f9UooYunppYaQzA8aO1j3mqhzypNeY8Vbu3qqCppds%3D' -o /tmp/pass07.zip
-          echo 'f8c28be409e3321e7d0a1e813f1ccfdf2d0365aad571419059a71fcd2e9bf189  /tmp/pass07.zip' | sha256sum -c -
+          curl -fL --retry 4 --retry-delay 2 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-c730-81f5-9401-e18104df7031/raw?se=2026-09-27T07%3A43%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=b8534296-6611-5506-8e79-fb8b13b11aac&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T06%3A37%3A11Z&ske=2026-09-28T06%3A37%3A11Z&sks=b&skv=2026-02-06&sig=C/X9ExGDJbGn1Zx9IPMJntXbMV0xmXiSXOA6HBh/Ono%3D' -o /tmp/pass07.zip
+          echo '212475d8e825a945e864b4ea3ce39fd57e7ddac33dd2976f9aea870e9e630c08  /tmp/pass07.zip' | sha256sum -c -
           unzip -t /tmp/pass07.zip
           git switch -c chatgpt/reborn-pass07-memory-replay
           unzip -o /tmp/pass07.zip
