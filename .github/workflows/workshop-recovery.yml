@@ -1,4 +1,4 @@
-name: REBORN workshop and recorder checkpoint
+name: REBORN workshop and recorder release
 on:
   push:
     branches: ['chatgpt/reborn-workshop-verify']
@@ -14,30 +14,46 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: fdd6b07436ced68ea9a2e70b0891abb1752e4270
+          ref: 786111357f7b77087377fb02841fb6e5231d412d
           fetch-depth: 0
-      - name: Recover exact source history and push a durable draft checkpoint
+      - name: Preserve exact source checkpoint without moving main
         id: source
         shell: bash
         run: |
           set -euo pipefail
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-dd7c-81f5-a992-7c82c3541998/raw?se=2026-09-27T22%3A36%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=b1ea2c18-60b4-528a-9ac7-9a14ad9759fd&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T12%3A41%3A57Z&ske=2026-09-28T12%3A41%3A57Z&sks=b&skv=2026-02-06&sig=Wc85utWad7hedZVVwA%2BkLKz9%2BkavsrrEEi8pgBwNicI%3D' -o /tmp/checkpoint.zip
-          echo '2eb7054ffd23b81053b43b7bba2be87e2d0ce3aeef9a70ceb4e9279e9957db67  /tmp/checkpoint.zip' | sha256sum -c -
+          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-cecc-81f5-a2fd-bef88e77a94e/raw?se=2026-09-27T22%3A46%3A36Z&sp=r&sv=2026-02-06&sr=b&scid=3e44c9c6-cfdb-5f73-9f34-331850f9fedf&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-27T15%3A47%3A05Z&ske=2026-09-28T15%3A47%3A05Z&sks=b&skv=2026-02-06&sig=cmWTXUZgLxbwpKz/orgJ5YwMu8ImDFhUzQLa9f1eb4E%3D' -o /tmp/checkpoint.zip
+          echo '2f972b0983193897421e21eb5f6c8fd8a100b9832ca26d899452d91751ddd969  /tmp/checkpoint.zip' | sha256sum -c -
           unzip /tmp/checkpoint.zip -d /tmp/source
           git bundle verify /tmp/source/source.bundle
           git fetch /tmp/source/source.bundle HEAD
-          test "$(git rev-parse FETCH_HEAD)" = '786111357f7b77087377fb02841fb6e5231d412d'
-          git merge-base --is-ancestor fdd6b07436ced68ea9a2e70b0891abb1752e4270 FETCH_HEAD
+          test "$(git rev-parse FETCH_HEAD)" = '3957339883932f0ed4c3bc9657ae4118aa8def29'
+          git merge-base --is-ancestor 786111357f7b77087377fb02841fb6e5231d412d FETCH_HEAD
           git push origin FETCH_HEAD:refs/heads/chatgpt/reborn-workshop-memory-ux
-          echo 'sha=786111357f7b77087377fb02841fb6e5231d412d' >> "$GITHUB_OUTPUT"
-  browser:
+          echo 'sha=3957339883932f0ed4c3bc9657ae4118aa8def29' >> "$GITHUB_OUTPUT"
+  verify:
     needs: checkpoint
     strategy:
       fail-fast: false
       matrix:
-        focus: [memory, workshop]
+        include:
+          - lane: core
+            command: npm test && npm run validate:assets && npm run test:http && node tests/controls-acceptance.cjs && node tests/driving-behavior.cjs && node tests/readability-acceptance.cjs && node tests/vehicle-shell-acceptance.cjs && node tests/town-packaging.cjs && git diff --check && git diff --exit-code
+          - lane: memory
+            command: npm run test:memory:browser
+          - lane: workshop
+            command: npm run test:workshop:browser
+          - lane: ux
+            command: npm run test:ux
+          - lane: weather
+            command: npm run test:weather:browser
+          - lane: passengers
+            command: npm run test:stories:browser && npm run test:stories:packaged
+          - lane: echoes
+            command: npm run test:echo:browser
+          - lane: website
+            command: npm run test:site:browser
     runs-on: ubuntu-latest
-    timeout-minutes: 14
+    timeout-minutes: 30
     env:
       REBORN_BROWSER_DRIVER: playwright
       REBORN_BROWSER_LOW: '1'
@@ -53,18 +69,37 @@ jobs:
           npm run build:site
           npm run test:site
       - name: Install isolated browser
+        if: matrix.lane != 'core'
         run: |
           python3 -m pip install playwright==1.55.0
           python3 -m playwright install --with-deps chromium
           python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
-      - name: Exercise actual browser interactions
+      - name: Execute independent acceptance lane
         run: |
-          set -o pipefail
-          npm run test:${{ matrix.focus }}:browser 2>&1 | tee /tmp/evidence/browser.log
+          set -euo pipefail
+          { ${{ matrix.command }}; } 2>&1 | tee /tmp/evidence/verification.log
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: reborn-workshop-${{ matrix.focus }}-checkpoint
+          name: reborn-workshop-${{ matrix.lane }}-evidence
           path: /tmp/evidence/
+          retention-days: 7
+          if-no-files-found: error
+  package:
+    needs: [checkpoint, verify]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.checkpoint.outputs.source }}
+      - name: Package verified website and identical standalone
+        run: |
+          npm run package:site
+          npm run test:site
+          git diff --exit-code
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-workshop-deployment-packages
+          path: packages/
           retention-days: 7
           if-no-files-found: error
