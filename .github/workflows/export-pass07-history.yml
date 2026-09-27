@@ -1,0 +1,27 @@
+name: Export pinned REBORN history
+on:
+  push:
+    branches: ['chatgpt/pass07-source-export']
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: fdd6b07436ced68ea9a2e70b0891abb1752e4270
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export objects without credentials or working-tree configuration
+        run: |
+          git branch pass07-baseline HEAD
+          git bundle create /tmp/REBORN-pass07-history.bundle pass07-baseline
+          git bundle verify /tmp/REBORN-pass07-history.bundle
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass07-history
+          path: /tmp/REBORN-pass07-history.bundle
+          retention-days: 3
+          if-no-files-found: error
