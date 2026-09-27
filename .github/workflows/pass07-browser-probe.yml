@@ -28,25 +28,12 @@ jobs:
           from pathlib import Path
           p=Path('tests/memory-replay-browser.py');s=p.read_text()
           needle='  page.goto(url);ready()'
-          trace='''  raw_wait=page.wait_for_function
-            def traced_wait(expression,*args,**kwargs):
-             print('WAIT',expression,flush=True)
-             try: return raw_wait(expression,*args,**kwargs)
-             except Exception:
-              try:
-               state=snap();print('FAILURE_STATE',json.dumps(state),flush=True)
-               print('PAGE_ERRORS',errors,flush=True)
-               page.screenshot(path=str(evidence/'failure.png'))
-              except Exception as diagnostic: print('DIAGNOSTIC_ERROR',str(diagnostic),flush=True)
-              raise
-            page.wait_for_function=traced_wait
-          '''
-          lines=trace.splitlines();lines=[line[2:] if i>0 and line.startswith('  ') else line for i,line in enumerate(lines)]
+          lines=["  raw_wait=page.wait_for_function", "  def traced_wait(expression,*args,**kwargs):", "   print('WAIT',expression,flush=True)", "   try: return raw_wait(expression,*args,**kwargs)", "   except Exception:", "    try:", "     state=snap();print('FAILURE_STATE',json.dumps(state),flush=True)", "     print('PAGE_ERRORS',errors,flush=True)", "     page.screenshot(path=str(evidence/'failure.png'))", "    except Exception as diagnostic: print('DIAGNOSTIC_ERROR',str(diagnostic),flush=True)", "    raise", "  page.wait_for_function=traced_wait"]
           assert s.count(needle)==1
           s=s.replace(needle,'\n'.join(lines)+'\n'+needle)
+          compile(s,str(p),'exec')
           p.write_text(s)
           PY
-          python3 -m py_compile tests/memory-replay-browser.py
           npm run build:site
       - name: Install test browser
         run: |
