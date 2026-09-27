@@ -1,12 +1,12 @@
 {
   "name": "99-5-reborn",
-  "version": "0.11.0-drive-stories-p014",
+  "version": "0.12.0-echo-roads-p015",
   "private": true,
   "description": "99½ REBORN static WebGL2 living-car and hometown driving game",
   "scripts": {
     "start": "node tools/serve.cjs",
     "build": "node tools/bundle.cjs",
-    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs && node tests/town-director.cjs && node tests/driver-ux.cjs && node tests/maine-weather.cjs && node tests/drive-stories.cjs",
+    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs && node tests/town-director.cjs && node tests/driver-ux.cjs && node tests/maine-weather.cjs && node tests/drive-stories.cjs && node tests/echo-roads.cjs",
     "test:ux": "node tests/garage-browser-check.cjs && node tests/driver-ux-browser.cjs && node tests/driver-touch-browser.cjs",
     "test:http": "node tests/http-smoke.cjs",
     "validate:assets": "node tools/assets/validate-vehicle.cjs",
@@ -16,6 +16,7 @@
     "test:site": "node tests/site-test.cjs",
     "test:site:browser": "node tests/site-browser.cjs",
     "test:stories:browser": "node tests/drive-stories-browser.cjs",
-    "test:stories:packaged": "node tests/passenger-packaged-browser.cjs"
+    "test:stories:packaged": "node tests/passenger-packaged-browser.cjs",
+    "test:echo:browser": "python3 tests/echo-roads-browser.py"
   }
 }

@@ -138,3 +138,24 @@ the normal test and full-site gates. See
 Open **Passenger Drives** from the garage, or `J` → **Passenger Drives**. The first response appears at pickup; `1`/`2`/`3`, touch buttons, or silence choose the reply. Unanswered questions retain their deadlines through reloads. Stops, final dialogue and a parked arrival gate each ending; the garage asks before abandoning a commitment. An unsafe-car onward-transport option avoids unfair trust loss. The fictional parts handoff uses five active-driving minutes rather than the town clock. Authored weather preferences restore after the trip without erasing accumulated road surfaces.
 
 Packaged-browser ending checks use explicit saved-position fixtures. They supplement—not replace—production route/choice tests, ordinary launch/input tests, and real-device review.
+
+## Echo Roads — Build 015 / Pass 6
+
+Open **J → Echo Roads → Begin a memory drive**. Six copper markers trace a quiet
+North Berwick loop. Slow below 6 mph near a marker and notice the place today.
+Press **V**, or tap **Enter Memory**, to compare an imagined 1999½ layer. After
+both views, use J to keep the place, keep the feeling, or leave it unspoken.
+Return to Today after all six reflections for the homecoming. No score or timer.
+
+Mapped landmark shells remain authoritative. Earlier furniture, facade finishes,
+traffic dressing and sound are authored memory cues, **not a verified 1999 town
+survey**. No historical photos, private residents or commercial music were added.
+Progress and the active view survive reload; ending the drive preserves discoveries.
+Passenger commitments must end before beginning a memory drive.
+
+`npm run package:site` builds the full memorial website and matching standalone
+from the same commit. `npm run test:echo:browser` exercises the packaged experience.
+See `docs/ECHO_ROADS_PASS_015.md` for boundaries and verification.
+
+**Pass 6 of 8: 2 gameplay passes remaining.** This is a prototype milestone, not
+physical-device acceptance, final historical accuracy or production deployment.

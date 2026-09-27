@@ -24,9 +24,9 @@ Rain, fog, frost, snow, slush, black ice, wet leaves, puddles, salt, plowing, an
 
 Three complete fictional passenger trips with in-car dialogue, route-sensitive commitments, silence as a choice, persistent relationships, Road Journal entries, and weather/mechanical consequences.
 
-## Pass 6 — Echo Roads timeline prototype
+## Pass 6 — Echo Roads timeline prototype — complete (Build 015)
 
-Two eras of the downtown corridor, layered landmarks and props, memory transitions, and period-specific audio/traffic dressing.
+Today and an imagined 1999½ memory interpretation across six mapped downtown landmarks. Layered facade finishes and decorative props, blended transitions, earlier-style traffic dressing, an original memory soundscape, persistent observations, reflection choices and a six-stop homecoming. Earlier details are authored, not claimed as an exact historical reconstruction.
 
 ## Pass 7 — Memory ghosts, replay, and diagnostic audio
 
@@ -38,4 +38,4 @@ System integration, balancing, accessibility, performance tiers, save migration,
 
 The remaining-pass count is reduced only after a pass is implemented, tested, packaged, and committed.
 
-After Build 014: **3 passes remaining**. Passenger drives are documented in `DRIVE_STORIES_PASS_014.md`; Pass 4 weather and full-site packaging remain documented in `MAINE_WEATHER_ROADS_PASS_013.md`.
+After Build 015: **2 passes remaining**. Echo Roads is documented in `ECHO_ROADS_PASS_015.md`. Passenger drives are documented in `DRIVE_STORIES_PASS_014.md`; Pass 4 weather and full-site packaging remain documented in `MAINE_WEATHER_ROADS_PASS_013.md`.

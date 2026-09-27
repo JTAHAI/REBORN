@@ -29,7 +29,9 @@ try:
   assert page.evaluate('REBORN.snapshot().car.speed')==0
   page.keyboard.press('Escape');page.locator('#town-season-setting').select_option('winter');page.locator('#town-weather-setting').select_option('snow');page.keyboard.press('Escape');page.wait_for_timeout(500)
   assert page.evaluate('REBORN.snapshot().weather.current.kind')=='snow';assert page.evaluate('REBORN.snapshot().weather.props')>0
-  page.screenshot(path=str(evidence/'packaged-snow.png'));page.keyboard.down('ArrowUp');page.wait_for_timeout(1500);page.keyboard.up('ArrowUp');assert page.evaluate('REBORN.snapshot().car.speed')>0
+  page.screenshot(path=str(evidence/'packaged-snow.png'));page.keyboard.down('ArrowUp')
+  try:page.wait_for_function('REBORN.snapshot().car.speed>0',timeout=15000)
+  finally:page.keyboard.up('ArrowUp')
   page.keyboard.press('j');page.locator('#ux-tab-town').click();assert page.locator('#weather-panel').is_visible();t=page.evaluate('REBORN.snapshot().weather.cursor');page.wait_for_timeout(300);assert page.evaluate('REBORN.snapshot().weather.cursor')==t
   page.keyboard.press('Escape');page.keyboard.press('m');page.locator('#ux-map-search').fill('Cumberland');page.locator('#ux-map-results button').first.click();assert page.locator('#ux-clear-pin').is_enabled();page.keyboard.press('Escape')
   assert not errors,errors;assert page.evaluate('REBORN.snapshot().errors')==[];log('PASS packaged first Free Drive, snow render, driving, hub, paused weather, searchable map')
@@ -45,13 +47,13 @@ try:
   # The current memorial homepage sits outside /play/ and explicitly updates
   # any historical play-scoped worker before its versioned Drive link is used.
   phase['root']=site;page.goto(base+'/?build='+release['cacheTag']);page.locator("a[href*='/play/?build=']").first.wait_for()
-  page.wait_for_function("caches.keys().then(keys=>keys.some(k=>k.includes('pass05-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
-  page.goto(base+'/play/?build='+release['cacheTag']);page.wait_for_function("window.REBORN?.version==='0.11.0-drive-stories-p014'",timeout=60000)
-  page.wait_for_function("navigator.serviceWorker.controller && caches.keys().then(keys=>keys.some(k=>k.includes('pass05-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
+  page.wait_for_function("caches.keys().then(keys=>keys.some(k=>k.includes('pass06-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
+  page.goto(base+'/play/?build='+release['cacheTag']);page.wait_for_function("window.REBORN?.version==='0.12.0-echo-roads-p015'",timeout=60000)
+  page.wait_for_function("navigator.serviceWorker.controller && caches.keys().then(keys=>keys.some(k=>k.includes('pass06-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
   page.wait_for_timeout(1200);page.wait_for_function('!!window.REBORN');page.locator('#buttercup-continue').click();page.locator('#drive').click();page.wait_for_function("REBORN.snapshot().appState==='play'")
   car=page.evaluate('REBORN.snapshot().livingCar.vehicle');assert abs(car['odometerMiles']-321)<.1;assert car['fuel']>41.9 and car['fuel']<=42
   keys=page.evaluate('caches.keys()');assert 'another-app-keep' in keys;assert any(k.endswith('root-keep') for k in keys)
   assert page.evaluate('REBORN.snapshot().errors')==[];log('PASS actual Build009 cached installation upgrades; saves and unrelated/root caches preserved')
-  browser.close();print(json.dumps({'packagedBrowser':'passed','cacheUpgrade':'build009-to-build014','renderer':'Chromium software WebGL, battery-saver preset','physicalMobile':'not tested'}),flush=True)
+  browser.close();print(json.dumps({'packagedBrowser':'passed','cacheUpgrade':'build009-to-build015','renderer':'Chromium software WebGL, battery-saver preset','physicalMobile':'not tested'}),flush=True)
 finally:
  server.shutdown();old.cleanup()
