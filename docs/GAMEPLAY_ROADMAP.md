@@ -28,9 +28,9 @@ Three complete fictional passenger trips with in-car dialogue, route-sensitive c
 
 Today and an imagined 1999½ memory interpretation across six mapped downtown landmarks. Layered facade finishes and decorative props, blended transitions, earlier-style traffic dressing, an original memory soundscape, persistent observations, reflection choices and a six-stop homecoming. Earlier details are authored, not claimed as an exact historical reconstruction.
 
-## Pass 7 — Memory ghosts, replay, and diagnostic audio
+## Pass 7 — Memory ghosts, replay, and diagnostic audio — complete (Build 016)
 
-Recorded drives, route ghosts, cinematic replay, mechanical sound cues, and expanded drive-journal presentation.
+Bounded local Free Drive recordings, spectral route ghosts, cinematic replay cameras, timeline seek/speed controls, route-map overlays, Road Journal linkage, and synthesized mechanical cues for recorded faults. No route leaves the existing local browser save.
 
 ## Pass 8 — Integration and release hardening
 
@@ -38,4 +38,4 @@ System integration, balancing, accessibility, performance tiers, save migration,
 
 The remaining-pass count is reduced only after a pass is implemented, tested, packaged, and committed.
 
-After Build 015: **2 passes remaining**. Echo Roads is documented in `ECHO_ROADS_PASS_015.md`. Passenger drives are documented in `DRIVE_STORIES_PASS_014.md`; Pass 4 weather and full-site packaging remain documented in `MAINE_WEATHER_ROADS_PASS_013.md`.
+After Build 016: **1 gameplay pass remaining**. Drive Memories is documented in `MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md`; Echo Roads remains documented in `ECHO_ROADS_PASS_015.md`.

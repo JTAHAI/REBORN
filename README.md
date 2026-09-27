@@ -159,3 +159,32 @@ See `docs/ECHO_ROADS_PASS_015.md` for boundaries and verification.
 
 **Pass 6 of 8: 2 gameplay passes remaining.** This is a prototype milestone, not
 physical-device acceptance, final historical accuracy or production deployment.
+
+
+## Drive Memories — Build 016 / Pass 7
+
+Eligible North Berwick Free Drives can now become bounded local route memories.
+Open **J → Drive Memories** to select a recording, inspect its route and mechanical
+summary, run a spectral Jetta ghost, or watch a cinematic replay. **G** pauses or
+resumes the active ghost and **Shift+G** stops it. Replays support pause/play,
+timeline seeking, 0.5×–2× speed and chase, roadside, orbit and driver cameras.
+
+The recorder stores a compact route trace, speed/input state, temperature,
+battery and five diagnostic-severity channels. It keeps no more than five drives
+with bounded samples, markers and history. Data remains in `995.reborn.save.v1`;
+there is no upload, account, telemetry, live map service, microphone recording or
+cloud database. The player can disable recording or diagnostic audio at any time.
+
+Diagnostic audio is synthesized locally with Web Audio from the Jetta's existing
+fault state. Wheel-bearing hum, charging whine, cooling strain, clutch slip and
+brake symptoms can be heard during ordinary driving and replay without bundling
+commercial music or external sound files. These cues support diagnosis; they do
+not claim physically exact acoustic modeling.
+
+`npm run test:memory:browser` exercises recording, Road Journal linkage, ghost
+controls, map route, replay cameras/seek/speed, audio nodes and touch layout. The
+normal full-site, offline, historical-cache, vehicle and world gates remain.
+See [`docs/MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md`](docs/MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md).
+
+**Pass 7 of 8: 1 gameplay pass remaining.** Final integration, balancing,
+performance tiers, accessibility and release hardening remain Pass 8.

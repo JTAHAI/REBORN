@@ -46,7 +46,7 @@ try:
    try:page.wait_for_function('([id,era])=>REBORN.snapshot().echoes.state.visits[id]?.[era]===true',arg=[id,era],timeout=120000,polling=200)
    except Exception:
     print('OBSERVATION_FAILURE',id,era,json.dumps(snapshot()),flush=True);page.screenshot(path=str(evidence/'echo-failure.png'));raise
-  page.goto(url);ready();hub();assert page.locator('[role=tab]').count()==6
+  page.goto(url);ready();hub();assert page.locator('[role=tab]').count()==7;assert page.locator('#ux-tab-echoes').count()==1;assert page.locator('#ux-tab-memories').count()==1
   assert page.locator('#echo-places .echo-card').count()==6
   assert 'not an exact historical reconstruction' in page.locator('#echo-panel').inner_text()
   assert page.locator('#echo-begin').is_enabled();page.screenshot(path=str(evidence/'echo-roads-hub.png'));log('six accessible notebook cards, interpretation notice, launch control')

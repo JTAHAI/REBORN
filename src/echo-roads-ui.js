@@ -27,6 +27,7 @@ function renderEchoPanel(force=false){
 }
 function launchEcho(){
   if(!echoDirector)return;const result=echoDirector.begin(!!passengerDirector?.state.active);if(!result.ok){notify(result.reason);return;}
+  archiveMemoryDraft('ENTERED ECHO ROADS');stopMemoryGhost();
   if(state==='journey')closeJourney();if(state!=='play'||!sim.world.northBerwick)start('free');
   echoDirector.enabled=echoAvailable();save.echoes=echoDirector.state;persist();updateEchoHUD();
   notify('ECHO ROADS / V COMPARES ERAS · SLOW DOWN TO NOTICE A PLACE',5);

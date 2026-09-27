@@ -12,7 +12,7 @@ const pkg=JSON.parse(read('package.json'));
 let sha=process.env.REBORN_SOURCE_SHA;
 if(!sha){try{sha=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();}catch{throw new Error('Set REBORN_SOURCE_SHA when building without git history');}}
 if(!/^[a-f0-9]{40}$/.test(sha))throw new Error('REBORN_SOURCE_SHA must be an exact 40-character commit');
-const short=sha.slice(0,7),download=`REBORN-PASS-06-ECHO-ROADS-${short}-Standalone.zip`;
+const short=sha.slice(0,7),download=`REBORN-PASS-07-MEMORY-GHOSTS-${short}-Standalone.zip`;
 const inputs=[...files(path.join(root,'dist')),...files(path.join(root,'website-game-shell'))];
 const contentTag=hash(Buffer.concat(inputs.map(f=>fs.readFileSync(f)))).slice(0,16);
 const world=JSON.parse(read('assets/worlds/north-berwick/world.json'));
@@ -28,16 +28,16 @@ if(html.includes('buttercup-dedication')||html.includes('memorial.js'))throw new
 const dedication=read('website-game-shell/dedication.html');
 html=html.replace('</head>',`<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg"><link rel="stylesheet" href="./memorial.css?v=${contentTag}"></head>`);
 html=html.replace('<div id="app">',dedication+'\n<div id="app">');
-html=html.replace(/<span>BUILD 015 <i>\/<\/i>[^<]*<\/span>/,'<button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
+html=html.replace(/<span>BUILD 016 <i>\/<\/i>[^<]*<\/span>/,'<button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
 // The footer varies slightly across historical releases; fail rather than omit the notice access.
 if(!html.includes('id="memorial-credits-open"'))html=html.replace('<footer class="intro-footer">','<footer class="intro-footer"><button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
 html=html.replace('</body>',`<script src="./memorial.js?v=${contentTag}"></script><script src="./release-client.js?v=${contentTag}"></script></body>`);
 write(path.join(game,'index.html'),html);
 for(const n of ['LICENSE.txt','EXHIBIT-B.txt','NOTICE.txt','MEDIA-NOTICE.txt'])write(path.join(game,n),read('website/'+n));
-const credits=['# 99½ REBORN — Build 015','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
-const release={game:pkg.version,runtime:'0.12.0-echo-roads-p015',pass:6,remainingPasses:2,sourceCommit:sha,baselineCommit:'708ce1719d4ca66efbc09e2e857245757fcf372c',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
+const credits=['# 99½ REBORN — Build 016','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
+const release={game:pkg.version,runtime:'0.13.0-memory-replay-p016',pass:7,remainingPasses:1,sourceCommit:sha,baselineCommit:'fdd6b07436ced68ea9a2e70b0891abb1752e4270',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
 write(path.join(game,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 6 of 8. 2 passes remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Echo Roads: begin a six-place memory drive. V: compare Today and 1999½.\nSlow down near each copper marker, observe both eras, then reflect in J.\nThe earlier layer is an authored memory, not an exact historical survey.\nThe Passenger Drives tab still contains three fictional North Berwick journeys.\nWeather, schedules, passengers and personal situations are authored gameplay.\n');
+write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 7 of 8. 1 gameplay pass remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
 const shell=files(game).map(f=>'./'+path.relative(game,f).replaceAll(path.sep,'/')).filter(n=>!n.endsWith('.txt'));
 const sw=read('tools/service-worker.template.js').replace('__BUILD_ID__',hash(JSON.stringify(release)).slice(0,16)).replace('__SHELL__',JSON.stringify(shell));write(path.join(game,'sw.js'),sw);
 fs.cpSync(game,path.join(out,'play'),{recursive:true});
@@ -45,7 +45,30 @@ fs.mkdirSync(path.join(out,'downloads'),{recursive:true});
 const python=process.env.PYTHON||(process.platform==='win32'?'python':'python3');
 cp.execFileSync(python,[path.join(root,'tools/zip-static.py'),game,path.join(out,'downloads',download)],{stdio:'inherit'});
 release.standaloneZip=download;release.standaloneZipSha256=hash(fs.readFileSync(path.join(out,'downloads',download)));write(path.join(out,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 015 / Pass 6 of 8\n2 passes remaining\nSource: ${sha}\n\nNew: Echo Roads. Six North Berwick places viewed today and in an imagined\n1999½ memory layer. V crossfades mapped shells, authored period-style props\nand traffic dressing. Slow observation, three reflection choices, a persistent\nnotebook, original soundscape, and a homecoming ending replace race scoring.\nRetained: passenger stories, Maine weather, Living Town, diagnostics, modern\nUX, map repair, owner-correct MkIV, original Story and all four activities.\n\nHistorical note: this is a memory interpretation, not a verified 1999 survey.\nNo claim is made that a specific prop or finish existed there in 1999.\n\nThis full website packages the current game AND its matching standalone ZIP.\nA push is not a production deployment. No production settings were changed.\nPassengers, conversations, schedules and personal situations are fictional.\nNo generated dialogue, photorealism or physical-device acceptance claim.\n\nStandalone SHA-256: ${release.standaloneZipSha256}\n`);
+write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 016 / Pass 7 of 8
+1 gameplay pass remaining
+Source: ${sha}
+
+New: local Drive Memories. Eligible North Berwick Free Drives create bounded
+route recordings in the existing browser save. Re-run a route beside a spectral
+Jetta, pause or stop the ghost, or watch a cinematic replay with chase, roadside,
+orbit and driver cameras, timeline seeking and playback speed controls.
+
+Mechanical state is captured with the route. Optional synthesized diagnostic
+audio turns wheel-bearing, charging, cooling, clutch and brake symptoms into
+local Web Audio cues during driving and replay. No microphone, uploaded route,
+telemetry, account, cloud storage, downloaded music or live mapping service is used.
+
+Retained: Echo Roads, passenger stories, Maine weather, Living Town, diagnostics,
+modern UX, map repair, owner-correct MkIV, original Story and all four activities.
+The earlier Echo Roads layer remains an authored memory, not a verified 1999 survey.
+
+This full website packages the current game AND its matching standalone ZIP.
+A push is not a production deployment. No production settings were changed.
+No photorealism, final balance or physical-device acceptance claim is made.
+
+Standalone SHA-256: ${release.standaloneZipSha256}
+`);
 write(path.join(out,'DEPLOY-README.txt'),'FULL WEBSITE PACKAGE\nindex.html is the memorial homepage; play/ contains the current game.\nDeploy the CONTENTS of this directory or the full website ZIP to your existing\nstatic host. The recorded production host is Workers Static Assets, not Pages.\nDo not replace this website with game-only dist/.\nNo deployment, hosting-plan, domain, binding or production configuration change\nis performed by the build or packaging commands.\n\nThe website has no root service worker. The game worker owns only its scope.\nCached installations update atomically once the complete new game is cached;\nlocalStorage saves are never cleared by the updater.\n');
 console.log(JSON.stringify({site:out,standalone:game,...release},null,2));
 module.exports={out,game,release};
