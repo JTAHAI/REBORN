@@ -1,0 +1,125 @@
+name: REBORN Pass 10 graphics recovery
+on:
+  push:
+    branches: [chatgpt/reborn-pass10-graphics-recovery]
+    paths: [.github/workflows/pass10.yml]
+permissions:
+  contents: read
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    outputs:
+      source: ${{ steps.commit.outputs.source }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Reproduce exact locally tested Build 019 candidate
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .github/pass10-apply.py /tmp/pass10-apply.py
+          git switch --detach b379b4d3f6884f9548855cf1798387003edcb39f
+          python3 /tmp/pass10-apply.py
+          npm test
+          git diff --cached --check
+          test "$(git write-tree)" = '7ebe6205fb2601c0f4e42491f07d9b1a84593a78'
+          git config user.name 'ChatGPT'
+          git config user.email 'chatgpt@users.noreply.github.com'
+          git commit -m 'Pause drives and replays safely across WebGL context loss'
+          git push origin HEAD:refs/heads/chatgpt/reborn-pass10-build
+          echo "source=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  verify:
+    needs: checkpoint
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [core, graphics, navigation, session, updates, release, ux, memory, workshop, weather, passengers, echoes, website]
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass10-evidence/screenshots
+      REBORN_EVIDENCE: /tmp/pass10-evidence/graphics
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.checkpoint.outputs.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: mkdir -p /tmp/pass10-evidence && npm run build:site
+      - if: matrix.gate != 'core'
+        run: |
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Independent acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            case '${{ matrix.gate }}' in
+              core) npm test; npm run validate:assets; npm run test:http; node tests/controls-acceptance.cjs; node tests/driving-behavior.cjs; node tests/readability-acceptance.cjs; node tests/vehicle-shell-acceptance.cjs; node tests/town-packaging.cjs; npm run test:site;;
+              graphics) npm run test:graphics:browser;;
+              navigation) npm run test:navigation:browser;;
+              session) npm run test:session:browser;;
+              updates) npm run test:updates:browser;;
+              release) npm run test:release:browser;;
+              ux) npm run test:ux;;
+              memory) npm run test:memory:browser;;
+              workshop) npm run test:workshop:browser;;
+              weather) npm run test:weather:browser;;
+              passengers) npm run test:stories:browser; npm run test:stories:packaged;;
+              echoes) npm run test:echo:browser;;
+              website) npm run test:site:browser;;
+            esac
+            git diff --exit-code
+          } 2>&1 | tee /tmp/pass10-evidence/results.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass10-${{ matrix.gate }}-evidence
+          path: /tmp/pass10-evidence/
+          retention-days: 7
+  packages:
+    needs: [checkpoint, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.checkpoint.outputs.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Build twice and require byte-identical release ZIPs
+        run: |
+          set -euo pipefail
+          npm run package:site
+          cp packages/SHA256SUMS.txt /tmp/first.txt
+          npm run package:site
+          cmp /tmp/first.txt packages/SHA256SUMS.txt
+          npm run test:site
+          git diff --exit-code
+          cp site-dist/release.json packages/release.json
+          git rev-parse HEAD > packages/SOURCE-COMMIT.txt
+          git diff b379b4d3f6884f9548855cf1798387003edcb39f HEAD --stat > packages/CHANGES.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass10-verified-packages
+          path: packages/
+          retention-days: 7
+          if-no-files-found: error
