@@ -16,17 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 0ae574c501631593fd31208096786764b0b71184
+          ref: 4b9fb8e7a949184236aa31d668940e3a466a7c36
           fetch-depth: 0
-      - name: Preserve draft source without changing main or production
+      - name: Preserve portrait layout repair without changing main or production
         id: commit
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass08-release-hardening | cut -f1)" = '0ae574c501631593fd31208096786764b0b71184'
-          curl -fL --retry 3 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-2c40-81f5-ba97-97cc8dd05030/raw?se=2026-09-28T04%3A11%3A50Z&sp=r&sv=2026-02-06&sr=b&scid=60642f6a-b518-5dc3-b879-18c602364f2f&skoid=38550de5-1fab-49d1-9ebb-83af5557cc43&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T00%3A18%3A06Z&ske=2026-09-29T00%3A18%3A06Z&sks=b&skv=2026-02-06&sig=pcgfbTwC/8HcLwUfWqvHkRqGTKqTo4dqDMP0yYECVCU%3D' -o /tmp/pass08.zip
-          echo '337c2bdcc34814ccb98a1d349f9c7ebdd0d1ac505af6c4c3edfbb2110c9a4ed7  /tmp/pass08.zip' | sha256sum -c -
-          unzip -o /tmp/pass08.zip
+          test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass08-release-hardening | cut -f1)" = '4b9fb8e7a949184236aa31d668940e3a466a7c36'
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('src/release-ux.css')
+          rule='@media(orientation:portrait) and (max-width:600px){#intro .subcopy,#intro .car-caption{display:none}#intro .numbers{font-size:64px}}\n'
+          if rule not in p.read_text(): p.write_text(p.read_text()+rule)
+          PY
           npm run build
           node tests/town-packaging.cjs
           node tests/release-hardening.cjs
@@ -35,8 +38,8 @@ jobs:
           git switch -c chatgpt/reborn-pass08-release-hardening
           git config user.name 'ChatGPT'
           git config user.email 'chatgpt@users.noreply.github.com'
-          git add README.md docs index.html dist package.json package-lock.json src tests tools website website-game-shell
-          git commit -m 'Refine hometown HUD and complete save, update and rendering safety'
+          git add index.html dist src/release-ux.css
+          git commit -m 'Keep portrait garage branding clear of the driving actions'
           git push origin HEAD:refs/heads/chatgpt/reborn-pass08-release-hardening
           echo "source=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
   verify:
