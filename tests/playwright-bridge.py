@@ -2,6 +2,7 @@
 Requires Python Playwright plus an installed Chromium; never used by the game.
 """
 import json, os, sys
+from hub_helpers import hub_tab
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
@@ -24,7 +25,10 @@ with sync_playwright() as p:
                 page.set_viewport_size({'width':int(args[2]),'height':int(args[3])}); page.wait_for_timeout(150)
             elif command == 'eval': result = page.evaluate(args[1])
             elif command == 'click':
-                page.locator(args[1]).click(); page.wait_for_timeout(120)
+
+                if args[1].startswith('#ux-tab-'):hub_tab(page,args[1][8:])
+                else:page.locator(args[1]).click()
+                page.wait_for_timeout(120)
             elif command == 'fill': page.locator(args[1]).fill(args[2])
             elif command == 'select': page.locator(args[1]).select_option(args[2])
             elif command == 'check': page.locator(args[1]).check()

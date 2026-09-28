@@ -1,3 +1,4 @@
+from hub_helpers import hub_tab
 """Packaged Echo Roads acceptance. Saved road-position fixtures shorten travel;
 all observations, comparisons, choices and the ending use actual gameplay/UI.
 No production requests, private footage, or manual-route claim.
@@ -32,7 +33,7 @@ try:
   def hub():
    if page.evaluate('REBORN.snapshot().appState')=='menu':page.locator('#journey-open').click()
    elif page.evaluate('REBORN.snapshot().appState')=='play':page.keyboard.press('j')
-   page.locator('#ux-tab-echoes').click()
+   hub_tab(page,'echoes')
   def snapshot():return page.evaluate('REBORN.snapshot()')
   def fixture(point,focus):
    # Pause before saving a fixture: the running game's autosave must not overwrite it.
@@ -83,7 +84,7 @@ try:
   page.evaluate('document.fullscreenElement ? document.exitFullscreen() : undefined')
   for width,height in [(1024,600),(844,390),(667,375)]:
    page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(100)
-   rects=page.locator('.ux-tabs button').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
+   rects=page.locator('.ux-tabs button:not([hidden])').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
    assert all(r['height']>=36 and r['width']>=40 and r['left']>=0 and r['right']<=width+1 for r in rects),rects
   page.set_viewport_size({'width':1024,'height':600});page.locator('#echo-stop').click();assert snapshot()['echoes']['state']['active']==False
   page.keyboard.press('Escape');page.wait_for_timeout(1200);assert snapshot()['echoes']['audioLevel']<.001;assert page.locator('#echo-strip').is_hidden()

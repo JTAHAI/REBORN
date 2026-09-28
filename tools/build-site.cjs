@@ -12,7 +12,7 @@ const pkg=JSON.parse(read('package.json'));
 let sha=process.env.REBORN_SOURCE_SHA;
 if(!sha){try{sha=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();}catch{throw new Error('Set REBORN_SOURCE_SHA when building without git history');}}
 if(!/^[a-f0-9]{40}$/.test(sha))throw new Error('REBORN_SOURCE_SHA must be an exact 40-character commit');
-const short=sha.slice(0,7),download=`REBORN-PASS-07-MEMORY-GHOSTS-${short}-Standalone.zip`;
+const short=sha.slice(0,7),download=`REBORN-PASS-08-HOMETOWN-UX-${short}-Standalone.zip`;
 const inputs=[...files(path.join(root,'dist')),...files(path.join(root,'website-game-shell'))];
 const contentTag=hash(Buffer.concat(inputs.map(f=>fs.readFileSync(f)))).slice(0,16);
 const world=JSON.parse(read('assets/worlds/north-berwick/world.json'));
@@ -28,16 +28,16 @@ if(html.includes('buttercup-dedication')||html.includes('memorial.js'))throw new
 const dedication=read('website-game-shell/dedication.html');
 html=html.replace('</head>',`<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg"><link rel="stylesheet" href="./memorial.css?v=${contentTag}"></head>`);
 html=html.replace('<div id="app">',dedication+'\n<div id="app">');
-html=html.replace(/<span>BUILD 016 <i>\/<\/i>[^<]*<\/span>/,'<button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
+html=html.replace(/<span>BUILD 017 <i>\/<\/i>[^<]*<\/span>/,'<button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
 // The footer varies slightly across historical releases; fail rather than omit the notice access.
 if(!html.includes('id="memorial-credits-open"'))html=html.replace('<footer class="intro-footer">','<footer class="intro-footer"><button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
 html=html.replace('</body>',`<script src="./memorial.js?v=${contentTag}"></script><script src="./release-client.js?v=${contentTag}"></script></body>`);
 write(path.join(game,'index.html'),html);
 for(const n of ['LICENSE.txt','EXHIBIT-B.txt','NOTICE.txt','MEDIA-NOTICE.txt'])write(path.join(game,n),read('website/'+n));
-const credits=['# 99½ REBORN — Build 016','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
-const release={game:pkg.version,runtime:'0.13.0-memory-replay-p016',pass:7,remainingPasses:1,sourceCommit:sha,baselineCommit:'fdd6b07436ced68ea9a2e70b0891abb1752e4270',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
+const credits=['# 99½ REBORN — Build 017','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
+const release={game:pkg.version,runtime:'0.14.0-hometown-ux-p017',pass:8,remainingPasses:0,sourceCommit:sha,baselineCommit:'3957339883932f0ed4c3bc9657ae4118aa8def29',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
 write(path.join(game,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 7 of 8. 1 gameplay pass remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
+write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 8 of 8. 0 planned engineering passes remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
 const shell=files(game).map(f=>'./'+path.relative(game,f).replaceAll(path.sep,'/')).filter(n=>!n.endsWith('.txt'));
 const sw=read('tools/service-worker.template.js').replace('__BUILD_ID__',hash(JSON.stringify(release)).slice(0,16)).replace('__SHELL__',JSON.stringify(shell));write(path.join(game,'sw.js'),sw);
 fs.cpSync(game,path.join(out,'play'),{recursive:true});
@@ -45,8 +45,8 @@ fs.mkdirSync(path.join(out,'downloads'),{recursive:true});
 const python=process.env.PYTHON||(process.platform==='win32'?'python':'python3');
 cp.execFileSync(python,[path.join(root,'tools/zip-static.py'),game,path.join(out,'downloads',download)],{stdio:'inherit'});
 release.standaloneZip=download;release.standaloneZipSha256=hash(fs.readFileSync(path.join(out,'downloads',download)));write(path.join(out,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 016 / Pass 7 of 8
-1 gameplay pass remaining
+write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 017 / Pass 8 of 8
+0 planned engineering passes remaining
 Source: ${sha}
 
 New: optional driveway Workshop story, based on Justin's red AEM intake install.

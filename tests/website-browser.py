@@ -1,3 +1,4 @@
+from hub_helpers import hub_tab
 """End-to-end staged release acceptance, including an old cached installation.
 No production requests. Requires Python Playwright and Chromium only for tests.
 """
@@ -32,7 +33,7 @@ try:
   page.screenshot(path=str(evidence/'packaged-snow.png'));page.keyboard.down('ArrowUp')
   try:page.wait_for_function('REBORN.snapshot().car.speed>0',timeout=15000)
   finally:page.keyboard.up('ArrowUp')
-  page.keyboard.press('j');page.locator('#ux-tab-town').click();assert page.locator('#weather-panel').is_visible();t=page.evaluate('REBORN.snapshot().weather.cursor');page.wait_for_timeout(300);assert page.evaluate('REBORN.snapshot().weather.cursor')==t
+  page.keyboard.press('j');hub_tab(page,'town');assert page.locator('#weather-panel').is_visible();t=page.evaluate('REBORN.snapshot().weather.cursor');page.wait_for_timeout(300);assert page.evaluate('REBORN.snapshot().weather.cursor')==t
   page.keyboard.press('Escape');page.keyboard.press('m');page.locator('#ux-map-search').fill('Cumberland');page.locator('#ux-map-results button').first.click();assert page.locator('#ux-clear-pin').is_enabled();page.keyboard.press('Escape')
   assert not errors,errors;assert page.evaluate('REBORN.snapshot().errors')==[];log('PASS packaged first Free Drive, snow render, driving, hub, paused weather, searchable map')
   response=page.request.get(base+'/downloads/'+release['standaloneZip']);assert response.ok;assert hashlib.sha256(response.body()).hexdigest()==release['standaloneZipSha256'];log('PASS embedded standalone ZIP matches release manifest')
@@ -47,9 +48,9 @@ try:
   # The current memorial homepage sits outside /play/ and explicitly updates
   # any historical play-scoped worker before its versioned Drive link is used.
   phase['root']=site;page.goto(base+'/?build='+release['cacheTag']);page.locator("a[href*='/play/?build=']").first.wait_for()
-  page.wait_for_function("caches.keys().then(keys=>keys.some(k=>k.includes('pass07-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
-  page.goto(base+'/play/?build='+release['cacheTag']);page.wait_for_function("window.REBORN?.version==='0.13.0-memory-replay-p016'",timeout=60000)
-  page.wait_for_function("navigator.serviceWorker.controller && caches.keys().then(keys=>keys.some(k=>k.includes('pass07-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
+  page.wait_for_function("caches.keys().then(keys=>keys.some(k=>k.includes('pass08-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
+  page.goto(base+'/play/?build='+release['cacheTag']);page.wait_for_function("window.REBORN?.version==='0.14.0-hometown-ux-p017'",timeout=60000)
+  page.wait_for_function("navigator.serviceWorker.controller && caches.keys().then(keys=>keys.some(k=>k.includes('pass08-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
   page.wait_for_timeout(1200);page.wait_for_function('!!window.REBORN');page.locator('#buttercup-continue').click();page.locator('#drive').click();page.wait_for_function("REBORN.snapshot().appState==='play'")
   car=page.evaluate('REBORN.snapshot().livingCar.vehicle');assert abs(car['odometerMiles']-321)<.1;assert car['fuel']>41.9 and car['fuel']<=42
   keys=page.evaluate('caches.keys()');assert 'another-app-keep' in keys;assert any(k.endswith('root-keep') for k in keys)

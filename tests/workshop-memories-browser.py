@@ -1,3 +1,4 @@
+from hub_helpers import hub_tab
 """Real UI acceptance for the optional driveway recollection. No repair fixture completes it."""
 import json, os, threading, tempfile
 from pathlib import Path
@@ -22,7 +23,7 @@ try:
   def ready(pg):
    pg.wait_for_function('window.REBORN && window.REBORN.snapshot')
    if pg.locator('#buttercup-continue').is_visible():pg.locator('#buttercup-continue').click()
-   pg.locator('#journey-open').click();pg.locator('#ux-tab-workshop').click()
+   pg.locator('#journey-open').click();hub_tab(pg,'workshop')
   def protected(pg):
    return pg.evaluate('(()=>{const s=REBORN.snapshot();return {vehicle:s.livingCar.vehicle,time:s.time,town:s.town,weather:s.weather,echoes:s.echoes,passengers:s.passengers}})()')
   page.goto(url);ready(page)
@@ -60,8 +61,8 @@ try:
   assert page.locator('#driveway-language').is_checked();assert 'MEMORY WORTH KEEPING' in page.locator('#driveway-step').inner_text()
   page.locator('.driveway-options summary').click();page.locator('#driveway-asides').uncheck();page.reload();ready(page);assert not page.locator('#driveway-asides').is_checked()
   log('memory completion and independent language/asides preferences survive reload')
-  page.locator('#ux-tab-stories').click();assert page.locator('#journey-title').inner_text()=='Someone needs a ride.'
-  page.locator('#ux-tab-memories').click();assert page.locator('#journey-title').inner_text()=='Your drives, kept.'
+  hub_tab(page,'stories');assert page.locator('#journey-title').inner_text()=='Someone needs a ride.'
+  hub_tab(page,'memories');assert page.locator('#journey-title').inner_text()=='Your drives, kept.'
   assert page.locator('#memory-recording-status').inner_text()
   log('hub headings follow the selected task and recording policy has an explicit status')
   assert not errors,errors;ctx.close()

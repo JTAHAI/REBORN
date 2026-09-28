@@ -1,3 +1,4 @@
+from hub_helpers import hub_tab
 """Packaged Pass 7 acceptance for local drive memories, ghosts, replay and audio.
 
 The desktop path records a real short Free Drive through production input and
@@ -50,7 +51,7 @@ try:
   ctx.add_init_script("if(!localStorage.getItem('995.reborn.save.v1'))localStorage.setItem('995.reborn.save.v1',"+json.dumps(json.dumps(seed))+')')
   page=ctx.new_page();page.set_default_timeout(120000);page.on('pageerror',lambda e:errors.append(str(e)))
   def ready(pg=page):
-   pg.wait_for_function("window.REBORN?.version==='0.13.0-memory-replay-p016'")
+   pg.wait_for_function("window.REBORN?.version==='0.14.0-hometown-ux-p017'")
    if pg.locator('#buttercup-continue').is_visible(): pg.locator('#buttercup-continue').click()
    pg.wait_for_function("!document.getElementById('intro').hidden")
   def snap(pg=page): return pg.evaluate('REBORN.snapshot()')
@@ -58,7 +59,7 @@ try:
    state=pg.evaluate('REBORN.snapshot().appState')
    if state=='menu': pg.locator('#journey-open').click()
    elif state=='play': pg.keyboard.press('j')
-   pg.locator('#ux-tab-memories').click()
+   hub_tab(pg,'memories')
 
   original_wait=page.wait_for_function
   def wait_with_snapshot(*args,**kwargs):
@@ -114,7 +115,7 @@ try:
   log('spectral route ghost advances, pauses, freezes on the map and stops without becoming a race')
 
   # Replay and diagnostic audio from the same real recording.
-  page.keyboard.press('j');page.locator('#ux-tab-memories').click()
+  page.keyboard.press('j');hub_tab(page,'memories')
   restore=snap();restore_car={k:restore['car'][k] for k in ['x','z','yaw']};restore_vehicle={k:restore['livingCar']['vehicle'][k] for k in ['engineTempC','battery']}
   page.locator('[data-memory-action="replay"]').click();page.wait_for_function("REBORN.snapshot().appState==='replay' && REBORN.snapshot().memories.replay")
   assert page.locator('#memory-replay').is_visible();assert page.locator('#memory-replay-camera').inner_text()=='CHASE'
@@ -167,7 +168,7 @@ try:
   touch.add_init_script("localStorage.setItem('995.reborn.save.v1',"+json.dumps(json.dumps(saved_obj))+')')
   t=touch.new_page();t.set_default_timeout(120000);t.on('pageerror',lambda e:errors.append(str(e)))
   t.goto(url);ready(t)
-  t.locator('#journey-open').tap();t.locator('#ux-tab-memories').tap();t.locator('.memory-card').scroll_into_view_if_needed()
+  t.locator('#journey-open').tap();hub_tab(t,'memories');t.locator('.memory-card').scroll_into_view_if_needed()
   actions=t.locator('.memory-card-actions button').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
   assert len(actions)==3 and all(r['height']>=44 and r['left']>=0 and r['right']<=844 for r in actions),actions
   t.screenshot(path=str(evidence/'drive-memories-touch-hub.png'))
@@ -178,7 +179,7 @@ try:
   for r in controls: assert not overlap(ghost,r),(ghost,r)
   t.screenshot(path=str(evidence/'memory-ghost-touch.png'))
   t.locator('#minimap').tap();assert t.evaluate('REBORN.snapshot().appState')=='map';before=t.evaluate('REBORN.snapshot().memories.ghost.time');t.wait_for_timeout(350);assert abs(t.evaluate('REBORN.snapshot().memories.ghost.time')-before)<.02
-  t.locator('#map-resume').tap();t.locator('#memory-ghost-stop').tap();t.keyboard.press('j');t.locator('#ux-tab-memories').tap();t.locator('.memory-card').scroll_into_view_if_needed();t.locator('[data-memory-action="replay"]').tap();t.wait_for_function("REBORN.snapshot().appState==='replay'")
+  t.locator('#map-resume').tap();t.locator('#memory-ghost-stop').tap();t.keyboard.press('j');hub_tab(t,'memories');t.locator('.memory-card').scroll_into_view_if_needed();t.locator('[data-memory-action="replay"]').tap();t.wait_for_function("REBORN.snapshot().appState==='replay'")
   replay_buttons=t.locator('.memory-replay-controls button').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
   assert all(r['height']>=44 and r['left']>=0 and r['right']<=844 and r['top']>=0 and r['bottom']<=390 for r in replay_buttons),replay_buttons
   t.screenshot(path=str(evidence/'memory-replay-touch.png'));t.locator('#memory-replay-exit').tap();t.wait_for_function("REBORN.snapshot().appState==='journey'")

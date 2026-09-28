@@ -35,6 +35,8 @@ No alternative license is designated by this release.
    if(!registration)return;
    await registration.update();
    const worker=registration.installing||registration.waiting;
+   const requestIdle=()=>{registration.waiting?.postMessage({type:'REBORN_ACTIVATE_IF_IDLE'});};requestIdle();
+   worker?.addEventListener('statechange',requestIdle);
    if(worker&&worker.state!=='activated')await new Promise(resolve=>{
     const timer=setTimeout(resolve,15000);
     worker.addEventListener('statechange',()=>{if(worker.state==='activated'||worker.state==='redundant'){clearTimeout(timer);resolve();}},{once:false});

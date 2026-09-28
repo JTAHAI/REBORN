@@ -1,3 +1,4 @@
+from hub_helpers import hub_tab
 """Packaged Pass 5 UI/lifecycle acceptance using isolated local saves.
 End-of-route positions are explicit save fixtures, not claimed manual drive-throughs.
 No production service or data is contacted. No writable game debug hooks are added.
@@ -34,7 +35,7 @@ try:
    page.wait_for_function("REBORN.snapshot().appState==='play' && !document.getElementById('passenger-choice').hidden")
   # New launch, unanswered conversation survives pause and page reload with the
   # original deadline. A keyboard response must not operate an unrelated control.
-  ctx,page,errors=open_case();resume(page,'long-way-home');page.keyboard.press('j');page.locator('#ux-tab-stories').click()
+  ctx,page,errors=open_case();resume(page,'long-way-home');page.keyboard.press('j');hub_tab(page,'stories')
   prompt=page.evaluate('REBORN.snapshot().passengers.state.active.prompt');town=page.evaluate('REBORN.snapshot().town.minuteOfDay')
   page.wait_for_timeout(500);assert page.evaluate('REBORN.snapshot().town.minuteOfDay')==town
   page.reload();page.wait_for_function('window.REBORN && !document.getElementById("intro").hidden')

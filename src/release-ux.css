@@ -1,0 +1,82 @@
+/* Pass 8: reserved HUD regions and a task-oriented, scalable hub. */
+:root{--reading-scale:1;--ux-ink:#edf1e8;--ux-surface:#101b24;--ux-copper:#deb789}
+.hub-primary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:6px 0 10px}
+.hub-primary button{min-height:48px;border:1px solid #8494945c;border-radius:7px;background:#172731;color:var(--ux-ink);font-size:16px;letter-spacing:.5px}
+.hub-primary button[aria-pressed=true]{background:#dfbe8b;color:#14202a;border-color:#dfbe8b;font-weight:700}
+.hub-mobile-picker{display:none}.ux-tabs{gap:8px!important;overflow:visible!important}
+.ux-tabs button{font-size:14px!important;min-height:44px!important;padding:9px 16px!important;white-space:normal!important}
+.ux-tabs button[hidden]{display:none!important}
+#hub-task-note{font-size:calc(13px * var(--reading-scale));line-height:1.5;color:#bac9c7;margin:6px 0 12px;max-width:850px}
+#hub-map-open{margin:0 0 12px;min-height:44px}
+.journey-modal .journey-header{align-items:flex-start}.journey-header h2{max-width:800px;line-height:1.2}
+#journey-close{flex:none;min-width:48px;min-height:48px}
+.ux-hub-chrome{background:var(--ux-surface)!important;padding-bottom:4px}
+.ux-hub-chrome .journey-header,.ux-hub-chrome .ux-tabs{background:var(--ux-surface)!important}
+.journey-panel p,.journey-panel .empty-log,.journey-panel small,.passenger-disclaimer,.echo-passage,.memory-privacy,.driveway-text,.driveway-quote{font-size:calc(14px * var(--reading-scale))!important;line-height:1.6!important}
+.journey-panel h3{font-size:calc(17px * var(--reading-scale))!important;line-height:1.4;overflow-wrap:anywhere}
+.journey-panel button:not(.driveway-options button),.journey-panel label,.drive-entry small,.road-row small{font-size:calc(13px * var(--reading-scale))!important;line-height:1.5!important;min-height:44px;white-space:normal}
+.journey-panel{min-width:0}.journey-panel *{overflow-wrap:anywhere}
+#pause .settings label{font-size:calc(14px * var(--reading-scale));line-height:1.5;gap:12px}
+#pause .settings label small{font-size:calc(12px * var(--reading-scale))}
+#pause .settings select{font-size:calc(13px * var(--reading-scale));min-height:44px;max-width:56%;min-width:0}
+#pause .control-help p{font-size:calc(13px * var(--reading-scale))!important;line-height:1.6}
+body[data-reading-scale="2"] .ux-tab-panel,body[data-reading-scale="1.5"] .ux-tab-panel{grid-template-columns:1fr}
+body[data-reading-scale="2"] #vehicle-condition-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#release-continue-detail{font-size:13px;color:#d6c4a7;margin:8px 0 0}
+#release-loading{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.6px;min-height:20px;flex-wrap:wrap}
+#release-load-detail{color:#ffc2a1;font-size:12px;letter-spacing:0}
+#release-load-retry{min-height:44px}#release-save-recovery{padding:14px;background:#33261d;border:1px solid #d6a672;border-radius:8px;max-height:34vh;overflow:auto;font-size:14px;line-height:1.5}#release-save-recovery button{margin:5px;min-height:44px}
+#release-save-recovery[hidden],#release-load-retry[hidden],#hub-map-open[hidden]{display:none}
+#release-dialog{position:fixed;inset:0;margin:auto;width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;box-sizing:border-box;padding:24px;color:var(--ux-ink);background:var(--ux-surface);border:1px solid #dfbe8b;border-radius:12px;font-size:calc(14px * var(--reading-scale));line-height:1.6;z-index:100}
+#release-dialog::backdrop{background:#000b}#release-dialog h2{font-size:28px;line-height:1.3;margin:0 0 15px}#release-dialog input{max-width:100%;min-height:44px;box-sizing:border-box}#release-dialog label{display:block;margin:16px 0}#release-dialog button{min-height:48px;white-space:normal;margin:6px 0}#release-dialog-result{color:#ffca9c}#release-dialog-cancel{display:block;width:100%}
+#release-dialog [hidden]{display:none}
+#release-audio-caption{position:absolute;left:50%;bottom:45px;transform:translateX(-50%);max-width:45vw;border:1px solid #d9c39c60;border-radius:6px;padding:8px 12px;background:#101c23ed;color:#e1d4b4;font-size:12px}
+.release-route-options{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}.release-route-options label{font-size:12px;color:#d5c19d}.release-route-options select{min-height:44px;background:#1c2b33;color:#f3e9d8;border:1px solid #8e9f9a;padding:8px}.release-route-options button{min-height:44px}#ux-route-summary{flex-basis:100%;font-size:13px;line-height:1.4;margin:2px 0;color:#c4d0c7}
+#ux-map-results button{min-height:44px!important}.ux-map-legend span{font-size:12px}
+/* The objective is left; live instruments are right; optional conversations live
+   below the road sightline. Alerts never move either thumb control. */
+#passenger-status{display:none!important}
+#hud .mission{max-width:300px;box-sizing:border-box}
+#hud #ux-navigation{top:170px;left:38px;transform:none;max-width:300px;font-size:13px;line-height:1.5}
+#hud #ux-alert{left:50%;top:82px;bottom:auto;transform:translateX(-50%);max-width:40vw;box-sizing:border-box;font-size:13px;line-height:1.4}
+#hud #passenger-choice{bottom:28px;left:50%;transform:translateX(-50%);width:min(730px,calc(100vw - 470px));max-height:40vh;overflow:auto}
+#passenger-choice-text{font-size:calc(14px * var(--reading-scale))!important}#passenger-choice-buttons button{min-height:48px}#passenger-choice-buttons strong{font-size:13px;line-height:1.4}
+body[data-reading-pause=true] #passenger-choice{border-color:#e8c58e;box-shadow:0 12px 50px #0009}
+body[data-reading-pause=true] #passenger-choice-timer{color:#f5d494}
+body[data-reading-scale="2"] #passenger-choice-buttons,body[data-reading-scale="1.5"] #passenger-choice-buttons{grid-template-columns:1fr}
+body[data-reading-scale="2"] #passenger-choice,body[data-reading-scale="1.5"] #passenger-choice{max-height:64vh}
+#hud #passenger-dialogue{bottom:175px;width:min(580px,calc(100vw - 470px));max-height:28vh;overflow:auto}
+#hud #echo-strip,#hud #memory-ghost-strip{bottom:25px;max-width:calc(100vw - 470px)}
+#hud #weather-chip{max-width:300px}
+#hud #toast{pointer-events:none}
+body[data-context=choice] #toast,body[data-context=dialogue] #toast{display:none!important}
+/* Do not obstruct play when a sub-740px phone or enlarged copy needs more room.
+   The visible reading pause freezes driving and response clocks together. */
+body.touch #hud .mission{left:122px;right:158px;top:76px;max-width:none;padding:6px 9px;max-height:76px;overflow:auto}
+body.touch #hud .mission h2{font-size:16px;line-height:1.4;margin:0}
+body.touch #hud .mission .eyebrow{font-size:10px;line-height:1.4}
+body.touch #hud #ux-navigation{left:122px;right:158px;top:76px;max-width:none;font-size:12px;max-height:72px;overflow:auto}
+body.touch #hud #weather-chip{left:122px;right:158px;top:45px;transform:none;max-width:none;min-height:25px;padding:5px 8px;font-size:11px}
+body.touch #hud #town-clock{top:12px;max-width:36vw;min-height:27px;padding:6px}
+body.touch #hud .map-wrap{left:20px;top:83px;bottom:auto;width:88px;padding:4px}
+body.touch #hud .map-wrap>div:not(.minimap-zoom),body.touch #hud .map-wrap .minimap-zoom{display:none}
+body.touch .touch.transform{left:20px!important;bottom:138px!important;min-width:110px!important;max-width:110px;min-height:44px!important}
+body.touch #hud .instrument{top:76px;width:125px;right:20px;bottom:auto}
+body.touch #hud .instrument .systems-mini{display:none}
+body.touch #hud #passenger-choice{left:154px;right:158px;bottom:12px;width:auto;max-width:none;transform:none;max-height:calc(100dvh - 167px);padding:8px;overflow:auto}
+body.touch #passenger-choice header{font-size:10px;letter-spacing:0;line-height:1.4;flex-wrap:wrap;gap:4px}
+body.touch #passenger-choice-text{font-size:calc(12px * var(--reading-scale))!important;line-height:1.5;margin:6px 0}
+body.touch #passenger-choice-buttons{gap:5px}body.touch #passenger-choice-buttons button{min-height:48px;padding:6px}body.touch #passenger-choice-buttons strong{font-size:12px}body.touch #passenger-choice-buttons kbd{display:none}
+body.touch #hud #passenger-dialogue{left:154px;right:158px;bottom:18px;transform:none;width:auto;max-height:125px;padding:8px}
+body.touch #hud #passenger-dialogue p{font-size:calc(12px * var(--reading-scale));line-height:1.5}
+body.touch #hud #ux-alert{left:154px;right:158px;top:149px;bottom:auto;transform:none;max-width:none;max-height:44px;overflow:auto;font-size:11px;padding:6px}
+body.touch #hud #release-audio-caption{left:154px;right:158px;bottom:14px;transform:none;max-width:none;font-size:11px;padding:6px}
+body.touch #hud #echo-strip,body.touch #hud #memory-ghost-strip{left:154px;right:158px;bottom:12px;transform:none;width:auto;max-width:none}
+body.touch #hud #town-interact{left:154px;right:158px;bottom:12px;transform:none;max-width:none;font-size:12px}
+body.touch #hud #ux-driving-tip{left:154px;right:158px;top:auto;bottom:12px;transform:none;width:auto;max-width:none;padding:10px;font-size:12px;max-height:180px;overflow:auto}
+body.touch #ux-driving-tip button{min-height:48px}
+body[data-contrast=high] .hub-primary button{border-color:#ebefdb}body[data-contrast=high] #hub-task-note{color:#f0f3e5}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #f7d9a6!important;outline-offset:3px}
+@media(max-width:780px){.hub-primary{display:none}.hub-mobile-picker{display:flex;align-items:center;gap:12px;font-size:13px;letter-spacing:1px;margin:8px 0}.hub-mobile-picker select{flex:1;min-height:48px;background:#24333b;border:1px solid #a8b4a8;color:#f4eee3;font-size:16px;padding:9px}.ux-tabs{padding:5px 0!important}.ux-tabs button{flex:1}.journey-header h2{font-size:24px!important}.journey-key,#hub-task-note{display:none}.journey-panel{padding:14px!important}.release-route-options{gap:5px}#ux-route-summary{max-height:52px;overflow:auto}}
+@media(max-height:570px) and (orientation:landscape){#release-loading{font-size:10px;min-height:16px}#release-continue-detail{margin:4px 0;font-size:11px}.hub-primary{padding:3px 0}.hub-primary button{min-height:42px}.ux-tabs{padding:4px 0!important}.ux-hub-chrome .journey-header{padding:4px 0}.ux-hub-chrome .journey-header h2{font-size:24px!important}#hub-task-note{display:none}#hub-map-open{margin:4px 0}.release-route-options{margin:4px 0}.release-route-options button,.release-route-options select{min-height:40px}#ux-route-summary{font-size:11px;max-height:36px;overflow:auto}#expanded-map{max-height:35vh}.hub-mobile-picker{margin:4px 0}.hub-mobile-picker select{min-height:44px}}
+@media(orientation:portrait) and (max-width:780px){.journey-header .eyebrow{font-size:11px}.journey-modal{max-height:96dvh!important}.ux-hub-chrome{top:-19px}#release-loading{line-height:1.4}#release-continue-detail{font-size:12px}.release-route-options{align-items:flex-start}}
