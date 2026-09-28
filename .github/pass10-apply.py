@@ -23,5 +23,5 @@ for f,b in {'tests/graphics-recovery.cjs': 'H4sIAAAAAAAC/21UUU/bMBB+768wT0lGlbK3
  p=Path(f);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(gzip.decompress(base64.b64decode(b)))
 subprocess.run(["node","tools/bundle.cjs"],check=True)
 subprocess.run(["git","add","-A"],check=True)
-tree=subprocess.check_output(["git","write-tree"],text=True).strip();assert tree=="7ebe6205fb2601c0f4e42491f07d9b1a84593a78",tree
+tree=subprocess.check_output(["git","write-tree"],text=True).strip();assert tree=="082ae53ff6692f3e2b7bb9ca07f6f94ffcc68bca",tree
 print(tree)
