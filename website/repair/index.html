@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Repair game loading — 99½ REBORN</title>
+<meta name="robots" content="noindex"><link rel="icon" href="/assets/favicon.svg">
+<style>
+body{margin:0;background:#0b1018;color:#f1f3f6;font:18px/1.6 system-ui,sans-serif;min-height:100vh;display:grid;place-items:center}main{max-width:36rem;padding:2rem}h1{line-height:1.15}a{color:#9ee7f0}button{font:inherit;font-weight:700;background:#b6ebef;color:#0b1018;border:0;border-radius:.5rem;padding:.8rem 1.1rem;cursor:pointer}button:disabled{opacity:.65}#status{min-height:4em}small{color:#bdc4ce}
+</style>
+</head>
+<body><main>
+<small>99½ REBORN · FOR BUTTERCUP</small>
+<h1>Get back on the road.</h1>
+<p>This restarts the game's offline loader. Your saved progress, vehicle, memories and settings are not deleted.</p>
+<button id="repair" type="button">Repair game loading</button>
+<p id="status" role="status" aria-live="polite">Close any other REBORN game tabs, then press the button.</p>
+<p><a href="/play/">Open the game</a> · <a href="/">Back to the tribute</a></p>
+<small>In loving memory — Buttercup, Justin Tahai's 99.5 mkIV</small>
+</main>
+<script>
+'use strict';
+const button=document.getElementById('repair'),status=document.getElementById('status');
+button.addEventListener('click',async()=>{
+ button.disabled=true;status.textContent='Restarting the game loader…';
+ try{
+  if('serviceWorker' in navigator){
+   const scope=new URL('/play/',location.origin).href;
+   const registrations=await navigator.serviceWorker.getRegistrations();
+   for(const registration of registrations){
+    if(registration.scope===scope&&!(await registration.unregister()))throw new Error('Please retry the game loader restart.');
+   }
+  }
+  // Deliberately do NOT clear localStorage, IndexedDB or any Cache Storage.
+  status.textContent='Opening the game. Your saves have been preserved.';
+  location.replace('/play/?repair=redirect-safe-v1');
+ }catch(error){status.textContent='The loader could not restart: '+error.message+' Close other game tabs and try again.';button.disabled=false;}
+});
+</script></body></html>

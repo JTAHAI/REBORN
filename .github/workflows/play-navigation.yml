@@ -1,0 +1,47 @@
+name: REBORN navigation hotfix regression
+on:
+  push:
+    branches: [chatgpt/reborn-play-navigation-hotfix]
+    paths-ignore: [.github/workflows/play-hotfix-source.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Capture public live redirect evidence
+        continue-on-error: true
+        run: |
+          mkdir -p hotfix-evidence
+          curl -fsSL --max-time 30 -D hotfix-evidence/live-index-headers.txt https://reborn.tahai.net/play/index.html -o /tmp/reborn-live-play.html
+          curl -fsS --max-time 30 https://reborn.tahai.net/play/sw.js -o hotfix-evidence/live-sw.js
+          curl -fsS --max-time 30 https://reborn.tahai.net/play/release.json -o hotfix-evidence/live-release.json
+      - name: Existing gameplay and new cache unit checks
+        run: |
+          npm test
+          node tests/service-worker-navigation.cjs
+          npm run build:site
+          npm run test:site
+      - name: Browser test dependencies
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Real Chromium old-failure, upgrade, offline and driving regressions
+        run: python tests/service-worker-navigation-browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reborn-navigation-hotfix-evidence
+          path: hotfix-evidence/
+          retention-days: 7
