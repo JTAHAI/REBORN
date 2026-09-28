@@ -1,4 +1,4 @@
-// Build 017 application adapter. State transitions, not CSS, own paused work.
+// Build 018 application adapter. State transitions, not CSS, own paused work.
 let releaseInitialized=false,releaseGroup='jetta',releaseRouter=null,releaseRoute=null;
 let releaseRouteWorld=null,releaseMapReturn=null,releaseDialogReturn=null,releaseImport=null;
 let releaseRenderStamp=0,releaseRenderFrames=0,releaseSkippedFrames=0,releaseChoiceHeld=false;
@@ -33,7 +33,7 @@ function releaseUpdateState(){
  $('release-load-status').textContent=northBerwickWorld?'NORTH BERWICK READY':releaseWorldError?'TOWN NOT LOADED · RETRY BELOW':'PREPARING NORTH BERWICK…';
  $('release-load-retry').hidden=!releaseWorldError;$('release-load-detail').textContent=releaseWorldError||'';
  const title=$('ux-save');if(saveLoadBlocked&&title){title.textContent='STORED SAVE NEEDS REVIEW · ORIGINAL RETAINED';title.dataset.error='true';}
- $('release-save-recovery').hidden=!saveLoadBlocked;
+ $('release-save-recovery').hidden=!saveLoadBlocked;sessionSaveNotice();
  window.dispatchEvent(new CustomEvent('reborn-safe-state',{detail:{safe:releaseSafeUpdate(),state}}));
 }
 function releaseQueueNotification(text,duration){
@@ -41,7 +41,7 @@ function releaseQueueNotification(text,duration){
  if(!busy)return false;if(!releaseNotifications.some(n=>n.text===text)){releaseNotifications.push({text:String(text).slice(0,280),duration:Math.min(6,Math.max(1,duration))});if(releaseNotifications.length>8)releaseNotifications.shift();}return true;
 }
 function releaseFlushNotifications(){if(state!=='play'||!releaseNotifications.length||clock<toastUntil||passengerDirector?.state.active?.prompt||!$('passenger-dialogue')?.hidden)return;const next=releaseNotifications.shift();$('toast').textContent=next.text;$('toast').classList.add('visible');toastUntil=clock+next.duration;}
-function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable;}
+function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable&&sessionSave.status().canWrite;}
 function releaseReadingPause(){
  const active=state==='play'&&!!passengerDirector?.state.active?.prompt&&!$('passenger-choice')?.hidden;
  // The smallest screens and enlarged text use an explicit reading pause. It is
@@ -77,16 +77,18 @@ function releaseShowDialog(kind){
  $('release-dialog-title').textContent=kind==='reset'?'Reset this car’s history?':'Review a save backup';$('release-dialog').showModal();$('release-dialog-cancel').focus();
 }
 function releaseCloseDialog(){const d=$('release-dialog');if(d.open)d.close();releaseImport=null;$('release-import-confirm').disabled=true;$('release-import-file').value='';$('release-import-preview').textContent='';releaseDialogReturn?.focus?.focus?.();}
-function releaseSessionBackup(){return JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2);}
+function releaseSessionBackup(){captureSessionSave();return JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2);}
 function releaseDownload(text,name){const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function releaseRestoreBackup(value){
- if(!value)return;persist();const previous={format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:rawStoredSave||JSON.stringify(save),story:rawStoredStory||JSON.stringify(director.progress)};
- try{localStorage.setItem('995.reborn.before-restore.v1',JSON.stringify(previous));}catch{$('release-dialog-result').textContent='Not enough storage for a recovery copy. Export your existing save first and free browser storage. Nothing was replaced.';return;}
- const result=C.ReleaseUX.writePair(localStorage,STORAGE,STORY_STORAGE,JSON.stringify(value.save),JSON.stringify(S.validateProgress(value.story)));
- if(!result.ok){$('release-dialog-result').textContent=result.message;return;}
- // All directors are re-created from the same validated pair on reload.
- // Avoid the old pagehide writer overwriting the newly restored pair.
- saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);location.reload();
+ if(!value)return;
+ let check=sessionSave.check();if(!check.ok){$('release-dialog-result').textContent=check.message;sessionSaveNotice();return;}
+ // Capture RAM for export, but do not overwrite the stored original merely to
+ // prepare a restore. Preserve its exact raw pair, including absent/corrupt data.
+ captureSessionSave();
+ const previous={format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:check.pair[0],story:check.pair[1]};
+ const result=sessionSave.write(JSON.stringify(value.save),JSON.stringify(S.validateProgress(value.story)),{key:'995.reborn.before-restore.v1',text:JSON.stringify(previous)});
+ if(!result.ok){storageAvailable=false;$('release-dialog-result').textContent=result.message;sessionSaveNotice();return;}
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
 }
 function releaseBuildRoute(){
  if(!uxDestination||!sim.world.northBerwick){releaseRoute=null;return;}
@@ -124,7 +126,7 @@ function releaseRenderDue(timestamp){
  if(timestamp-releaseRenderStamp<1000/cap-1){releaseSkippedFrames++;return false;}
  releaseRenderStamp=timestamp;releaseRenderFrames++;return true;
 }
-function releaseSnapshot(){return {build:17,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
+function releaseSnapshot(){return {build:18,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,saveSession:sessionSaveStatus(),staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
 function initReleaseUX(){
  const chrome=document.querySelector('.ux-hub-chrome')||document.querySelector('.journey-header'),tabs=document.querySelector('.ux-tabs');
  const nav=document.createElement('nav');nav.className='hub-primary';nav.setAttribute('aria-label','Main game sections');nav.innerHTML=Object.entries(hubGroups).map(([id,g])=>'<button type="button" data-hub-group="'+id+'" aria-pressed="false">'+g.label+'</button>').join('');tabs.before(nav);
@@ -141,10 +143,10 @@ function initReleaseUX(){
  $('ux-export-recovery').addEventListener('click',()=>{try{const raw=localStorage.getItem('995.reborn.before-restore.v1');if(!raw){notify('NO PREVIOUS RESTORE COPY');return;}const r=JSON.parse(raw);try{releaseDownload(JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:r.exportedAt,save:JSON.parse(r.save),story:JSON.parse(r.story)},null,2),'REBORN-pre-restore-backup.json');}catch{releaseDownload(raw,'REBORN-pre-restore-raw.json');}}catch{notify('RECOVERY COPY UNAVAILABLE');}});
  document.body.insertAdjacentHTML('beforeend','<dialog id="release-dialog" aria-labelledby="release-dialog-title"><h2 id="release-dialog-title"></h2><div id="release-import-view"><p>Choose a local JSON backup. The current car is not replaced until you review and confirm.</p><input type="file" id="release-import-file" accept=".json,application/json" aria-label="Choose REBORN backup"><p id="release-import-preview" role="status"></p><button id="release-import-confirm" type="button" class="primary" disabled>RESTORE REVIEWED SAVE</button></div><div id="release-reset-view" hidden><p>This removes this browser’s car history, relationships, roads, Echo discoveries and recordings. It does not affect any other browser. Export a backup first.</p><button id="release-reset-export" type="button" class="secondary">EXPORT BACKUP FIRST</button><label>Type RESET to confirm <input id="release-reset-text" type="text" autocomplete="off"></label><button id="release-reset-confirm" type="button" class="primary" disabled>RESET LOCAL PROGRESS</button></div><p id="release-dialog-result" role="alert"></p><button id="release-dialog-cancel" class="quiet" type="button">CANCEL · KEEP CURRENT SAVE</button></dialog>');
  $('release-dialog-cancel').addEventListener('click',releaseCloseDialog);$('release-dialog').addEventListener('cancel',e=>{e.preventDefault();releaseCloseDialog();});
- $('release-import-file').addEventListener('change',async e=>{releaseImport=null;$('release-import-confirm').disabled=true;const file=e.target.files[0];if(!file)return;try{if(file.size>C.ReleaseUX.LIMITS.backupBytes)throw new Error('Choose a backup smaller than 4 MB.');const value=C.ReleaseUX.backup(await file.text());if(e.target.files[0]!==file)return;releaseImport=value;const s=value.save;$('release-import-preview').textContent='Review: '+s.vehicle.odometerMiles.toFixed(1)+' mi · '+Math.round(s.vehicle.fuel)+'% fuel · '+Object.keys(s.roadKnowledge).length+' roads · '+s.journeys.completed.length+' passenger drives · '+s.memories.recordings.length+' memories. Restoring reloads the game. A recovery copy is kept first.';$('release-import-confirm').disabled=false;}catch(error){$('release-import-preview').textContent=error.message;}});
+ $('release-import-file').addEventListener('change',async e=>{releaseImport=null;$('release-import-confirm').disabled=true;const file=e.target.files[0];if(!file)return;try{if(file.size>C.ReleaseUX.LIMITS.backupBytes)throw new Error('Choose a backup smaller than 4 MB.');const value=C.ReleaseUX.backup(await file.text());if(e.target.files[0]!==file)return;releaseImport=value;const s=value.save;$('release-import-preview').textContent='Review: '+s.vehicle.odometerMiles.toFixed(1)+' mi · '+Math.round(s.vehicle.fuel)+'% fuel · '+Object.keys(s.roadKnowledge).length+' roads · '+s.journeys.completed.length+' passenger drives · '+s.memories.recordings.length+' memories. Restoring reloads the game. A recovery copy is kept first.';$('release-import-confirm').disabled=false;sessionSaveNotice();}catch(error){$('release-import-preview').textContent=error.message;}});
  $('release-import-confirm').addEventListener('click',()=>releaseRestoreBackup(releaseImport));
  $('release-reset-export').addEventListener('click',()=>{persist();releaseDownload(releaseSessionBackup(),'REBORN-before-reset.json');});
- $('release-reset-text').addEventListener('input',e=>{$('release-reset-confirm').disabled=e.target.value!=='RESET';});
+ $('release-reset-text').addEventListener('input',e=>{$('release-reset-confirm').disabled=e.target.value!=='RESET';sessionSaveNotice();});
  $('release-reset-confirm').addEventListener('click',()=>{if($('release-reset-text').value!=='RESET')return;releaseRestoreBackup({save:C.validateSave(null),story:null});});
  // Capture replaces the old two-click reset, which could erase a save on a stray click.
  $('reset-progress').addEventListener('click',e=>{e.stopImmediatePropagation();$('release-reset-text').value='';$('release-reset-confirm').disabled=true;releaseShowDialog('reset');},true);

@@ -86,13 +86,13 @@ def worker_updated(page):
     page.wait_for_function("""async()=>{
       const r=await navigator.serviceWorker.getRegistration('/play/');
       const keys=await caches.keys();
-      return !!r.waiting || (keys.some(k=>k.includes('pass08-navfix1-')) && !keys.some(k=>k.endsWith('pass07-old')));
+      return !!r.waiting || (keys.some(k=>k.includes('navfix1-')) && !keys.some(k=>k.endsWith('pass07-old')));
     }""")
     page.evaluate("navigator.serviceWorker.getRegistration('/play/').then(r=>r.waiting?.postMessage({type:'REBORN_ACTIVATE_IF_IDLE'}))")
     page.wait_for_function("""async()=>{
       const r=await navigator.serviceWorker.getRegistration('/play/');
       const keys=await caches.keys();
-      return !r.waiting && r.active?.state==='activated' && keys.some(k=>k.includes('pass08-navfix1-')) && !keys.some(k=>k.endsWith('pass07-old'));
+      return !r.waiting && r.active?.state==='activated' && keys.some(k=>k.includes('navfix1-')) && !keys.some(k=>k.endsWith('pass07-old'));
     }""")
 
 try:

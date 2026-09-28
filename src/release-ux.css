@@ -87,3 +87,10 @@ body.touch #hud #passenger-choice{max-height:calc(100dvh - 215px)}
 /* A real roadside prompt owns the lowest contextual lane. */
 body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #hud #memory-ghost-strip{bottom:78px}
 #hud #memory-ghost-strip{top:auto}
+
+/* Save-protection actions stay inside the scrollable paused menu, never over driving controls. */
+#session-save-banner{margin:14px 0 0;padding:14px;border:1px solid #dfb976;border-radius:10px;background:#19242b;color:#f0eadf;text-align:left;overflow-wrap:anywhere}
+#session-save-banner[hidden]{display:none}
+#session-save-banner p{font-size:calc(.84rem * var(--reading-scale,1));line-height:1.5}
+.session-save-actions{display:flex;flex-wrap:wrap;gap:8px}
+.session-save-actions button{min-height:44px;flex:1 1 160px;white-space:normal}

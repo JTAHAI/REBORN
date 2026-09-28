@@ -297,6 +297,13 @@ body.touch #hud #passenger-choice{max-height:calc(100dvh - 215px)}
 body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #hud #memory-ghost-strip{bottom:78px}
 #hud #memory-ghost-strip{top:auto}
 
+/* Save-protection actions stay inside the scrollable paused menu, never over driving controls. */
+#session-save-banner{margin:14px 0 0;padding:14px;border:1px solid #dfb976;border-radius:10px;background:#19242b;color:#f0eadf;text-align:left;overflow-wrap:anywhere}
+#session-save-banner[hidden]{display:none}
+#session-save-banner p{font-size:calc(.84rem * var(--reading-scale,1));line-height:1.5}
+.session-save-actions{display:flex;flex-wrap:wrap;gap:8px}
+.session-save-actions button{min-height:44px;flex:1 1 160px;white-space:normal}
+
 /* RELEASE_CSS_END */
 </style>
 </head>
@@ -332,7 +339,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
   </div>
   <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="journey-open" class="quiet">JETTA STATUS / DIAGNOSTICS ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 017 <i>/</i> MEMORY REPLAY</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 018 <i>/</i> MEMORY REPLAY</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <output id="town-clock" aria-label="Fictional town time" hidden></output><button id="town-interact" class="secondary" type="button" hidden>F · ROADSIDE INTERACTION</button>
@@ -414,7 +421,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
   else root.RebornCore = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  const VERSION = '0.14.0-hometown-ux-p017';
+  const VERSION = '0.15.0-session-safety-p018';
   const DT = 1 / 120;
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -1759,6 +1766,69 @@ const WorkshopMemories = (() => {
 })();
 
   /* WORKSHOP_MEMORIES_END */
+  /* SESSION_SAVES_BEGIN */
+// Build 018: one cooperating writer per origin, plus raw-pair stale-save checks.
+// Web Locks excludes other Build 018 writers. Older clients do not honor that
+// lock; comparing the expected raw pair is defense-in-depth, not a transaction.
+const SessionSaves = (() => {
+ 'use strict';
+ const messages={pending:'Checking which game tab may save…',other:'Another REBORN tab is saving. This tab is session-only.',conflict:'Stored progress changed in another tab. This session will not overwrite it.',unavailable:'Browser storage is unavailable. Export this session before closing.',unknown:'The original stored pair could not be read. Reload before enabling saves.',released:'This page is no longer the saving tab. Reload before enabling saves.'};
+ class Guard {
+  constructor(getStorage,saveKey,storyKey,saveText,storyText,known=true){
+   this.getStorage=getStorage;this.keys=[saveKey,storyKey];this.expected=[saveText,storyText];this.known=known;
+   this.mode='pending';this.conflict=false;this.last={ok:false,reason:'pending',message:messages.pending};this.generation=0;this.finish=null;this.changed=()=>{};
+  }
+  fail(reason){this.last={ok:false,reason,message:messages[reason]||messages.unavailable};return this.last;}
+  status(){return {mode:this.mode,conflict:this.conflict,reason:this.last.reason||'',canWrite:!this.conflict&&this.known&&['owner','fallback'].includes(this.mode),message:this.last.message||''};}
+  // Called once on startup, and explicitly on BFCache restoration only. A busy
+  // tab never silently acquires ownership when the other page later disappears.
+  begin(locks,onChange=()=>{}){
+   this.release();this.changed=onChange;const generation=++this.generation;
+   this.mode='pending';this.fail('pending');this.changed();
+   if(!locks?.request){this.mode='fallback';this.check();this.changed();return;}
+   try{Promise.resolve(locks.request('995.reborn.save-writer.v1',{mode:'exclusive',ifAvailable:true},lock=>{
+    if(generation!==this.generation)return;
+    if(!lock){this.mode='other';this.fail('other');this.changed();return;}
+    this.mode='owner';const held=new Promise(resolve=>{this.finish=resolve;});this.check();this.changed();return held;
+   })).catch(()=>{if(generation===this.generation){this.mode='unavailable';this.fail('unavailable');this.changed();}});}
+   catch{this.mode='unavailable';this.fail('unavailable');this.changed();}
+  }
+  release(){++this.generation;const finish=this.finish;this.finish=null;this.mode='released';this.fail('released');if(finish)finish();}
+  read(){const storage=this.getStorage();return {storage,pair:this.keys.map(k=>storage.getItem(k))};}
+  check(){
+   if(this.conflict)return this.fail('conflict');
+   if(!this.known)return this.fail('unknown');
+   if(!['owner','fallback'].includes(this.mode))return this.fail(this.mode);
+   try{const current=this.read();if(current.pair.some((v,i)=>v!==this.expected[i])){this.conflict=true;return this.fail('conflict');}this.last={ok:true};return {...this.last,...current};}
+   catch{return this.fail('unavailable');}
+  }
+  write(saveText,storyText,recovery=null){
+   const check=this.check();if(!check.ok)return check;
+   const storage=check.storage,pair=[saveText,storyText],changes=[];
+   const put=(key,value)=>{const before=storage.getItem(key);if(before===value)return;storage.setItem(key,value);changes.push({key,before,value});};
+   try{
+    if(recovery)put(recovery.key,recovery.text);
+    pair.forEach((value,i)=>put(this.keys[i],value));
+    // Also observe a non-cooperating writer interleaving with this attempt.
+    if(this.keys.some((k,i)=>storage.getItem(k)!==pair[i])){this.conflict=true;return this.fail('conflict');}
+    this.expected=pair;this.last={ok:true};return this.last;
+   }catch{
+    let restored=true;
+    for(const c of changes.reverse())try{
+     const current=storage.getItem(c.key);
+     if(current===c.value){if(c.before===null)storage.removeItem(c.key);else storage.setItem(c.key,c.before);}
+     else if(current!==c.before)restored=false; // Do not roll back somebody else's new value.
+    }catch{restored=false;}
+    if(!restored){this.conflict=true;this.last={ok:false,reason:'conflict',restored:false,message:'Storage refused the write and complete recovery. Export this session and inspect stored data before reloading.'};}
+    else this.last={ok:false,reason:'unavailable',restored:true,message:'Save failed. Previous stored progress and recovery copy were retained. Export this session before closing.'};
+    return this.last;
+   }
+  }
+ }
+ return Object.freeze({Guard});
+})();
+
+  /* SESSION_SAVES_END */
   /* RELEASE_CORE_BEGIN */
 // Pass 8 pure helpers: bounded storage, routing and render-candidate selection.
 // Embedded in RebornCore; no remote services and no mutation of world geometry.
@@ -1835,7 +1905,7 @@ const ReleaseUX = (() => {
       weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion,...driverPreferences(s)},
       town:Town.sanitize(raw.town),climate:MaineWeather.sanitize(raw.climate,Town.now(Town.sanitize(raw.town)),Town.sanitize(raw.town).seed),journeys:DriveStories.sanitize(raw.journeys),echoes:EchoRoads.sanitize(raw.echoes),memories:MemoryReplay.sanitize(raw.memories),workshopMemories:WorkshopMemories.sanitize(raw.workshopMemories),vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,serviceHistory:validateServiceHistory(raw.serviceHistory),stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive'||x.kind==='journey').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather,DriveStories,EchoRoads,MemoryReplay,WorkshopMemories,ReleaseUX};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather,DriveStories,EchoRoads,MemoryReplay,WorkshopMemories,ReleaseUX,SessionSaves};
 });
 
 </script>
@@ -3440,14 +3510,20 @@ const C=RebornCore,S=RebornStory,$=id=>document.getElementById(id);
 const STORAGE='995.reborn.save.v1',STORY_STORAGE='995.reborn.story.v1';
 const touch=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0;
 document.body.classList.toggle('touch',touch);
-let save,hadSave=false,storageAvailable=true,saveLoadBlocked=false,rawStoredSave=null,rawStoredStory=null,releaseWorldError='';
-try{rawStoredSave=localStorage.getItem(STORAGE);rawStoredStory=localStorage.getItem(STORY_STORAGE);hadSave=!!rawStoredSave;const parsed=rawStoredSave?JSON.parse(rawStoredSave):null;if(rawStoredSave&&(!parsed||parsed.version!==1))saveLoadBlocked=true;save=C.validateSave(parsed);if(rawStoredStory)JSON.parse(rawStoredStory);}catch(_e){save=save||C.validateSave(null);storageAvailable=false;saveLoadBlocked=!!rawStoredSave||!!rawStoredStory;}
+let save,hadSave=false,storageAvailable=true,saveLoadBlocked=false,rawStoredSave=null,rawStoredStory=null,storedPairRead=false,releaseWorldError='';
+try{rawStoredSave=localStorage.getItem(STORAGE);rawStoredStory=localStorage.getItem(STORY_STORAGE);storedPairRead=true;hadSave=!!rawStoredSave;const parsed=rawStoredSave?JSON.parse(rawStoredSave):null;if(rawStoredSave&&(!parsed||parsed.version!==1))saveLoadBlocked=true;save=C.validateSave(parsed);if(rawStoredStory)JSON.parse(rawStoredStory);}catch(_e){save=save||C.validateSave(null);storageAvailable=false;saveLoadBlocked=!!rawStoredSave||!!rawStoredStory;}
 if(!hadSave){save.settings.weather='rain';save.settings.autoThrottle=false;save.settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;}
+const sessionSave=new C.SessionSaves.Guard(()=>localStorage,STORAGE,STORY_STORAGE,rawStoredSave,rawStoredStory,storedPairRead);
 const settings=save.settings;let vehicle=save.vehicle,roadKnowledge=save.roadKnowledge,driveJournal=save.journal,serviceHistory=save.serviceHistory;let storyData=null;try{storyData=JSON.parse(localStorage.getItem(STORY_STORAGE)||'null');}catch(_e){}
 // Touch must always begin at rest: the stick supplies the same four directions as arrow keys.
 settings.autoThrottle=false;
 const director=new S.Director(storyData);let viewingChapter=S.nextIndex(director.progress);
-function persist(){if(memoryRecorder)save.memories=memoryRecorder.export();if(echoDirector)save.echoes=echoDirector.state;if(passengerDirector)save.journeys=passengerDirector.state;if(townDirector)save.town=townDirector.state;if(weatherDirector)save.climate=weatherDirector.state;save.vehicle=vehicle;save.roadKnowledge=roadKnowledge;save.journal=driveJournal;save.serviceHistory=serviceHistory;if(saveLoadBlocked){setUXSaveStatus(false);return;}const result=C.ReleaseUX.writePair(localStorage,STORAGE,STORY_STORAGE,JSON.stringify(save),JSON.stringify(director.progress));storageAvailable=result.ok;if(result.ok){rawStoredSave=JSON.stringify(save);rawStoredStory=JSON.stringify(director.progress);}setUXSaveStatus(storageAvailable);}
+function persist(){
+ captureSessionSave();if(saveLoadBlocked){setUXSaveStatus(false);return false;}
+ let result;try{result=sessionSave.write(JSON.stringify(save),JSON.stringify(director.progress));}catch{result=sessionSave.fail('unavailable');}
+ storageAvailable=result.ok;if(result.ok){[rawStoredSave,rawStoredStory]=sessionSave.expected;}
+ setUXSaveStatus(storageAvailable);sessionSaveNotice();return result.ok;
+}
 let renderer;
 try{renderer=new RebornRenderer.Renderer($('world'),C.createWorld());}catch(e){$('loading').hidden=true;$('fatal').hidden=false;$('fatal-message').textContent=e.message;return;}
 window.addEventListener('reborn-vehicle-model-ready',()=>{if(renderer.gl){try{renderer.initGL();renderer.resize();}catch(e){renderer.error=e.message;}}});
@@ -4272,7 +4348,7 @@ function initDriverUX(){
  for(const [id,key] of [['ux-units','units'],['ux-hud','hudStyle'],['ux-contrast','highContrast'],['ux-hints','controlHints']])$(id).addEventListener('change',()=>{settings[key]=$(id).type==='checkbox'?$(id).checked:$(id).value;applyDriverPreferences();persist();});
  $('ux-camera').addEventListener('change',()=>{cameraStyle=Number($('ux-camera').value);cameraEye=null;cameraTarget=null;updateCameraChoice();});$('ux-fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(_){notify('FULLSCREEN UNAVAILABLE IN THIS BROWSER');}});$('ux-show-guide').addEventListener('click',()=>{settings.tutorialSeen=false;settings.controlHints=true;persist();applyDriverPreferences();notify('DRIVING GUIDE ENABLED FOR YOUR NEXT DRIVE');});
  document.querySelector('#pause .settings').insertAdjacentHTML('beforeend','<label for="ux-volume"><span>Engine & effects volume <output id="ux-volume-value">100%</output></span><input id="ux-volume" type="range" min="0" max="100" step="5"></label>');$('ux-volume').value=Math.round((settings.volume??1)*100);$('ux-volume-value').textContent=$('ux-volume').value+'%';$('ux-volume').addEventListener('input',()=>{settings.volume=Number($('ux-volume').value)/100;audio.volume=settings.volume;audio.setEnabled(settings.sound);$('ux-volume-value').textContent=$('ux-volume').value+'%';});$('ux-volume').addEventListener('change',persist);
- $('ux-fullscreen').insertAdjacentHTML('afterend','<button id="ux-export-save" type="button" class="secondary">EXPORT SAVE BACKUP</button>');$('ux-export-save').addEventListener('click',()=>{const data=JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2),url=URL.createObjectURL(new Blob([data],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='REBORN-save-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+ $('ux-fullscreen').insertAdjacentHTML('afterend','<button id="ux-export-save" type="button" class="secondary">EXPORT SAVE BACKUP</button>');$('ux-export-save').addEventListener('click',()=>{const data=releaseSessionBackup(),url=URL.createObjectURL(new Blob([data],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='REBORN-save-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
  const grid=document.querySelector('.journey-grid'),tabs=document.createElement('nav');tabs.className='ux-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Jetta hub');grid.before(tabs);const chrome=document.createElement('div');chrome.className='ux-hub-chrome';const header=$('journey-title').closest('.journey-header');header.before(chrome);chrome.append(header,tabs);
  const sections={overview:['vehicle-condition-grid','symptom-list'],workshop:['diagnostic-tests','parts-grid','repair-history'],town:['town-ledger'],stories:['passenger-journeys'],journal:['road-memory-summary','drive-journal']};for(const [name,ids]of Object.entries(sections)){const button=document.createElement('button');button.type='button';button.id='ux-tab-'+name;button.dataset.uxTab=name;releaseSyncHub(name);button.setAttribute('role','tab');button.setAttribute('aria-controls','ux-panel-'+name);button.textContent={overview:'Jetta status',workshop:'Workshop',town:'Living town',stories:'Passenger drives',journal:'Road journal'}[name];button.addEventListener('click',()=>selectDriverTab(name));tabs.append(button);const panel=document.createElement('div');panel.id='ux-panel-'+name;panel.className='ux-tab-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby',button.id);for(const id of ids)panel.append($(id).closest('.journey-panel'));grid.append(panel);}
  tabs.addEventListener('keydown',e=>{const list=Array.from(tabs.querySelectorAll('button')).filter(b=>!b.hidden),index=list.indexOf(document.activeElement);let next=index;if(e.key==='ArrowRight')next=(index+1)%list.length;else if(e.key==='ArrowLeft')next=(index+list.length-1)%list.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=list.length-1;else return;e.preventDefault();e.stopPropagation();selectDriverTab(list[next].dataset.uxTab,true);});selectDriverTab('overview');
@@ -4297,8 +4373,55 @@ function drawDriverMapLabels(ctx,p,world,w,h,pad){
 }
 
 /* DRIVER_UX_END */
+/* SESSION_SAVE_UI_BEGIN */
+// Build 018: save ownership is independent of driving, inputs and story clocks.
+function captureSessionSave(){
+ if(memoryRecorder)save.memories=memoryRecorder.export();if(echoDirector)save.echoes=echoDirector.state;if(passengerDirector)save.journeys=passengerDirector.state;if(townDirector)save.town=townDirector.state;if(weatherDirector)save.climate=weatherDirector.state;
+ save.vehicle=vehicle;save.roadKnowledge=roadKnowledge;save.journal=driveJournal;save.serviceHistory=serviceHistory;
+}
+function sessionSaveStatus(){return sessionSave.status();}
+function sessionSaveNotice(){
+ const status=sessionSave.status(),banner=$('session-save-banner'),label=$('session-save-message');
+ if(!banner)return;
+ const problem=!sessionSave.last.ok&&status.reason!=='pending';
+ banner.hidden=!problem;if(label)label.textContent=sessionSave.last.message;
+ for(const id of ['session-export','session-export-stored','session-reload'])$(id).disabled=status.reason==='pending';
+ const canRestore=status.canWrite&&status.reason!=='unavailable';
+ if($('release-import-confirm'))$('release-import-confirm').disabled=!releaseImport||!canRestore;
+ if($('release-reset-confirm'))$('release-reset-confirm').disabled=$('release-reset-text').value!=='RESET'||!canRestore;
+ const node=$('ux-save');if(node&&!sessionSave.last.ok){node.textContent=status.reason==='pending'?'CHECKING SAVE OWNERSHIP':status.reason==='other'?'OTHER TAB SAVING · SESSION ONLY':status.conflict?'NEWER STORED SAVE · SESSION ONLY':'SAVE UNAVAILABLE · EXPORT SESSION';node.dataset.error=String(problem);}
+ document.body.dataset.saveSession=problem?'protected':'ready';
+ $('pause-button').title=problem?'Save protected — pause to export this session':'Pause and settings';
+ window.dispatchEvent(new CustomEvent('reborn-safe-state',{detail:{safe:releaseSafeUpdate(),state}}));
+}
+function sessionBeginSaving(){
+ let locks;try{locks=navigator.locks;}catch{locks={request(){throw new Error('Lock access denied');}};}
+ sessionSave.begin(locks,()=>{if(sessionSave.last.ok&&!saveLoadBlocked)persist();else storageAvailable=false;sessionSaveNotice();});
+}
+function sessionReloadLatest(){
+ // The button means discard this RAM session in favor of the stored pair. A
+ // separate export action is always available first. No pagehide write follows.
+ if(!confirm('Reload the stored game? Unsaved changes in this tab will be discarded. Export this session first to keep them.'))return;
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
+}
+function initSessionSaves(){
+ const banner=document.createElement('section');banner.id='session-save-banner';banner.hidden=true;banner.setAttribute('aria-label','Save protection');
+ banner.innerHTML='<strong>YOUR SAVE IS PROTECTED</strong><p id="session-save-message" role="status" aria-live="polite"></p><p>Keep playing here without changing stored progress, or export this session first. Close other game tabs before reloading the stored game.</p><div class="session-save-actions"><button id="session-export" type="button" class="secondary">EXPORT THIS SESSION</button><button id="session-export-stored" type="button" class="secondary">EXPORT STORED ORIGINALS</button><button id="session-reload" type="button" class="secondary">RELOAD STORED GAME…</button></div>';
+ document.querySelector('#pause .ux-settings-body').prepend(banner);
+ $('session-export').addEventListener('click',()=>releaseDownload(releaseSessionBackup(),'REBORN-session-backup.json'));
+ $('session-export-stored').addEventListener('click',()=>{try{const raw=sessionSave.read();releaseDownload(JSON.stringify({format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:raw.pair[0],story:raw.pair[1]},null,2),'REBORN-stored-originals.json');}catch{$('session-save-message').textContent='The browser denied access to stored data. Export this session instead.';}});
+ $('session-reload').addEventListener('click',sessionReloadLatest);
+ // Null key is localStorage.clear(). Other apps/keys and sessionStorage do not
+ // affect this writer. The guard compares actual current bytes, not event order.
+ window.addEventListener('storage',event=>{try{if(event.storageArea!==localStorage||event.key!==null&&!sessionSave.keys.includes(event.key))return;}catch{return;}if(['owner','fallback'].includes(sessionSave.mode)){const result=sessionSave.check();if(!result.ok)storageAvailable=false;sessionSaveNotice();}});
+ window.addEventListener('pagehide',()=>sessionSave.release());
+ window.addEventListener('pageshow',event=>{if(event.persisted)sessionBeginSaving();});
+ sessionBeginSaving();
+}
+
+/* SESSION_SAVE_UI_END */
 /* RELEASE_UI_BEGIN */
-// Build 017 application adapter. State transitions, not CSS, own paused work.
+// Build 018 application adapter. State transitions, not CSS, own paused work.
 let releaseInitialized=false,releaseGroup='jetta',releaseRouter=null,releaseRoute=null;
 let releaseRouteWorld=null,releaseMapReturn=null,releaseDialogReturn=null,releaseImport=null;
 let releaseRenderStamp=0,releaseRenderFrames=0,releaseSkippedFrames=0,releaseChoiceHeld=false;
@@ -4333,7 +4456,7 @@ function releaseUpdateState(){
  $('release-load-status').textContent=northBerwickWorld?'NORTH BERWICK READY':releaseWorldError?'TOWN NOT LOADED · RETRY BELOW':'PREPARING NORTH BERWICK…';
  $('release-load-retry').hidden=!releaseWorldError;$('release-load-detail').textContent=releaseWorldError||'';
  const title=$('ux-save');if(saveLoadBlocked&&title){title.textContent='STORED SAVE NEEDS REVIEW · ORIGINAL RETAINED';title.dataset.error='true';}
- $('release-save-recovery').hidden=!saveLoadBlocked;
+ $('release-save-recovery').hidden=!saveLoadBlocked;sessionSaveNotice();
  window.dispatchEvent(new CustomEvent('reborn-safe-state',{detail:{safe:releaseSafeUpdate(),state}}));
 }
 function releaseQueueNotification(text,duration){
@@ -4341,7 +4464,7 @@ function releaseQueueNotification(text,duration){
  if(!busy)return false;if(!releaseNotifications.some(n=>n.text===text)){releaseNotifications.push({text:String(text).slice(0,280),duration:Math.min(6,Math.max(1,duration))});if(releaseNotifications.length>8)releaseNotifications.shift();}return true;
 }
 function releaseFlushNotifications(){if(state!=='play'||!releaseNotifications.length||clock<toastUntil||passengerDirector?.state.active?.prompt||!$('passenger-dialogue')?.hidden)return;const next=releaseNotifications.shift();$('toast').textContent=next.text;$('toast').classList.add('visible');toastUntil=clock+next.duration;}
-function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable;}
+function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable&&sessionSave.status().canWrite;}
 function releaseReadingPause(){
  const active=state==='play'&&!!passengerDirector?.state.active?.prompt&&!$('passenger-choice')?.hidden;
  // The smallest screens and enlarged text use an explicit reading pause. It is
@@ -4377,16 +4500,18 @@ function releaseShowDialog(kind){
  $('release-dialog-title').textContent=kind==='reset'?'Reset this car’s history?':'Review a save backup';$('release-dialog').showModal();$('release-dialog-cancel').focus();
 }
 function releaseCloseDialog(){const d=$('release-dialog');if(d.open)d.close();releaseImport=null;$('release-import-confirm').disabled=true;$('release-import-file').value='';$('release-import-preview').textContent='';releaseDialogReturn?.focus?.focus?.();}
-function releaseSessionBackup(){return JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2);}
+function releaseSessionBackup(){captureSessionSave();return JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2);}
 function releaseDownload(text,name){const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function releaseRestoreBackup(value){
- if(!value)return;persist();const previous={format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:rawStoredSave||JSON.stringify(save),story:rawStoredStory||JSON.stringify(director.progress)};
- try{localStorage.setItem('995.reborn.before-restore.v1',JSON.stringify(previous));}catch{$('release-dialog-result').textContent='Not enough storage for a recovery copy. Export your existing save first and free browser storage. Nothing was replaced.';return;}
- const result=C.ReleaseUX.writePair(localStorage,STORAGE,STORY_STORAGE,JSON.stringify(value.save),JSON.stringify(S.validateProgress(value.story)));
- if(!result.ok){$('release-dialog-result').textContent=result.message;return;}
- // All directors are re-created from the same validated pair on reload.
- // Avoid the old pagehide writer overwriting the newly restored pair.
- saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);location.reload();
+ if(!value)return;
+ let check=sessionSave.check();if(!check.ok){$('release-dialog-result').textContent=check.message;sessionSaveNotice();return;}
+ // Capture RAM for export, but do not overwrite the stored original merely to
+ // prepare a restore. Preserve its exact raw pair, including absent/corrupt data.
+ captureSessionSave();
+ const previous={format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:check.pair[0],story:check.pair[1]};
+ const result=sessionSave.write(JSON.stringify(value.save),JSON.stringify(S.validateProgress(value.story)),{key:'995.reborn.before-restore.v1',text:JSON.stringify(previous)});
+ if(!result.ok){storageAvailable=false;$('release-dialog-result').textContent=result.message;sessionSaveNotice();return;}
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
 }
 function releaseBuildRoute(){
  if(!uxDestination||!sim.world.northBerwick){releaseRoute=null;return;}
@@ -4424,7 +4549,7 @@ function releaseRenderDue(timestamp){
  if(timestamp-releaseRenderStamp<1000/cap-1){releaseSkippedFrames++;return false;}
  releaseRenderStamp=timestamp;releaseRenderFrames++;return true;
 }
-function releaseSnapshot(){return {build:17,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
+function releaseSnapshot(){return {build:18,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,saveSession:sessionSaveStatus(),staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
 function initReleaseUX(){
  const chrome=document.querySelector('.ux-hub-chrome')||document.querySelector('.journey-header'),tabs=document.querySelector('.ux-tabs');
  const nav=document.createElement('nav');nav.className='hub-primary';nav.setAttribute('aria-label','Main game sections');nav.innerHTML=Object.entries(hubGroups).map(([id,g])=>'<button type="button" data-hub-group="'+id+'" aria-pressed="false">'+g.label+'</button>').join('');tabs.before(nav);
@@ -4441,10 +4566,10 @@ function initReleaseUX(){
  $('ux-export-recovery').addEventListener('click',()=>{try{const raw=localStorage.getItem('995.reborn.before-restore.v1');if(!raw){notify('NO PREVIOUS RESTORE COPY');return;}const r=JSON.parse(raw);try{releaseDownload(JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:r.exportedAt,save:JSON.parse(r.save),story:JSON.parse(r.story)},null,2),'REBORN-pre-restore-backup.json');}catch{releaseDownload(raw,'REBORN-pre-restore-raw.json');}}catch{notify('RECOVERY COPY UNAVAILABLE');}});
  document.body.insertAdjacentHTML('beforeend','<dialog id="release-dialog" aria-labelledby="release-dialog-title"><h2 id="release-dialog-title"></h2><div id="release-import-view"><p>Choose a local JSON backup. The current car is not replaced until you review and confirm.</p><input type="file" id="release-import-file" accept=".json,application/json" aria-label="Choose REBORN backup"><p id="release-import-preview" role="status"></p><button id="release-import-confirm" type="button" class="primary" disabled>RESTORE REVIEWED SAVE</button></div><div id="release-reset-view" hidden><p>This removes this browser’s car history, relationships, roads, Echo discoveries and recordings. It does not affect any other browser. Export a backup first.</p><button id="release-reset-export" type="button" class="secondary">EXPORT BACKUP FIRST</button><label>Type RESET to confirm <input id="release-reset-text" type="text" autocomplete="off"></label><button id="release-reset-confirm" type="button" class="primary" disabled>RESET LOCAL PROGRESS</button></div><p id="release-dialog-result" role="alert"></p><button id="release-dialog-cancel" class="quiet" type="button">CANCEL · KEEP CURRENT SAVE</button></dialog>');
  $('release-dialog-cancel').addEventListener('click',releaseCloseDialog);$('release-dialog').addEventListener('cancel',e=>{e.preventDefault();releaseCloseDialog();});
- $('release-import-file').addEventListener('change',async e=>{releaseImport=null;$('release-import-confirm').disabled=true;const file=e.target.files[0];if(!file)return;try{if(file.size>C.ReleaseUX.LIMITS.backupBytes)throw new Error('Choose a backup smaller than 4 MB.');const value=C.ReleaseUX.backup(await file.text());if(e.target.files[0]!==file)return;releaseImport=value;const s=value.save;$('release-import-preview').textContent='Review: '+s.vehicle.odometerMiles.toFixed(1)+' mi · '+Math.round(s.vehicle.fuel)+'% fuel · '+Object.keys(s.roadKnowledge).length+' roads · '+s.journeys.completed.length+' passenger drives · '+s.memories.recordings.length+' memories. Restoring reloads the game. A recovery copy is kept first.';$('release-import-confirm').disabled=false;}catch(error){$('release-import-preview').textContent=error.message;}});
+ $('release-import-file').addEventListener('change',async e=>{releaseImport=null;$('release-import-confirm').disabled=true;const file=e.target.files[0];if(!file)return;try{if(file.size>C.ReleaseUX.LIMITS.backupBytes)throw new Error('Choose a backup smaller than 4 MB.');const value=C.ReleaseUX.backup(await file.text());if(e.target.files[0]!==file)return;releaseImport=value;const s=value.save;$('release-import-preview').textContent='Review: '+s.vehicle.odometerMiles.toFixed(1)+' mi · '+Math.round(s.vehicle.fuel)+'% fuel · '+Object.keys(s.roadKnowledge).length+' roads · '+s.journeys.completed.length+' passenger drives · '+s.memories.recordings.length+' memories. Restoring reloads the game. A recovery copy is kept first.';$('release-import-confirm').disabled=false;sessionSaveNotice();}catch(error){$('release-import-preview').textContent=error.message;}});
  $('release-import-confirm').addEventListener('click',()=>releaseRestoreBackup(releaseImport));
  $('release-reset-export').addEventListener('click',()=>{persist();releaseDownload(releaseSessionBackup(),'REBORN-before-reset.json');});
- $('release-reset-text').addEventListener('input',e=>{$('release-reset-confirm').disabled=e.target.value!=='RESET';});
+ $('release-reset-text').addEventListener('input',e=>{$('release-reset-confirm').disabled=e.target.value!=='RESET';sessionSaveNotice();});
  $('release-reset-confirm').addEventListener('click',()=>{if($('release-reset-text').value!=='RESET')return;releaseRestoreBackup({save:C.validateSave(null),story:null});});
  // Capture replaces the old two-click reset, which could erase a save on a stray click.
  $('reset-progress').addEventListener('click',e=>{e.stopImmediatePropagation();$('release-reset-text').value='';$('release-reset-confirm').disabled=true;releaseShowDialog('reset');},true);
@@ -4458,7 +4583,7 @@ function initReleaseUX(){
 }
 
 /* RELEASE_UI_END */
-initDriveStoriesUI();initDriverUX();initWeatherUI();initEchoUI();initMemoryReplayUI();initWorkshopMemory();initReleaseUX();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
+initDriveStoriesUI();initDriverUX();initWeatherUI();initEchoUI();initMemoryReplayUI();initWorkshopMemory();initReleaseUX();initSessionSaves();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
 if(location.protocol.startsWith('http')&&window.isSecureContext&&'serviceWorker'in navigator&&!document.body.dataset.standalone){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
 })();
 
