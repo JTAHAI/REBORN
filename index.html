@@ -4039,7 +4039,7 @@ function pause(){
  if(state==='pause')return resume();
  pausedFromMenu=state==='menu';focusBefore=document.activeElement;state='pause';input.clear();showState();applySettings();$('resume').textContent=pausedFromMenu?'BACK TO GARAGE':'BACK TO THE ROAD';$('recover').hidden=pausedFromMenu;$('garage').hidden=pausedFromMenu;$('reset-progress').textContent='RESET PROGRESS';
  const panel=$('pause');panel.scrollTop=0;
- const firstFocusable=panel.querySelector('input:not([disabled]),select:not([disabled]),button:not([disabled])');
+ const firstFocusable=Array.from(panel.querySelectorAll('input:not([disabled]),select:not([disabled]),button:not([disabled])')).find(el=>el.offsetParent!==null&&!el.hidden&&el.tabIndex>=0&&!el.closest('[inert]'));
  if(firstFocusable)firstFocusable.focus();
 }
 function resume(){if(state!=='pause')return;state=pausedFromMenu?'menu':'play';input.clear();accumulator=0;showState();if(focusBefore?.focus)focusBefore.focus();if(state==='play'){audio.start();acquireWake();}}

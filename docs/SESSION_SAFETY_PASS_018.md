@@ -41,6 +41,10 @@ Save controls live in the scrollable paused menu, not over driving controls:
 - Reload stored game: explicit confirmation; removes the old pagehide writer so
   it cannot undo the loaded record. Export first to retain unsaved RAM progress.
 
+Pause autofocus skips actions inside hidden banners. When save protection is
+visible, its export action receives focus. The narrow paused menu is tested at
+100% and 200% reading size with all three actions reachable.
+
 The top-level save label identifies session-only operation. Restore and RESET are
 blocked in non-writing tabs, including programmatically dispatched click events.
 An owning tab may deliberately restore a corrupt original, preserving its raw
