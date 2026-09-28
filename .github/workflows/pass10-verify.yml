@@ -26,7 +26,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/pass10-evidence
-          cat .github/pass10.patch.*.b64 > /tmp/pass10.patch.b64
+          cat .github/pass10.patch.*.b64 | tr -d '\r\n\t ' > /tmp/pass10.patch.b64
           test "$(wc -c < /tmp/pass10.patch.b64)" = '66552'
           base64 -d /tmp/pass10.patch.b64 > /tmp/pass10.patch.gz
           echo 'e5f6b277e644bbc2d6ab70e99f91a01b62a32686bc769574fb12af396b8db34b  /tmp/pass10.patch.gz' | sha256sum -c -
