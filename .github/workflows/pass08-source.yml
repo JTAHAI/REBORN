@@ -1,0 +1,21 @@
+name: Pass 8 source checkpoint
+on:
+  push:
+    branches: ['chatgpt/pass08-build']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 3957339883932f0ed4c3bc9657ae4118aa8def29
+      - run: git archive --format=zip -o /tmp/reborn-build016-source.zip HEAD
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-build016-source
+          path: /tmp/reborn-build016-source.zip
+          retention-days: 7
+          if-no-files-found: error
