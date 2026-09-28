@@ -16,4 +16,4 @@ const worldSource = path.join(root, 'assets', 'worlds', 'north-berwick');
 const worldOut = path.join(out, 'assets', 'worlds', 'north-berwick');
 fs.mkdirSync(worldOut, {recursive:true});
 for (const file of ['world.json', 'provenance.json', 'CREDITS.md', 'facades-atlas.webp', 'facades-atlas.json']) fs.copyFileSync(path.join(worldSource, file), path.join(worldOut, file));
-console.log('Static Build 017 written to dist/ with local drive memories, route ghosts, cinematic replay, diagnostic audio, Echo Roads, passenger drives, Maine weather, Living Town Director, diagnostics, Living Car, Road Memory, licensed vehicle and North Berwick data.');
+console.log('Static Build 018 written to dist/ with local drive memories, route ghosts, cinematic replay, diagnostic audio, Echo Roads, passenger drives, Maine weather, Living Town Director, diagnostics, Living Car, Road Memory, licensed vehicle and North Berwick data.');

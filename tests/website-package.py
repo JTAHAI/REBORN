@@ -25,7 +25,7 @@ for f in site.rglob('*.html'):
   if not target.is_file():errors.append((str(f.relative_to(site)),url))
 assert not errors,errors
 release=json.loads((site/'release.json').read_text());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-assert release['pass']==8 and release['remainingPasses']==0
+assert release['pass']==9 and release['remainingPasses']==0
 assert sha(site/'play/index.html')==release['packagedPlayIndexSha256']
 assert sha(site/'play/index.html')==sha(game/'index.html')
 assert sha(site/'play/assets/worlds/north-berwick/world.json')==release['northBerwickWorldSha256']
@@ -47,4 +47,4 @@ assert (game/'sw.js').read_text().count('__BUILD_ID__')==0
 assert not (site/'sw.js').exists(),'No root worker should compete with the game scope'
 assert all(p.stat().st_size<25*1024*1024 for p in site.rglob('*') if p.is_file())
 assert 'immutable' not in (site/'_headers').read_text()
-print(json.dumps({'siteHtmlPages':html_count,'brokenLocalLinks':len(errors),'siteFiles':sum(p.is_file() for p in site.rglob('*')),'matchingDownloadFiles':sum(p.is_file() for p in game.rglob('*')),'matchingWorldAndGLB':True,'pass':8,'remaining':0}))
+print(json.dumps({'siteHtmlPages':html_count,'brokenLocalLinks':len(errors),'siteFiles':sum(p.is_file() for p in site.rglob('*')),'matchingDownloadFiles':sum(p.is_file() for p in game.rglob('*')),'matchingWorldAndGLB':True,'pass':9,'remaining':0}))

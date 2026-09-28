@@ -3,7 +3,7 @@
 const SCOPE=new URL(self.registration.scope);
 const PREFIX='995-reborn-'+encodeURIComponent(self.registration.scope)+'-';
 const LEGACY_PREFIX='995-reborn-'+encodeURIComponent(SCOPE.pathname)+'-';
-const CACHE=PREFIX+'pass08-navfix1-__BUILD_ID__';
+const CACHE=PREFIX+'pass09-navfix1-__BUILD_ID__';
 const SHELL=__SHELL__;
 const ENTRY=new URL('./index.html',SCOPE).href;
 const URLS=new Set(SHELL.map(p=>new URL(p,SCOPE).href));

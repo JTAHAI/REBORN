@@ -12,7 +12,7 @@ const pkg=JSON.parse(read('package.json'));
 let sha=process.env.REBORN_SOURCE_SHA;
 if(!sha){try{sha=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();}catch{throw new Error('Set REBORN_SOURCE_SHA when building without git history');}}
 if(!/^[a-f0-9]{40}$/.test(sha))throw new Error('REBORN_SOURCE_SHA must be an exact 40-character commit');
-const short=sha.slice(0,7),download=`REBORN-PASS-08-HOMETOWN-UX-${short}-Standalone.zip`;
+const short=sha.slice(0,7),download=`REBORN-PASS-09-SESSION-SAFETY-${short}-Standalone.zip`;
 const inputs=[...files(path.join(root,'dist')),...files(path.join(root,'website-game-shell')),...files(path.join(root,'website')),path.join(root,'tools/service-worker.template.js')];
 const contentTag=hash(Buffer.concat(inputs.flatMap(f=>[Buffer.from(path.relative(root,f).replaceAll(path.sep,'/')+'\0'),fs.readFileSync(f)]))).slice(0,16);
 const world=JSON.parse(read('assets/worlds/north-berwick/world.json'));
@@ -28,16 +28,16 @@ if(html.includes('buttercup-dedication')||html.includes('memorial.js'))throw new
 const dedication=read('website-game-shell/dedication.html');
 html=html.replace('</head>',`<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg"><link rel="stylesheet" href="./memorial.css?v=${contentTag}"></head>`);
 html=html.replace('<div id="app">',dedication+'\n<div id="app">');
-html=html.replace(/<span>BUILD 017 <i>\/<\/i>[^<]*<\/span>/,'<button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
+html=html.replace(/<span>BUILD 018 <i>\/<\/i>[^<]*<\/span>/,'<button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
 // The footer varies slightly across historical releases; fail rather than omit the notice access.
 if(!html.includes('id="memorial-credits-open"'))html=html.replace('<footer class="intro-footer">','<footer class="intro-footer"><button id="memorial-credits-open" type="button">FOR BUTTERCUP · CREDITS</button>');
 html=html.replace('</body>',`<script src="./memorial.js?v=${contentTag}"></script><script src="./release-client.js?v=${contentTag}"></script></body>`);
 write(path.join(game,'index.html'),html);
 for(const n of ['LICENSE.txt','EXHIBIT-B.txt','NOTICE.txt','MEDIA-NOTICE.txt'])write(path.join(game,n),read('website/'+n));
-const credits=['# 99½ REBORN — Build 017','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
-const release={game:pkg.version,runtime:'0.14.0-hometown-ux-p017',pass:8,remainingPasses:0,sourceCommit:sha,baselineCommit:'3957339883932f0ed4c3bc9657ae4118aa8def29',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),navigationHotfix:'redirect-safe-v1',navigationHotfixBase:'d0dd8466cb3d9f659cbccc31ad25138d9270ca73',architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
+const credits=['# 99½ REBORN — Build 018','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
+const release={game:pkg.version,runtime:'0.15.0-session-safety-p018',pass:9,originalMilestonePasses:8,remainingPasses:0,sourceCommit:sha,baselineCommit:'9d5e6d926edfdf93ec8cf2b46812089ef5f44cdc',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),navigationHotfix:'redirect-safe-v1',navigationHotfixBase:'d0dd8466cb3d9f659cbccc31ad25138d9270ca73',architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
 write(path.join(game,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 8 of 8. 0 planned engineering passes remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: four-section hub. Drive: passenger/Echo journeys. Jetta: status/workshop.\nTown: ledger and road map. Journal: drives/recordings. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
+write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 9 · post-milestone save safety. Original eight-pass milestone complete.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: four-section hub. Drive: passenger/Echo journeys. Jetta: status/workshop.\nTown: ledger and road map. Journal: drives/recordings. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
 const shell=files(game).map(f=>'./'+path.relative(game,f).replaceAll(path.sep,'/')).filter(n=>!n.endsWith('.txt'));
 const sw=read('tools/service-worker.template.js').replace('__BUILD_ID__',hash(JSON.stringify(release)).slice(0,16)).replace('__SHELL__',JSON.stringify(shell));write(path.join(game,'sw.js'),sw);
 fs.cpSync(game,path.join(out,'play'),{recursive:true});
@@ -45,16 +45,22 @@ fs.mkdirSync(path.join(out,'downloads'),{recursive:true});
 const python=process.env.PYTHON||(process.platform==='win32'?'python':'python3');
 cp.execFileSync(python,[path.join(root,'tools/zip-static.py'),game,path.join(out,'downloads',download)],{stdio:'inherit'});
 release.standaloneZip=download;release.standaloneZipSha256=hash(fs.readFileSync(path.join(out,'downloads',download)));write(path.join(out,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 017 / Pass 8 of 8
-0 planned engineering passes remaining
+write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 018 / Pass 9 · post-milestone save safety
+Original eight-pass milestone complete
 Source: ${sha}
+
+New: single-writer save ownership across cooperating game tabs, stale-tab
+protection, explicit session-only warnings, current-session export, and raw
+stored-original export. Restore/reset in a non-writing tab is blocked.
+Recovery copies and original records are retained on failed writes where
+storage permits rollback. No cloud save or runtime server has been added.
 
 Loading repair included: redirected cached HTML is rebuilt into a navigation-safe
 response. Already-installed games can use /repair/ after closing other game tabs.
 Save records are never cleared by the loader repair. Pass 8 idle-consent update
 safety is retained; this build does not reintroduce forced active-drive reloads.
 
-New: four primary hub sections (Drive, Jetta, Town, Journal), compact mobile
+Retained from Pass 8: four primary hub sections (Drive, Jetta, Town, Journal), compact mobile
 navigation, contextual headings, continued passenger/Echo drives, protected HUD
 regions, 100–200% reading size and an optional fair passenger reading pause.
 Mapped-road destination paths offer direct/cautious/familiar profiles with an

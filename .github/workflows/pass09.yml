@@ -1,0 +1,21 @@
+name: REBORN Pass 9 engineering
+on:
+  push:
+    branches: [chatgpt/reborn-pass09-session-reliability]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: git bundle create /tmp/reborn-pass09-source.bundle --all
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass09-source
+          path: /tmp/reborn-pass09-source.bundle
+          retention-days: 3
