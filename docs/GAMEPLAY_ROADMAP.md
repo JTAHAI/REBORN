@@ -32,10 +32,16 @@ Today and an imagined 1999½ memory interpretation across six mapped downtown la
 
 Bounded local Free Drive recordings, spectral route ghosts, cinematic replay cameras, timeline seek/speed controls, route-map overlays, Road Journal linkage, and synthesized mechanical cues for recorded faults. No route leaves the existing local browser save.
 
-## Pass 8 — Integration and release hardening
+## Pass 8 — Integration and release hardening — Build 017
 
-System integration, balancing, accessibility, performance tiers, save migration, mobile/desktop acceptance, packaging, and final deployment polish.
+Four-section hub navigation, readable task panels, protected mobile HUD regions,
+fair reading pauses, mapped-road route preferences/fallback, safe backup restore,
+corrupt-save preservation, explicit multi-tab update consent, spatial rendering,
+reusable instance buffers, world-switch resource cleanup, and full-site packaging.
+Acceptance gates cover prior gameplay and the new complete user tasks. Physical
+phone performance, owner visual acceptance and final balancing remain outstanding.
+This milestone is complete only when its independent acceptance gates pass.
 
 The remaining-pass count is reduced only after a pass is implemented, tested, packaged, and committed.
 
-After Build 016: **1 gameplay pass remaining**. Drive Memories is documented in `MEMORY_GHOSTS_REPLAY_AUDIO_PASS_016.md`; Echo Roads remains documented in `ECHO_ROADS_PASS_015.md`.
+After verified Build 017: **0 planned engineering passes remaining**. This closes the scoped prototype sequence, not ongoing game development or physical-device acceptance. See `RELEASE_HARDENING_PASS_017.md`. Drive Memories and Echo Roads retain their separate engineering documents.

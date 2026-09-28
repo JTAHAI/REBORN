@@ -13,8 +13,8 @@ let sha=process.env.REBORN_SOURCE_SHA;
 if(!sha){try{sha=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();}catch{throw new Error('Set REBORN_SOURCE_SHA when building without git history');}}
 if(!/^[a-f0-9]{40}$/.test(sha))throw new Error('REBORN_SOURCE_SHA must be an exact 40-character commit');
 const short=sha.slice(0,7),download=`REBORN-PASS-08-HOMETOWN-UX-${short}-Standalone.zip`;
-const inputs=[...files(path.join(root,'dist')),...files(path.join(root,'website-game-shell'))];
-const contentTag=hash(Buffer.concat(inputs.map(f=>fs.readFileSync(f)))).slice(0,16);
+const inputs=[...files(path.join(root,'dist')),...files(path.join(root,'website-game-shell')),...files(path.join(root,'website')),path.join(root,'tools/service-worker.template.js')];
+const contentTag=hash(Buffer.concat(inputs.flatMap(f=>[Buffer.from(path.relative(root,f).replaceAll(path.sep,'/')+'\0'),fs.readFileSync(f)]))).slice(0,16);
 const world=JSON.parse(read('assets/worlds/north-berwick/world.json'));
 const vars={SOURCE_SHA:sha,SHORT_SHA:short,CACHE_TAG:contentTag,STANDALONE_ZIP:download,WORLD_ROADS:String(world.roads.length),BUILDINGS:world.buildings.length.toLocaleString('en-US'),LANDMARKS:String(world.landmarks.length)};
 const substitute=s=>s.replace(/\{\{([A-Z_]+)\}\}/g,(_,key)=>{if(!Object.hasOwn(vars,key))throw new Error('Unknown website token '+key);return vars[key];});
@@ -37,7 +37,7 @@ for(const n of ['LICENSE.txt','EXHIBIT-B.txt','NOTICE.txt','MEDIA-NOTICE.txt'])w
 const credits=['# 99½ REBORN — Build 017','In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV','Source: https://github.com/JTAHAI/REBORN/tree/'+sha,read('assets/vehicles/jetta-mkiv/CREDITS.md'),read('assets/worlds/north-berwick/CREDITS.md')].join('\n\n');write(path.join(game,'CREDITS.md'),credits);
 const release={game:pkg.version,runtime:'0.14.0-hometown-ux-p017',pass:8,remainingPasses:0,sourceCommit:sha,baselineCommit:'3957339883932f0ed4c3bc9657ae4118aa8def29',upstreamIndexSha256:hash(read('dist/index.html')),packagedPlayIndexSha256:hash(html),modelSha256:hash(fs.readFileSync(path.join(root,'assets/vehicles/jetta-mkiv/volkswagen-bora-jetta-mk4-2005.cc-by-4.0.glb'))),northBerwickWorldSha256:hash(read('assets/worlds/north-berwick/world.json')),architecture:'static-front-end-only',status:'playable-pre-alpha',cacheTag:contentTag};
 write(path.join(game,'release.json'),JSON.stringify(release,null,2)+'\n');
-write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 8 of 8. 0 planned engineering passes remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: Jetta hub. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
+write(path.join(game,'START-HERE.txt'),'99½ REBORN — Pass 8 of 8. 0 planned engineering passes remaining.\n\nServe this folder over local HTTP (for example: python -m http.server 8000),\nthen open http://localhost:8000/. Double-click file:// is not supported by the\nasset loader. No map API, login, database or server-side game logic is required.\n\nJ: four-section hub. Drive: passenger/Echo journeys. Jetta: status/workshop.\nTown: ledger and road map. Journal: drives/recordings. M: paused map. F: nearby incident. E: existing pulse.\n1 / 2 / 3: passenger response; letting the prompt expire chooses silence.\nJ / Drive Memories: manage local route recordings, ghosts and replays.\nG pauses or resumes a route ghost; Shift+G stops it. Replay uses Space, C,\ntimeline seek and the on-screen controls. Replay starts paused. Diagnostic sounds are synthesized\nlocally from recorded mechanical state and can be disabled in Drive Memories.\nJ / Echo Roads and V retain the six-place Today / imagined 1999½ memory drive.\nAll route recordings remain inside the existing local browser save.\n');
 const shell=files(game).map(f=>'./'+path.relative(game,f).replaceAll(path.sep,'/')).filter(n=>!n.endsWith('.txt'));
 const sw=read('tools/service-worker.template.js').replace('__BUILD_ID__',hash(JSON.stringify(release)).slice(0,16)).replace('__SHELL__',JSON.stringify(shell));write(path.join(game,'sw.js'),sw);
 fs.cpSync(game,path.join(out,'play'),{recursive:true});
@@ -49,13 +49,23 @@ write(path.join(out,'release-notes.txt'),`99½ REBORN — Build 017 / Pass 8 of 
 0 planned engineering passes remaining
 Source: ${sha}
 
-New: optional driveway Workshop story, based on Justin's red AEM intake install.
+New: four primary hub sections (Drive, Jetta, Town, Journal), compact mobile
+navigation, contextual headings, continued passenger/Echo drives, protected HUD
+regions, 100–200% reading size and an optional fair passenger reading pause.
+Mapped-road destination paths offer direct/cautious/familiar profiles with an
+explicit bearing-only fallback. No live traffic or private driveway claim.
+Save restore requires file validation, review and confirmation, and keeps a
+pre-restore recovery copy. Corrupt originals are not overwritten. Game updates
+wait for idle tabs and explicit consent. Spatial scene queries and reusable
+instance buffers reduce rendering work without changing the fixed-step model.
+
+Retained: optional driveway Workshop story, based on Justin's red AEM intake install.
 The intake got cold air. The driveway got hot language. All choices work; no
 precision puzzle, repair gate, delay or penalty. Stronger language is opt-in under
 Memory options. Quiet diagnostic/service/repair callbacks can be switched off.
 Portrait workshop menus and contextual hub headings are included.
 
-New: local Drive Memories. Eligible North Berwick Free Drives create bounded
+Retained: local Drive Memories. Eligible North Berwick Free Drives create bounded
 route recordings in the existing browser save. Re-run a route beside a spectral
 Jetta, pause or stop the ghost, or watch a cinematic replay with chase, roadside,
 orbit and driver cameras, timeline seeking and playback speed controls.
@@ -75,6 +85,6 @@ No photorealism, final balance or physical-device acceptance claim is made.
 
 Standalone SHA-256: ${release.standaloneZipSha256}
 `);
-write(path.join(out,'DEPLOY-README.txt'),'FULL WEBSITE PACKAGE\nindex.html is the memorial homepage; play/ contains the current game.\nDeploy the CONTENTS of this directory or the full website ZIP to your existing\nstatic host. The recorded production host is Workers Static Assets, not Pages.\nDo not replace this website with game-only dist/.\nNo deployment, hosting-plan, domain, binding or production configuration change\nis performed by the build or packaging commands.\n\nThe website has no root service worker. The game worker owns only its scope.\nCached installations update atomically once the complete new game is cached;\nlocalStorage saves are never cleared by the updater.\n');
+write(path.join(out,'DEPLOY-README.txt'),'FULL WEBSITE PACKAGE\nindex.html is the memorial homepage; play/ contains the current game.\nDeploy the CONTENTS of this directory or the full website ZIP to your existing\nstatic host. The recorded production host is Workers Static Assets, not Pages.\nDo not replace this website with game-only dist/.\nNo deployment, hosting-plan, domain, binding or production configuration change\nis performed by the build or packaging commands.\n\nThe website has no root service worker. The game worker owns only its scope.\nCached installations update after the full game is cached, the player approves,\nand other in-scope game tabs are idle;\nlocalStorage saves are never cleared by the updater.\n');
 console.log(JSON.stringify({site:out,standalone:game,...release},null,2));
 module.exports={out,game,release};

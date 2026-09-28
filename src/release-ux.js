@@ -2,7 +2,7 @@
 let releaseInitialized=false,releaseGroup='jetta',releaseRouter=null,releaseRoute=null;
 let releaseRouteWorld=null,releaseMapReturn=null,releaseDialogReturn=null,releaseImport=null;
 let releaseRenderStamp=0,releaseRenderFrames=0,releaseSkippedFrames=0,releaseChoiceHeld=false;
-let releaseAlertRevision='',releaseCaptionRevision='',releaseHubScroll=new Map();
+let releaseAlertRevision='',releaseCaptionRevision='',releaseHubScroll=new Map(),releaseNotifications=[];
 const hubGroups=Object.freeze({drive:{label:'Drive',tabs:['stories','echoes']},jetta:{label:'Jetta',tabs:['overview','workshop']},town:{label:'Town',tabs:['town']},journal:{label:'Journal',tabs:['journal','memories']}});
 const releaseGroupFor=name=>Object.keys(hubGroups).find(k=>hubGroups[k].tabs.includes(name))||'jetta';
 function releaseSelectGroup(group){if(!hubGroups[group])return;const remembered=document.querySelector('[data-hub-group="'+group+'"]')?.dataset.lastTab;selectDriverTab(remembered||hubGroups[group].tabs[0],true);}
@@ -36,6 +36,11 @@ function releaseUpdateState(){
  $('release-save-recovery').hidden=!saveLoadBlocked;
  window.dispatchEvent(new CustomEvent('reborn-safe-state',{detail:{safe:releaseSafeUpdate(),state}}));
 }
+function releaseQueueNotification(text,duration){
+ const busy=state==='play'&&(passengerDirector?.state.active?.prompt||!$('passenger-dialogue')?.hidden||clock<toastUntil);
+ if(!busy)return false;if(!releaseNotifications.some(n=>n.text===text)){releaseNotifications.push({text:String(text).slice(0,280),duration:Math.min(6,Math.max(1,duration))});if(releaseNotifications.length>8)releaseNotifications.shift();}return true;
+}
+function releaseFlushNotifications(){if(state!=='play'||!releaseNotifications.length||clock<toastUntil||passengerDirector?.state.active?.prompt||!$('passenger-dialogue')?.hidden)return;const next=releaseNotifications.shift();$('toast').textContent=next.text;$('toast').classList.add('visible');toastUntil=clock+next.duration;}
 function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable;}
 function releaseReadingPause(){
  const active=state==='play'&&!!passengerDirector?.state.active?.prompt&&!$('passenger-choice')?.hidden;
@@ -60,7 +65,7 @@ function releaseUpdateHUD(){
  if(contextBusy&&$('town-interact'))$('town-interact').hidden=true;
  $('radio').hidden=$('radio').hidden||contextBusy;
  if(contextBusy)$('ux-driving-tip').hidden=true;
- const levels=memoryDiagnostics(),captions=Object.entries(levels).filter(([,v])=>v>.22).map(([id])=>({bearing:'Wheel-bearing hum',charging:'Electrical strain',cooling:'Cooling fan / heat',clutch:'Clutch slip',brakeHydraulics:'Brake pressure warning'}[id]||'Mechanical sound')).slice(0,2).join(' · ');
+ const levels=memoryDiagnostics(),captions=Object.entries(levels).filter(([,v])=>v>.22).map(([id])=>({bearing:'Wheel-bearing hum',charging:'Electrical strain',cooling:'Cooling fan / heat',clutch:'Clutch slip',brakes:'Brake pressure warning'}[id]||'Mechanical sound')).slice(0,2).join(' · ');
  if(captions!==releaseCaptionRevision){releaseCaptionRevision=captions;$('release-audio-caption').textContent=captions?'SOUND CUE · '+captions:'';}
  $('release-audio-caption').hidden=!settings.diagnosticCaptions||!captions||choice||!!list.length;
  updateReleaseRouteHUD();
@@ -118,7 +123,7 @@ function releaseRenderDue(timestamp){
  if(timestamp-releaseRenderStamp<1000/cap-1){releaseSkippedFrames++;return false;}
  releaseRenderStamp=timestamp;releaseRenderFrames++;return true;
 }
-function releaseSnapshot(){return {build:17,safeToUpdate:releaseSafeUpdate(),hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
+function releaseSnapshot(){return {build:17,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
 function initReleaseUX(){
  const chrome=document.querySelector('.ux-hub-chrome')||document.querySelector('.journey-header'),tabs=document.querySelector('.ux-tabs');
  const nav=document.createElement('nav');nav.className='hub-primary';nav.setAttribute('aria-label','Main game sections');nav.innerHTML=Object.entries(hubGroups).map(([id,g])=>'<button type="button" data-hub-group="'+id+'" aria-pressed="false">'+g.label+'</button>').join('');tabs.before(nav);

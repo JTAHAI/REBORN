@@ -201,3 +201,47 @@ optional quiet callbacks after diagnostics, repairs and routine service.
 Workshop menus now remain accessible in portrait; the landscape guard is reserved
 for driving and replay. Hub headings follow the selected task. Replay starts paused
 so a short memory cannot end while the player is choosing a camera.
+
+
+## Hometown UX and release hardening — Build 017 / Pass 8
+
+The Jetta Hub now has four primary sections: **Drive**, **Jetta**, **Town**, and
+**Journal**. The existing seven task panels remain available underneath them.
+A compact selector replaces the crowded primary navigation on narrow screens.
+The garage continues a passenger or Echo commitment and shows actual town-load
+readiness. A failed North Berwick load has a retry, not a silent substitute map.
+
+The driving HUD gives passenger objectives, instruments, warnings and touch
+controls separate regions. Settings add 100–200% reading size, mechanical-sound
+captions and an optional **Pause to read** choice mode. Very small screens and
+large text automatically hold the choice clock while reading. Manual throttle,
+M/minimap pause, J hub, F roadside interaction, E pulse and V Echo comparison stay.
+
+**Town → Open North Berwick Map** works from the garage or a paused drive. A pin
+now has a mapped-road path using Direct, Cautious or Familiar routing preferences.
+Disconnected or distant locations explicitly fall back to a pin and bearing.
+These are static game routes, not current traffic, legal access or real-world
+safe-driving advice. Cautious routes use simulated conditions, not live weather.
+
+**Settings → Restore save backup** validates a local backup, previews it and asks
+for confirmation. A pre-restore copy is retained. Corrupt stored originals are
+protected instead of overwritten. Reset requires typing RESET. Updated game
+installations wait for approval and idle game tabs; an active trip is not reloaded.
+
+Rendering uses a spatial static-scene index, reusable instance staging buffers,
+resource cleanup on world changes and bounded menu-render frequency. This reduces
+work without changing the fixed-step driving model. Real-phone frame rates and
+final visual acceptance remain unmeasured; software-browser acceptance is separate.
+
+The red AEM driveway memory remains optional, skippable and mechanically harmless.
+
+```sh
+npm run build:site     # maintained full memorial site, /play/ and matching download
+npm run test:site      # package structure, local links, matching game and assets
+npm run package:site  # FULL-WEBSITE.zip + Standalone.zip + checksums in packages/
+```
+
+See `docs/RELEASE_HARDENING_PASS_017.md` for exact scope, acceptance and limitations.
+After all Build 017 gates pass: **0 planned engineering passes remain**. This is
+completion of the scoped eight-pass prototype sequence, not a claim of a finished
+commercial game, accessibility certification, owner acceptance or deployment.

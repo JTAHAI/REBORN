@@ -2,7 +2,7 @@
   "name": "99-5-reborn",
   "version": "0.14.0-hometown-ux-p017",
   "private": true,
-  "description": "99½ REBORN static WebGL2 living-car and hometown driving game",
+  "description": "99\u00bd REBORN static WebGL2 living-car and hometown driving game",
   "scripts": {
     "start": "node tools/serve.cjs",
     "build": "node tools/bundle.cjs",
@@ -20,6 +20,7 @@
     "test:echo:browser": "python3 tests/echo-roads-browser.py",
     "test:memory:browser": "python3 tests/memory-replay-browser.py",
     "test:workshop:browser": "python3 tests/workshop-memories-browser.py",
-    "test:release:browser": "python3 tests/release-hardening-browser.py"
+    "test:release:browser": "python3 tests/release-hardening-browser.py",
+    "test:updates:browser": "python3 tests/update-safety-browser.py"
   }
 }

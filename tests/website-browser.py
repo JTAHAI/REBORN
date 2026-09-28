@@ -55,6 +55,6 @@ try:
   car=page.evaluate('REBORN.snapshot().livingCar.vehicle');assert abs(car['odometerMiles']-321)<.1;assert car['fuel']>41.9 and car['fuel']<=42
   keys=page.evaluate('caches.keys()');assert 'another-app-keep' in keys;assert any(k.endswith('root-keep') for k in keys)
   assert page.evaluate('REBORN.snapshot().errors')==[];log('PASS actual Build009 cached installation upgrades; saves and unrelated/root caches preserved')
-  browser.close();print(json.dumps({'packagedBrowser':'passed','cacheUpgrade':'build009-to-build016','renderer':'Chromium software WebGL, battery-saver preset','physicalMobile':'not tested'}),flush=True)
+  browser.close();print(json.dumps({'packagedBrowser':'passed','cacheUpgrade':'build009-to-build017','renderer':'Chromium software WebGL, battery-saver preset','physicalMobile':'not tested'}),flush=True)
 finally:
  server.shutdown();old.cleanup()

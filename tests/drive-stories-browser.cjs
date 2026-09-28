@@ -17,7 +17,7 @@ require('./garage-browser-check.cjs').withBrowser(async browser=>{
  assert.equal(await inspect("REBORN.snapshot().appState"),'play');
  assert.equal(await inspect("REBORN.snapshot().passengers.active.id"),'long-way-home');
  assert.equal(await inspect("REBORN.snapshot().passengers.active.phase"),'ride');
- assert.equal(await inspect("document.getElementById('passenger-status').hidden"),false);
+ assert.ok((await inspect("document.querySelector('.mission').textContent")).toUpperCase().includes('MARA'));
  const promptWait=await waitFor("!document.getElementById('passenger-choice').hidden",18000);
  assert.equal(promptWait,true,`Passenger prompt did not open after boarding: ${JSON.stringify(promptWait)}`);
  assert.equal(await inspect("document.querySelectorAll('[data-passenger-choice]').length"),3);
