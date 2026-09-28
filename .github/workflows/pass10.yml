@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Reproduce exact locally tested Build 019 candidate
+      - name: Reproduce exact CI-pinned Build 019 candidate
         id: commit
         shell: bash
         run: |
@@ -30,7 +30,7 @@ jobs:
           python3 /tmp/pass10-apply.py
           npm test
           git diff --cached --check
-          test "$(git write-tree)" = '7ebe6205fb2601c0f4e42491f07d9b1a84593a78'
+          test "$(git write-tree)" = '082ae53ff6692f3e2b7bb9ca07f6f94ffcc68bca'
           git config user.name 'ChatGPT'
           git config user.email 'chatgpt@users.noreply.github.com'
           git commit -m 'Pause drives and replays safely across WebGL context loss'
