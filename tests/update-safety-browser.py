@@ -3,6 +3,7 @@ Two complete staged versions share one local origin. No production requests.
 """
 import json, os, shutil, tempfile, threading
 from pathlib import Path
+from urllib.parse import urlsplit
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parent.parent
@@ -14,6 +15,13 @@ r=new/'play/release.json';data=json.loads(r.read_text());data['testInstallation'
 phase={'root':root/'site-dist'}
 class Handler(SimpleHTTPRequestHandler):
  def __init__(self,*a,**kw):super().__init__(*a,directory=str(phase['root']),**kw)
+ def do_GET(self):
+  parsed=urlsplit(self.path)
+  if parsed.path.endswith('/index.html'):
+   self.send_response(307)
+   self.send_header('Location',parsed.path[:-len('index.html')]+(('?'+parsed.query) if parsed.query else ''))
+   self.end_headers();return
+  super().do_GET()
  def log_message(self,*a):pass
  def end_headers(self):self.send_header('Cache-Control','no-store');super().end_headers()
 server=ThreadingHTTPServer(('127.0.0.1',0),Handler);threading.Thread(target=server.serve_forever,daemon=True).start();url=f'http://127.0.0.1:{server.server_port}/play/'
