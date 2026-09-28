@@ -1,0 +1,145 @@
+name: REBORN final Pass 8 release gates
+on:
+  push:
+    branches: ['chatgpt/pass08-navigation-verify']
+    paths: ['.github/workflows/pass08-final.yml']
+permissions:
+  contents: read
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      source: ${{ steps.commit.outputs.source }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Correct only the lifecycle probe, preserving the tested game
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/chatgpt/reborn-pass08-release-hardening | cut -f1)
+          git switch --detach "$current"
+          if [ "$current" = 'ad8a2369e576e6f644900a3eb36f29cc2cbf4d58' ]; then
+            python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/service-worker-navigation-browser.py')
+          s=p.read_text()
+          a=s.index('def worker_updated(page):');b=s.index('\ntry:',a)
+          s=s[:a]+'''def worker_updated(page):
+              # No controlled game tabs remain. The browser may activate naturally as the
+              # old worker loses its last client, or the waiting worker may accept the
+              # homepage's idle request. Do not race those two valid lifecycle paths.
+              page.evaluate("navigator.serviceWorker.getRegistration('/play/').then(r=>r.update())")
+              page.wait_for_function("""async()=>{
+                const r=await navigator.serviceWorker.getRegistration('/play/');
+                const keys=await caches.keys();
+                return !!r.waiting || (keys.some(k=>k.includes('pass08-navfix1-')) && !keys.some(k=>k.endsWith('pass07-old')));
+              }""")
+              page.evaluate("navigator.serviceWorker.getRegistration('/play/').then(r=>r.waiting?.postMessage({type:'REBORN_ACTIVATE_IF_IDLE'}))")
+              page.wait_for_function("""async()=>{
+                const r=await navigator.serviceWorker.getRegistration('/play/');
+                const keys=await caches.keys();
+                return !r.waiting && r.active?.state==='activated' && keys.some(k=>k.includes('pass08-navfix1-')) && !keys.some(k=>k.endsWith('pass07-old'));
+              }""")
+          ''' +s[b:]
+          s=s.replace('Broken cached installation upgrades after idle consent; saves and unrelated/root caches survive','Broken cached installation upgrades with old game tabs closed; saves and unrelated/root caches survive')
+          p.write_text(s)
+          PY
+          fi
+          test "$(git diff ad8a2369e576e6f644900a3eb36f29cc2cbf4d58 --name-only)" = 'tests/service-worker-navigation-browser.py'
+          echo '8bf651ae3a42c2c704de4d6f7bd203394348265358665a71bd1bd8a4826e2613  tests/service-worker-navigation-browser.py' | sha256sum -c -
+          python3 -m py_compile tests/service-worker-navigation-browser.py
+          node tests/service-worker-navigation.cjs
+          git diff --check
+          if [ "$current" = 'ad8a2369e576e6f644900a3eb36f29cc2cbf4d58' ]; then
+            git config user.name 'ChatGPT'
+            git config user.email 'chatgpt@users.noreply.github.com'
+            git add tests/service-worker-navigation-browser.py
+            git commit -m 'Handle natural zero-client activation in the navigation regression probe'
+            git push origin HEAD:refs/heads/chatgpt/reborn-pass08-release-hardening
+          fi
+          echo "source=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  verify:
+    needs: checkpoint
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [core, navigation, release, updates, ux, memory, workshop, weather, passengers, echoes, website]
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass08-final-evidence/screenshots
+      REBORN_EVIDENCE: /tmp/pass08-final-evidence/navigation
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.checkpoint.outputs.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - run: mkdir -p /tmp/pass08-final-evidence && npm run build:site
+      - if: matrix.gate != 'core'
+        run: |
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Run independent acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            case '${{ matrix.gate }}' in
+              core) npm test; npm run validate:assets; npm run test:http; node tests/controls-acceptance.cjs; node tests/driving-behavior.cjs; node tests/readability-acceptance.cjs; node tests/vehicle-shell-acceptance.cjs; node tests/town-packaging.cjs; npm run test:site; git diff --exit-code;;
+              navigation) npm run test:navigation:browser;;
+              release) npm run test:release:browser;;
+              updates) npm run test:updates:browser;;
+              ux) npm run test:ux;;
+              memory) npm run test:memory:browser;;
+              workshop) npm run test:workshop:browser;;
+              weather) npm run test:weather:browser;;
+              passengers) npm run test:stories:browser; npm run test:stories:packaged;;
+              echoes) npm run test:echo:browser;;
+              website) npm run test:site:browser;;
+            esac
+          } 2>&1 | tee /tmp/pass08-final-evidence/results.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass08-final-${{ matrix.gate }}-evidence
+          path: /tmp/pass08-final-evidence/
+          retention-days: 7
+  packages:
+    needs: [checkpoint, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.checkpoint.outputs.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Package the verified source and confirm repeatable bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run package:site
+          cp packages/SHA256SUMS.txt /tmp/first-build-hashes.txt
+          npm run package:site
+          cmp /tmp/first-build-hashes.txt packages/SHA256SUMS.txt
+          npm run test:site
+          git diff --exit-code
+          cp site-dist/release.json packages/release.json
+          git rev-parse HEAD > packages/SOURCE-COMMIT.txt
+          git diff a7641ebe5fc1fc52f7ba96ce9ca2062ae31cafa9 HEAD --stat > packages/INTEGRATION-CHANGES.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass08-final-deployment-packages
+          path: packages/
+          retention-days: 7
+          if-no-files-found: error
