@@ -79,12 +79,21 @@ def ready(page):
     page.evaluate('navigator.serviceWorker.ready')
 
 def worker_updated(page):
-    # This helper runs OUTSIDE /play/ after the failed game tab is closed.
-    # Pass 8 must wait for explicit consent, not regain Pass 7's skipWaiting.
+    # No controlled game tabs remain. The browser may activate naturally as the
+    # old worker loses its last client, or the waiting worker may accept the
+    # homepage's idle request. Do not race those two valid lifecycle paths.
     page.evaluate("navigator.serviceWorker.getRegistration('/play/').then(r=>r.update())")
-    page.wait_for_function("navigator.serviceWorker.getRegistration('/play/').then(r=>!!r.waiting)")
-    page.evaluate("navigator.serviceWorker.getRegistration('/play/').then(r=>r.waiting.postMessage({type:'REBORN_ACTIVATE_IF_IDLE'}))")
-    page.wait_for_function("navigator.serviceWorker.getRegistration('/play/').then(r=>!r.waiting&&r.active?.state==='activated')")
+    page.wait_for_function("""async()=>{
+      const r=await navigator.serviceWorker.getRegistration('/play/');
+      const keys=await caches.keys();
+      return !!r.waiting || (keys.some(k=>k.includes('pass08-navfix1-')) && !keys.some(k=>k.endsWith('pass07-old')));
+    }""")
+    page.evaluate("navigator.serviceWorker.getRegistration('/play/').then(r=>r.waiting?.postMessage({type:'REBORN_ACTIVATE_IF_IDLE'}))")
+    page.wait_for_function("""async()=>{
+      const r=await navigator.serviceWorker.getRegistration('/play/');
+      const keys=await caches.keys();
+      return !r.waiting && r.active?.state==='activated' && keys.some(k=>k.includes('pass08-navfix1-')) && !keys.some(k=>k.endsWith('pass07-old'));
+    }""")
 
 try:
     with sync_playwright() as p:
@@ -137,7 +146,7 @@ try:
         assert state['save'] == 'original-progress-keep' and state['other'] == 'keep'
         assert 'another-app-keep' in state['keys'] and any(k.endswith('root-keep') for k in state['keys'])
         assert not any(k.endswith('old-path-cache') or k.endswith('pass07-old') for k in state['keys'])
-        passed('Broken cached installation upgrades after idle consent; saves and unrelated/root caches survive')
+        passed('Broken cached installation upgrades with old game tabs closed; saves and unrelated/root caches survive')
         context.set_offline(True)
         for suffix in ['/play/', '/play/index.html', '/play/?build=offline']:
             page.goto(base + suffix)
