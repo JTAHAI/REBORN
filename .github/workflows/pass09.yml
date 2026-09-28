@@ -20,24 +20,23 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Reproduce the exact locally tested candidate without changing main or production
+      - name: Checkpoint the visible-focus correction without changing main or production
         id: commit
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/pass09-transport /tmp/checkpoint-evidence
-          cp .github/pass09-candidate.*.b64 /tmp/pass09-transport/
-          cp .github/pass09-apply.py /tmp/pass09-apply.py
-          test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass09-session-reliability | cut -f1)" = '1c1fedf3c6b12ba8cb9912ab36106e12711e443a'
-          git switch --detach 1c1fedf3c6b12ba8cb9912ab36106e12711e443a
-          python3 /tmp/pass09-apply.py /tmp/pass09-transport
+          mkdir -p /tmp/checkpoint-evidence
+          cp .github/pass09-focus.py /tmp/pass09-focus.py
+          test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass09-session-reliability | cut -f1)" = 'fb4de96a61e10f5a92c106af60a236da58008018'
+          git switch --detach fb4de96a61e10f5a92c106af60a236da58008018
+          python3 /tmp/pass09-focus.py
           npm test 2>&1 | tee /tmp/checkpoint-evidence/core.log
           git diff --cached --exit-code -- assets legacy website/_headers website/_redirects
           git diff --cached --check
-          test "$(git write-tree)" = '09ce29187a53a446ce8c17ecff0affd225af540e'
+          test "$(git write-tree)" = 'e27c691021731163d52238fcc995946755276f17'
           git config user.name 'ChatGPT'
           git config user.email 'chatgpt@users.noreply.github.com'
-          git commit -m 'Protect local progress from stale tabs and preserve recovery copies on failed saves'
+          git commit -m 'Skip hidden save controls during pause autofocus and verify narrow recovery menus'
           git push origin HEAD:refs/heads/chatgpt/reborn-pass09-session-reliability
           echo "source=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           git rev-parse HEAD > /tmp/checkpoint-evidence/SOURCE-COMMIT.txt
