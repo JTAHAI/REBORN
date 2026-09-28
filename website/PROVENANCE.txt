@@ -1,0 +1,9 @@
+Maintained memorial website source recovered from the repository archive:
+release-packages/reborn-cloudflare-pages-c1d56e5-NORTH-BERWICK-POLISHED.zip
+Archive SHA-256: c7e8027de259b4b7eb562eab52e8a1302ddbc5bb25663451ee3a9df20cd18438
+
+Existing tribute, concept artwork, historic inspection screenshot and license
+notices preserved. Concept illustrations are labelled as such, not gameplay.
+The outdated play/index.html and standalone download are deliberately excluded
+from maintained website source. tools/build-site.cjs inserts the current game.
+Updated Build013 feature copy, current source metadata and consistent packaging.
