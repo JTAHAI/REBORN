@@ -1,0 +1,23 @@
+name: Export Pass 8 integration source
+on:
+  push:
+    branches: [chatgpt/pass08-navigation-verify]
+    paths: [.github/workflows/export-pass08-navigation.yml]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export source and history
+        run: git bundle create /tmp/reborn-pass08-integration.bundle --all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reborn-pass08-integration-source
+          path: /tmp/reborn-pass08-integration.bundle
+          retention-days: 3
