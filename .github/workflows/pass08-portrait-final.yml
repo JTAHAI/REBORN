@@ -6,45 +6,24 @@ on:
 permissions:
   contents: read
   actions: read
+env:
+  SOURCE: 9d5e6d926edfdf93ec8cf2b46812089ef5f44cdc
+  REBORN_BROWSER_DRIVER: playwright
+  REBORN_BROWSER_LOW: '1'
 jobs:
   ux:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: write
-    outputs:
-      source: ${{ steps.commit.outputs.source }}
-    env:
-      REBORN_BROWSER_DRIVER: playwright
-      REBORN_BROWSER_LOW: '1'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 7780d5a637ddfa964c30b641e2c80aba1c742b69
+          ref: 9d5e6d926edfdf93ec8cf2b46812089ef5f44cdc
           fetch-depth: 0
-      - name: Wait for the actual fullscreen transition, without weakening the portrait assertion
-        shell: bash
+          persist-credentials: false
+      - name: Verify the only source delta is the expanded portrait acceptance test
         run: |
-          set -euo pipefail
           mkdir -p /tmp/delivery-evidence
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('tests/driver-touch-browser.cjs');s=p.read_text()
-          s=s.replace(" const inspect=async code=>JSON.parse(await browser('eval',code));", """ const inspect=async code=>JSON.parse(await browser('eval',code));
-           // Fullscreen exit is asynchronous and may restore the previous viewport after
-           // click() returns. Observe completion before resizing; do not sample mid-exit.
-           const until=async (expression,label)=>{
-            const end=Date.now()+10000;
-            while(Date.now()<end){if(await inspect(expression))return;await browser('wait','100');}
-            const state=await inspect(`({width:innerWidth,height:innerHeight,fullscreen:!!document.fullscreenElement,scene:REBORN.snapshot().appState,touch:document.body.classList.contains('touch'),portrait:matchMedia('(orientation:portrait)').matches,guard:getComputedStyle(document.getElementById('rotate-device')).display})`);
-            assert.fail(label+': '+JSON.stringify(state));
-           };""")
-          s=s.replace("if(await inspect(`!!document.fullscreenElement`)){await browser('click','#pause-button');await browser('click','#ux-fullscreen');await browser('click','#ux-close-settings');}", "if(await inspect(`!!document.fullscreenElement`)){await browser('click','#pause-button');await browser('click','#ux-fullscreen');await until(`!document.fullscreenElement`,'Fullscreen exit did not complete');await browser('click','#ux-close-settings');}\n await until(`!document.fullscreenElement && REBORN.snapshot().appState==='play'`,'Drive must be resumed outside fullscreen before resizing');")
-          s=s.replace("await browser('set','viewport','390','844');assert.equal", "await browser('set','viewport','390','844');\n await until(`innerWidth===390 && innerHeight===844 && matchMedia('(orientation:portrait)').matches`,'Portrait viewport did not settle');\n console.log('PORTRAIT_STATE',await inspect(`({width:innerWidth,height:innerHeight,fullscreen:!!document.fullscreenElement,scene:REBORN.snapshot().appState,touch:document.body.classList.contains('touch'),guard:getComputedStyle(document.getElementById('rotate-device')).display})`));\n assert.equal")
-          p.write_text(s)
-          PY
-          echo '1e5530b30481ab3d366f4c654d3aeecd4bff979ee49299fce50a4e5ecc86b151  tests/driver-touch-browser.cjs' | sha256sum -c -
-          test "$(git diff --name-only)" = 'tests/driver-touch-browser.cjs'
+          test "$(git diff 7780d5a637ddfa964c30b641e2c80aba1c742b69 HEAD --name-only)" = 'tests/driver-touch-browser.cjs'
           node --check tests/driver-touch-browser.cjs
           git diff --check
       - name: Browser dependencies
@@ -52,25 +31,13 @@ jobs:
           python3 -m pip install playwright==1.57.0
           python3 -m playwright install --with-deps chromium
           python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
-      - name: Full original UX gate and a second independent touch lifecycle run
+      - name: Full UX gate and a second independent touch lifecycle run
         shell: bash
         run: |
           set -euo pipefail
           npm run test:ux 2>&1 | tee /tmp/delivery-evidence/ux.log
           node tests/driver-touch-browser.cjs 2>&1 | tee /tmp/delivery-evidence/touch-repeat.log
-      - name: Checkpoint only the successfully tested probe
-        id: commit
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git ls-remote origin refs/heads/chatgpt/reborn-pass08-release-hardening | cut -f1)" = '7780d5a637ddfa964c30b641e2c80aba1c742b69'
-          test "$(git diff --name-only)" = 'tests/driver-touch-browser.cjs'
-          git config user.name 'ChatGPT'
-          git config user.email 'chatgpt@users.noreply.github.com'
-          git add tests/driver-touch-browser.cjs
-          git commit -m 'Await real fullscreen exit before asserting the portrait driving guard'
-          git push origin HEAD:refs/heads/chatgpt/reborn-pass08-release-hardening
-          echo "source=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git diff --exit-code
           git rev-parse HEAD > /tmp/delivery-evidence/SOURCE-COMMIT.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
@@ -83,14 +50,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      REBORN_BROWSER_DRIVER: playwright
-      REBORN_BROWSER_LOW: '1'
       REBORN_SCREENSHOTS: /tmp/delivery-evidence/screenshots
       REBORN_EVIDENCE: /tmp/delivery-evidence/navigation
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ needs.ux.outputs.source }}
+          ref: 9d5e6d926edfdf93ec8cf2b46812089ef5f44cdc
           fetch-depth: 0
           persist-credentials: false
       - name: Require all ten unchanged-runtime gates from the pinned matrix
@@ -118,7 +83,7 @@ jobs:
               if required.issubset(jobs) and all(jobs[n]['conclusion']=='success' for n in required):break
               if time.monotonic()>deadline:raise RuntimeError('Timed out waiting for complete acceptance evidence')
               print('Waiting for: '+', '.join(sorted(n for n in required if n not in jobs or jobs[n]['conclusion']!='success')),flush=True);time.sleep(15)
-          receipt={'sourceMatrix':'7780d5a637ddfa964c30b641e2c80aba1c742b69','runtimeIdenticalToDeliveredSource':True,'onlySourceDelta':'tests/driver-touch-browser.cjs','runId':36381245460,'requiredRuntimeGates':{n:{'jobId':jobs[n]['id'],'conclusion':jobs[n]['conclusion'],'url':jobs[n]['html_url']} for n in sorted(required)},'supersededUxOutcome':jobs.get('verify (ux)',{}).get('conclusion'),'uxReplacement':'Full original UX assertions plus fullscreen/viewport completion waits and independent repeated touch check in this delivery workflow'}
+          receipt={'sourceMatrix':'7780d5a637ddfa964c30b641e2c80aba1c742b69','deliveredSource':os.environ['SOURCE'],'runtimeIdenticalToDeliveredSource':True,'onlySourceDelta':'tests/driver-touch-browser.cjs','runId':36381245460,'requiredRuntimeGates':{n:{'jobId':jobs[n]['id'],'conclusion':jobs[n]['conclusion'],'url':jobs[n]['html_url']} for n in sorted(required)},'supersededUxOutcome':jobs.get('verify (ux)',{}).get('conclusion'),'uxReplacement':'Full UX assertions plus fullscreen completion waits, portrait orientation pause with frozen clocks, accessible portrait menus, resumed driving guard and independent repeated touch check. The original test incorrectly required the driving guard to cover the intentionally paused portrait menu.'}
           Path('/tmp/delivery-evidence/PRIOR-GATES.json').write_text(json.dumps(receipt,indent=2))
           print(json.dumps(receipt,indent=2))
           PY
