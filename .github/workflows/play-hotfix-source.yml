@@ -1,0 +1,23 @@
+name: Export deployed source for play navigation repair
+on:
+  push:
+    branches: [chatgpt/reborn-play-navigation-hotfix]
+    paths: [.github/workflows/play-hotfix-source.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3957339883932f0ed4c3bc9657ae4118aa8def29
+          persist-credentials: false
+      - name: Export exact deployed source
+        run: git archive --format=tar HEAD | gzip -n > /tmp/reborn-deployed-source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reborn-deployed-pass07-source
+          path: /tmp/reborn-deployed-source.tar.gz
+          retention-days: 3
