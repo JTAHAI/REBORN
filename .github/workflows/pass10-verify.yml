@@ -1,4 +1,5 @@
 name: REBORN Pass 10 graphics recovery verification
+# Six patch chunks are normalized before checksum verification.
 on:
   push:
     branches: [chatgpt/pass10-verify]
