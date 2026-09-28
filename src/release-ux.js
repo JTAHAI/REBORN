@@ -63,11 +63,12 @@ function releaseUpdateHUD(){
  $('passenger-status').hidden=true;
  const contextBusy=choice||!$('passenger-dialogue').hidden;
  if(contextBusy&&$('town-interact'))$('town-interact').hidden=true;
+ document.body.dataset.roadside=String(!!$('town-interact')&&!$('town-interact').hidden);
  $('radio').hidden=$('radio').hidden||contextBusy;
  if(contextBusy)$('ux-driving-tip').hidden=true;
  const levels=memoryDiagnostics(),captions=Object.entries(levels).filter(([,v])=>v>.22).map(([id])=>({bearing:'Wheel-bearing hum',charging:'Electrical strain',cooling:'Cooling fan / heat',clutch:'Clutch slip',brakes:'Brake pressure warning'}[id]||'Mechanical sound')).slice(0,2).join(' · ');
  if(captions!==releaseCaptionRevision){releaseCaptionRevision=captions;$('release-audio-caption').textContent=captions?'SOUND CUE · '+captions:'';}
- $('release-audio-caption').hidden=!settings.diagnosticCaptions||!captions||choice||!!list.length;
+ $('release-audio-caption').hidden=!settings.diagnosticCaptions||!captions||contextBusy||!!list.length||!!echoDirector?.state.active||!!memoryGhost;
  updateReleaseRouteHUD();
 }
 function releaseShowDialog(kind){

@@ -84,3 +84,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 body.touch #hud #passenger-choice{max-height:calc(100dvh - 215px)}
 @media(max-height:700px) and (min-width:801px){#intro .subcopy,#intro #ux-garage-summary{display:none}}
 @media(orientation:portrait) and (max-width:600px){#intro .subcopy,#intro .car-caption{display:none}#intro .numbers{font-size:64px}}
+/* A real roadside prompt owns the lowest contextual lane. */
+body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #hud #memory-ghost-strip{bottom:78px}
+#hud #memory-ghost-strip{top:auto}

@@ -106,6 +106,7 @@ try:
   # Route ghost from production UI.
   page.locator('[data-memory-action="ghost"]').click();page.wait_for_function("REBORN.snapshot().appState==='play' && REBORN.snapshot().memories.ghost")
   assert page.locator('#memory-ghost-strip').is_visible()
+  assert page.locator('#memory-ghost-strip').bounding_box()['height']<=100
   ghost_before=snap()['memories']['ghost'];page.wait_for_function("p=>{const g=REBORN.snapshot().memories.ghost;if(!g)return false;return ((g.time-p.time+p.duration)%p.duration)>.1}",arg=ghost_before,timeout=15000,polling=100);ghost_after=snap()['memories']['ghost'];ghost_delta=(ghost_after['time']-ghost_before['time']+ghost_before['duration'])%ghost_before['duration'];assert ghost_delta>.1,(ghost_before,ghost_after,ghost_delta)
   page.keyboard.press('g');assert snap()['memories']['ghost']['paused'] is True;paused=snap()['memories']['ghost']['time'];page.wait_for_timeout(500);assert abs(snap()['memories']['ghost']['time']-paused)<.02
   page.keyboard.press('g');assert snap()['memories']['ghost']['paused'] is False
@@ -175,7 +176,7 @@ try:
   t.locator('[data-memory-action="ghost"]').tap();t.wait_for_function("REBORN.snapshot().appState==='play' && REBORN.snapshot().memories.ghost")
   ghost=t.locator('#memory-ghost-strip').bounding_box();buttons=t.locator('#memory-ghost-strip button').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
   controls=t.locator('#drive-stick,#touch-controls button,#town-interact').evaluate_all('(es)=>es.filter(e=>e.offsetParent!==null).map(e=>e.getBoundingClientRect().toJSON())')
-  assert ghost and all(r['height']>=44 for r in buttons)
+  assert ghost and ghost['height']<=100 and all(r['height']>=44 for r in buttons)
   for r in controls: assert not overlap(ghost,r),(ghost,r)
   t.screenshot(path=str(evidence/'memory-ghost-touch.png'))
   t.locator('#minimap').tap();assert t.evaluate('REBORN.snapshot().appState')=='map';before=t.evaluate('REBORN.snapshot().memories.ghost.time');t.wait_for_timeout(350);assert abs(t.evaluate('REBORN.snapshot().memories.ghost.time')-before)<.02
