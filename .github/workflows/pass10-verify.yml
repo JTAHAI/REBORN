@@ -1,5 +1,5 @@
 name: REBORN Pass 10 graphics recovery verification
-# Six logical patch chunks are normalized before checksum verification.
+# Exact split patch chunks are normalized before checksum verification.
 on:
   push:
     branches: [chatgpt/pass10-verify]
@@ -27,7 +27,20 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/pass10-evidence
-          cat .github/pass10.patch.1.b64 .github/pass10.patch.2.b64 .github/pass10.patch.3a.b64 .github/pass10.patch.3b.b64 .github/pass10.patch.4.b64 .github/pass10.patch.5.b64 .github/pass10.patch.6.b64 | tr -d '\r\n\t ' > /tmp/pass10.patch.b64
+          cat \
+            .github/pass10.patch.1.b64 \
+            .github/pass10.patch.2.b64 \
+            .github/pass10.patch.3a.b64 \
+            .github/pass10.patch.3b.b64 \
+            .github/pass10.patch.41.b64 \
+            .github/pass10.patch.42.b64 \
+            .github/pass10.patch.43.b64 \
+            .github/pass10.patch.44.b64 \
+            .github/pass10.patch.51.b64 \
+            .github/pass10.patch.52.b64 \
+            .github/pass10.patch.53.b64 \
+            .github/pass10.patch.54.b64 \
+            .github/pass10.patch.6.b64 | tr -d '\r\n\t ' > /tmp/pass10.patch.b64
           test "$(wc -c < /tmp/pass10.patch.b64)" = '66552'
           base64 -d /tmp/pass10.patch.b64 > /tmp/pass10.patch.gz
           echo 'e5f6b277e644bbc2d6ab70e99f91a01b62a32686bc769574fb12af396b8db34b  /tmp/pass10.patch.gz' | sha256sum -c -
