@@ -42,7 +42,7 @@ class Handler(SimpleHTTPRequestHandler):
         path = urlsplit(self.path).path
         # Reproduce the host behavior missing from the previous local server tests.
         if path.endswith('/index.html'):
-            self.send_response(308)
+            self.send_response(307)
             self.send_header('Location', path[:-len('index.html')])
             self.end_headers()
             return
@@ -122,6 +122,11 @@ try:
         passed('Original deployed worker reproduces ERR_FAILED after index.html redirect')
 
         phase.update(template=FIXED, tag='fixed')
+        # Chromium commits its error document asynchronously after ERR_FAILED.
+        # A fresh tab in the SAME context retains the broken worker and all saves.
+        page.close()
+        page = context.new_page()
+        page.set_default_timeout(30000)
         page.goto(base + '/outside/')
         worker_updated(page)
         for suffix in ['/play/', '/play/index.html', '/play/?build=hotfix', '/play/']:
