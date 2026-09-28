@@ -1,4 +1,4 @@
-"""Build 018 storage ownership/recovery on the packaged game in real Chromium.
+"""Build 019 storage ownership/recovery on the packaged game in real Chromium.
 Two real tabs and real storage/lock APIs; quota/denial are explicit fault fixtures.
 No production requests. Physical phones and arbitrary legacy races not certified.
 """

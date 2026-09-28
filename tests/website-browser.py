@@ -49,7 +49,7 @@ try:
   # any historical play-scoped worker before its versioned Drive link is used.
   phase['root']=site;page.goto(base+'/?build='+release['cacheTag']);page.locator("a[href*='/play/?build=']").first.wait_for()
   page.wait_for_function("caches.keys().then(keys=>keys.some(k=>k.includes('pass09-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
-  page.goto(base+'/play/?build='+release['cacheTag']);page.wait_for_function("window.REBORN?.version==='0.15.0-session-safety-p018'",timeout=60000)
+  page.goto(base+'/play/?build='+release['cacheTag']);page.wait_for_function("window.REBORN?.version==='0.16.0-graphics-recovery-p019'",timeout=60000)
   page.wait_for_function("navigator.serviceWorker.controller && caches.keys().then(keys=>keys.some(k=>k.includes('pass09-')) && !keys.some(k=>k.includes('build009')))",timeout=60000)
   page.wait_for_timeout(1200);page.wait_for_function('!!window.REBORN');page.locator('#buttercup-continue').click();page.locator('#drive').click();page.wait_for_function("REBORN.snapshot().appState==='play'")
   car=page.evaluate('REBORN.snapshot().livingCar.vehicle');assert abs(car['odometerMiles']-321)<.1;assert car['fuel']>41.9 and car['fuel']<=42

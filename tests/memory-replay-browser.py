@@ -51,7 +51,7 @@ try:
   ctx.add_init_script("if(!localStorage.getItem('995.reborn.save.v1'))localStorage.setItem('995.reborn.save.v1',"+json.dumps(json.dumps(seed))+')')
   page=ctx.new_page();page.set_default_timeout(120000);page.on('pageerror',lambda e:errors.append(str(e)))
   def ready(pg=page):
-   pg.wait_for_function("window.REBORN?.version==='0.15.0-session-safety-p018'")
+   pg.wait_for_function("window.REBORN?.version==='0.16.0-graphics-recovery-p019'")
    if pg.locator('#buttercup-continue').is_visible(): pg.locator('#buttercup-continue').click()
    pg.wait_for_function("!document.getElementById('intro').hidden")
   def snap(pg=page): return pg.evaluate('REBORN.snapshot()')
