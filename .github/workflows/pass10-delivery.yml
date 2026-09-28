@@ -1,0 +1,105 @@
+name: REBORN Pass 10 verified delivery
+on:
+  push:
+    branches: [chatgpt/reborn-pass10-graphics-recovery]
+    paths: [.github/workflows/pass10-delivery.yml]
+permissions:
+  contents: read
+  actions: read
+env:
+  SOURCE: 201a628b4c9819385f9b90b74a0e0991aa0e5ae7
+  REBORN_BROWSER_DRIVER: playwright
+  REBORN_BROWSER_LOW: '1'
+jobs:
+  graphics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REBORN_EVIDENCE: /tmp/pass10-delivery/graphics
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 201a628b4c9819385f9b90b74a0e0991aa0e5ae7
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: mkdir -p /tmp/pass10-delivery && npm run build:site && node tests/graphics-recovery.cjs
+      - run: |
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Real WebGL context loss and restore acceptance
+        run: npm run test:graphics:browser 2>&1 | tee /tmp/pass10-delivery/graphics.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass10-delivery-graphics-evidence
+          path: /tmp/pass10-delivery/
+          retention-days: 7
+  packages:
+    needs: graphics
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 201a628b4c9819385f9b90b74a0e0991aa0e5ae7
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Require every unchanged-runtime gate from the final matrix
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pass10-delivery
+          python3 - <<'PY'
+          import os,json,time,urllib.request
+          from pathlib import Path
+          run_id=36490131196
+          base=f'https://api.github.com/repos/JTAHAI/REBORN/actions/runs/{run_id}'
+          def get(url):
+           q=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+           with urllib.request.urlopen(q,timeout=30) as r:return json.load(r)
+          required={'verify ('+s+')' for s in ['core','session','updates','memory','echoes','weather','passengers','ux','navigation','workshop','website','release']}
+          end=time.monotonic()+1200
+          while True:
+           jobs={j['name']:j for j in get(base+'/jobs?per_page=100')['jobs']}
+           failed=[n for n in required if n in jobs and jobs[n]['status']=='completed' and jobs[n]['conclusion']!='success']
+           if failed:raise RuntimeError('Required gate failed: '+str(failed))
+           if required.issubset(jobs) and all(jobs[n]['conclusion']=='success' for n in required):break
+           if time.monotonic()>end:raise RuntimeError('Timed out waiting for prior runtime gates')
+           print('Waiting for '+', '.join(sorted(n for n in required if n not in jobs or jobs[n]['conclusion']!='success')),flush=True);time.sleep(15)
+          receipt={'runtimeSource':'7adc0c24e88c350c85a262680c24f0d1a2ebade3','deliveredSource':os.environ['SOURCE'],'onlyDeltaAfterRuntimeMatrix':'tests/graphics-recovery-browser.py test correction','sourceRun':run_id,'requiredGates':{n:{'jobId':jobs[n]['id'],'conclusion':jobs[n]['conclusion'],'url':jobs[n]['html_url']} for n in sorted(required)},'graphicsGate':'this delivery workflow uses retained WEBGL_lose_context extension handle across lost state'}
+          Path('/tmp/pass10-delivery/VERIFICATION-GATES.json').write_text(json.dumps(receipt,indent=2))
+          print(json.dumps(receipt,indent=2))
+          PY
+      - name: Build twice and require byte-identical complete packages
+        run: |
+          set -euo pipefail
+          npm run package:site
+          cp packages/SHA256SUMS.txt /tmp/first.txt
+          npm run package:site
+          cmp /tmp/first.txt packages/SHA256SUMS.txt
+          npm run test:site
+          git diff --exit-code
+          cp site-dist/release.json packages/release.json
+          git rev-parse HEAD > packages/SOURCE-COMMIT.txt
+          git diff b379b4d3f6884f9548855cf1798387003edcb39f HEAD --stat > packages/CHANGES.txt
+          cp /tmp/pass10-delivery/VERIFICATION-GATES.json packages/VERIFICATION-GATES.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass10-delivery-evidence
+          path: /tmp/pass10-delivery/
+          retention-days: 7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass10-delivery-packages
+          path: packages/
+          retention-days: 7
+          if-no-files-found: error
