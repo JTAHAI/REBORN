@@ -245,3 +245,13 @@ See `docs/RELEASE_HARDENING_PASS_017.md` for exact scope, acceptance and limitat
 After all Build 017 gates pass: **0 planned engineering passes remain**. This is
 completion of the scoped eight-pass prototype sequence, not a claim of a finished
 commercial game, accessibility certification, owner acceptance or deployment.
+
+
+## Build 020 — recovery integrity
+
+Build 020 adds explicit interrupted-session review, bounded local emergency
+checkpoints, stored-pair conflict protection, and render-confirmed WebGL resource
+recovery. It retains the Build 018 single-writer save guard and every prior game
+system. Recovery is local-only, never automatic, and returns persistent progress
+to the garage rather than claiming an exact road-position resume. See
+`docs/RECOVERY_INTEGRITY_PASS_020.md`.

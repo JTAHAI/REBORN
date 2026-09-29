@@ -1,12 +1,12 @@
 {
   "name": "99-5-reborn",
-  "version": "0.16.0-graphics-recovery-p019",
+  "version": "0.17.0-recovery-integrity-p020",
   "private": true,
   "description": "99\u00bd REBORN static WebGL2 living-car and hometown driving game",
   "scripts": {
     "start": "node tools/serve.cjs",
     "build": "node tools/bundle.cjs",
-    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs && node tests/town-director.cjs && node tests/driver-ux.cjs && node tests/maine-weather.cjs && node tests/drive-stories.cjs && node tests/echo-roads.cjs && node tests/memory-replay.cjs && node tests/workshop-memories.cjs && node tests/release-hardening.cjs && node tests/service-worker-navigation.cjs && node tests/session-saves.cjs && node tests/graphics-recovery.cjs",
+    "test": "node tests/smoke.cjs && node tests/north-berwick-realism.cjs && node tests/living-car-road-memory.cjs && node tests/diagnostics-garage.cjs && node tests/world-rendering.cjs && node tests/project-boundaries.cjs && node tests/town-director.cjs && node tests/driver-ux.cjs && node tests/maine-weather.cjs && node tests/drive-stories.cjs && node tests/echo-roads.cjs && node tests/memory-replay.cjs && node tests/workshop-memories.cjs && node tests/release-hardening.cjs && node tests/service-worker-navigation.cjs && node tests/session-saves.cjs && node tests/graphics-recovery.cjs && node tests/crash-recovery.cjs",
     "test:ux": "node tests/garage-browser-check.cjs && node tests/driver-ux-browser.cjs && node tests/driver-touch-browser.cjs",
     "test:http": "node tests/http-smoke.cjs",
     "validate:assets": "node tools/assets/validate-vehicle.cjs",
@@ -24,6 +24,7 @@
     "test:updates:browser": "python3 tests/update-safety-browser.py",
     "test:navigation:browser": "python3 tests/service-worker-navigation-browser.py",
     "test:session:browser": "python3 tests/session-saves-browser.py",
-    "test:graphics:browser": "python3 tests/graphics-recovery-browser.py"
+    "test:graphics:browser": "python3 tests/graphics-recovery-browser.py",
+    "test:recovery:browser": "python3 tests/crash-recovery-browser.py"
   }
 }

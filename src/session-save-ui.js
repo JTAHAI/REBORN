@@ -13,6 +13,7 @@ function sessionSaveNotice(){
  const canRestore=status.canWrite&&status.reason!=='unavailable';
  if($('release-import-confirm'))$('release-import-confirm').disabled=!releaseImport||!canRestore;
  if($('release-reset-confirm'))$('release-reset-confirm').disabled=$('release-reset-text').value!=='RESET'||!canRestore;
+ if(typeof crashRecoveryRender==='function')crashRecoveryRender();
  const node=$('ux-save');if(node&&!sessionSave.last.ok){node.textContent=status.reason==='pending'?'CHECKING SAVE OWNERSHIP':status.reason==='other'?'OTHER TAB SAVING · SESSION ONLY':status.conflict?'NEWER STORED SAVE · SESSION ONLY':'SAVE UNAVAILABLE · EXPORT SESSION';node.dataset.error=String(problem);}
  document.body.dataset.saveSession=problem?'protected':'ready';
  $('pause-button').title=problem?'Save protected — pause to export this session':'Pause and settings';
@@ -26,7 +27,7 @@ function sessionReloadLatest(){
  // The button means discard this RAM session in favor of the stored pair. A
  // separate export action is always available first. No pagehide write follows.
  if(!confirm('Reload the stored game? Unsaved changes in this tab will be discarded. Export this session first to keep them.'))return;
- saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);if(typeof crashRecoveryClearCurrent==='function')crashRecoveryClearCurrent();sessionSave.release();location.reload();
 }
 function initSessionSaves(){
  const banner=document.createElement('section');banner.id='session-save-banner';banner.hidden=true;banner.setAttribute('aria-label','Save protection');

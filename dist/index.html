@@ -305,6 +305,21 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
 .session-save-actions button{min-height:44px;flex:1 1 160px;white-space:normal}
 
 /* RELEASE_CSS_END */
+/* CRASH_RECOVERY_CSS_BEGIN */
+.crash-recovery-card{border:1px solid rgba(238,190,126,.55);background:rgba(18,38,43,.94);padding:14px 16px;margin:0 0 12px;color:#dce7de;box-shadow:0 8px 28px #07141666}
+.crash-recovery-card>strong{display:block;color:#eebe7e;font-size:10px;letter-spacing:1.5px;margin-bottom:7px}
+.crash-recovery-card p{font-size:10px;line-height:1.55;margin:5px 0;color:#c3d0c7}
+.crash-recovery-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:stretch}
+.crash-recovery-actions button{min-height:44px;flex:1 1 150px}
+.crash-recovery-actions .primary{min-width:0;padding:10px 14px;font-size:9px;gap:8px}
+#crash-recovery-discard{align-self:center;min-height:44px}
+#crash-recovery-count:empty{display:none}
+.crash-recovery-settings{margin-top:0}
+body[data-state="menu"] #crash-recovery-banner{max-width:780px}
+@media(max-width:600px) and (orientation:portrait){#crash-recovery-banner{max-height:35vh;overflow:auto;padding:11px 12px}.crash-recovery-card p{font-size:9px}.crash-recovery-actions button{flex-basis:100%;font-size:8px}.crash-recovery-actions .quiet{font-size:10px}}
+@media(max-height:540px) and (orientation:landscape){#crash-recovery-banner{max-height:46vh;overflow:auto;padding:9px 11px;margin-bottom:7px}.crash-recovery-card>strong{font-size:8px}.crash-recovery-card p{font-size:8px;line-height:1.35;margin:3px 0}.crash-recovery-actions{margin-top:6px}.crash-recovery-actions button{min-height:36px;padding:6px 9px}}
+
+/* CRASH_RECOVERY_CSS_END */
 </style>
 </head>
 <body data-standalone="true">
@@ -339,7 +354,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
   </div>
   <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="journey-open" class="quiet">JETTA STATUS / DIAGNOSTICS ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 019 <i>/</i> MEMORY REPLAY</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 020 <i>/</i> MEMORY REPLAY</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <output id="town-clock" aria-label="Fictional town time" hidden></output><button id="town-interact" class="secondary" type="button" hidden>F · ROADSIDE INTERACTION</button>
@@ -421,7 +436,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
   else root.RebornCore = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  const VERSION = '0.16.0-graphics-recovery-p019';
+  const VERSION = '0.17.0-recovery-integrity-p020';
   const DT = 1 / 120;
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -1829,6 +1844,86 @@ const SessionSaves = (() => {
 })();
 
   /* SESSION_SAVES_END */
+  /* CRASH_RECOVERY_BEGIN */
+// Build 020: bounded, local-only interrupted-session checkpoints.
+// Every tab owns a unique record; normal page exit removes it after a successful
+// main save. A browser/renderer crash leaves the record for explicit review.
+const CrashRecovery = (() => {
+ 'use strict';
+ const FORMAT='REBORN_EMERGENCY_V1';
+ const PREFIX='995.reborn.emergency.v1.';
+ const MAX_RECORDS=3;
+ const MAX_AGE_MS=7*24*60*60*1000;
+ const MAX_BYTES=3*1024*1024;
+ const text=v=>v==null?'':String(v);
+ function fingerprint(value){
+  const s=text(value);let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}
+  return (h>>>0).toString(16).padStart(8,'0')+':'+s.length;
+ }
+ const pairFingerprint=(saveText,storyText)=>fingerprint(text(saveText)+'\u0000'+text(storyText));
+ function backupPair(backup){
+  if(!backup||backup.format!=='REBORN_BACKUP_V1'||backup.save?.version!==1)return null;
+  try{return [JSON.stringify(backup.save),JSON.stringify(backup.story??null)];}catch{return null;}
+ }
+ function backupFingerprint(backup){const pair=backupPair(backup);return pair?pairFingerprint(...pair):'';}
+ function validId(id){return typeof id==='string'&&/^[a-zA-Z0-9._-]{8,96}$/.test(id);}
+ function makeId(now=Date.now(),random=Math.random){return Math.floor(now).toString(36)+'-'+Math.floor(random()*0x100000000).toString(36).padStart(7,'0')+'-'+Math.floor(random()*0x100000000).toString(36).padStart(7,'0');}
+ function normalize(raw,now=Date.now()){
+  if(!raw||raw.format!==FORMAT||!validId(raw.id)||!Number.isFinite(raw.updatedAt))return null;
+  if(raw.updatedAt>now+60000||now-raw.updatedAt>MAX_AGE_MS)return null;
+  const pair=backupPair(raw.backup);if(!pair)return null;
+  const state=typeof raw.state==='string'?raw.state.slice(0,32):'unknown';
+  const runtime=raw.runtime&&typeof raw.runtime==='object'?{
+   world:typeof raw.runtime.world==='string'?raw.runtime.world.slice(0,80):'',
+   mode:typeof raw.runtime.mode==='string'?raw.runtime.mode.slice(0,24):'',
+   road:typeof raw.runtime.road==='string'?raw.runtime.road.slice(0,100):'',
+   odometer:Number.isFinite(raw.runtime.odometer)?Math.max(0,raw.runtime.odometer):0,
+   fuel:Number.isFinite(raw.runtime.fuel)?Math.max(0,Math.min(100,raw.runtime.fuel)):0,
+   activeTrip:!!raw.runtime.activeTrip,
+   recordingSeconds:Number.isFinite(raw.runtime.recordingSeconds)?Math.max(0,raw.runtime.recordingSeconds):0
+  }:{};
+  return {format:FORMAT,id:raw.id,updatedAt:raw.updatedAt,startedAt:Number.isFinite(raw.startedAt)?raw.startedAt:raw.updatedAt,reason:typeof raw.reason==='string'?raw.reason.slice(0,80):'checkpoint',state,build:typeof raw.build==='string'?raw.build.slice(0,80):'',baseFingerprint:typeof raw.baseFingerprint==='string'?raw.baseFingerprint.slice(0,80):'',backupFingerprint:backupFingerprint(raw.backup),backup:{format:'REBORN_BACKUP_V1',exportedAt:typeof raw.backup.exportedAt==='string'?raw.backup.exportedAt.slice(0,40):'',save:raw.backup.save,story:raw.backup.story??null},runtime};
+ }
+ class Journal {
+  constructor(getStorage,options={}){
+   this.getStorage=getStorage;this.prefix=options.prefix||PREFIX;this.now=options.now||Date.now;this.id=options.id||makeId(this.now(),options.random||Math.random);this.startedAt=this.now();this.last={ok:false,reason:'empty'};
+  }
+  key(id=this.id){return this.prefix+id;}
+  storage(){const s=this.getStorage();if(!s)throw new Error('storage unavailable');return s;}
+  list(prune=true){
+   let storage;try{storage=this.storage();}catch{return [];}
+   const now=this.now(),records=[];let keys=[];
+   try{for(let i=0;i<storage.length;i++){const key=storage.key(i);if(key?.startsWith(this.prefix))keys.push(key);}}
+   catch{return [];}
+   for(const key of keys){let record=null;try{const raw=storage.getItem(key);if(raw&&raw.length<=MAX_BYTES)record=normalize(JSON.parse(raw),now);}catch{}
+    if(record)records.push(record);else if(prune)try{storage.removeItem(key);}catch{}
+   }
+   return records.sort((a,b)=>b.updatedAt-a.updatedAt||a.id.localeCompare(b.id));
+  }
+  checkpoint(value={}){
+   let storage;try{storage=this.storage();}catch{return this.last={ok:false,reason:'unavailable'};}
+   const backup=value.backup,pair=backupPair(backup);if(!pair)return this.last={ok:false,reason:'invalid'};
+   const record={format:FORMAT,id:this.id,startedAt:this.startedAt,updatedAt:this.now(),reason:text(value.reason||'checkpoint').slice(0,80),state:text(value.state||'unknown').slice(0,32),build:text(value.build||'').slice(0,80),baseFingerprint:text(value.baseFingerprint||'').slice(0,80),backupFingerprint:pairFingerprint(...pair),backup,runtime:value.runtime&&typeof value.runtime==='object'?value.runtime:{}};
+   let body;try{body=JSON.stringify(record);}catch{return this.last={ok:false,reason:'invalid'};}
+   if(body.length>MAX_BYTES)return this.last={ok:false,reason:'too-large',bytes:body.length};
+   try{storage.setItem(this.key(),body);}catch{return this.last={ok:false,reason:'unavailable',bytes:body.length};}
+   const keep=new Set(this.list(false).slice(0,MAX_RECORDS).map(r=>r.id));keep.add(this.id);
+   try{for(let i=storage.length-1;i>=0;i--){const key=storage.key(i);if(key?.startsWith(this.prefix)&&!keep.has(key.slice(this.prefix.length)))storage.removeItem(key);}}catch{}
+   return this.last={ok:true,reason:'saved',bytes:body.length,record:normalize(record,this.now())};
+  }
+  clear(){try{this.storage().removeItem(this.key());this.last={ok:true,reason:'cleared'};return true;}catch{this.last={ok:false,reason:'unavailable'};return false;}}
+  discard(id){if(!validId(id))return false;try{this.storage().removeItem(this.key(id));return true;}catch{return false;}}
+ }
+ function candidates(records,currentSaveText,currentStoryText,currentId=''){
+  const current=pairFingerprint(currentSaveText,currentStoryText),map=new Map();
+  for(const raw of records||[]){const record=normalize(raw);if(!record||record.id===currentId||record.backupFingerprint===current)continue;const old=map.get(record.id);if(!old||old.updatedAt<record.updatedAt)map.set(record.id,record);}
+  return [...map.values()].sort((a,b)=>b.updatedAt-a.updatedAt||a.id.localeCompare(b.id));
+ }
+ return Object.freeze({FORMAT,PREFIX,MAX_RECORDS,MAX_AGE_MS,MAX_BYTES,fingerprint,pairFingerprint,backupFingerprint,makeId,normalize,Journal,candidates});
+})();
+
+  /* CRASH_RECOVERY_END */
   /* RELEASE_CORE_BEGIN */
 // Pass 8 pure helpers: bounded storage, routing and render-candidate selection.
 // Embedded in RebornCore; no remote services and no mutation of world geometry.
@@ -1905,7 +2000,7 @@ const ReleaseUX = (() => {
       weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion,...driverPreferences(s)},
       town:Town.sanitize(raw.town),climate:MaineWeather.sanitize(raw.climate,Town.now(Town.sanitize(raw.town)),Town.sanitize(raw.town).seed),journeys:DriveStories.sanitize(raw.journeys),echoes:EchoRoads.sanitize(raw.echoes),memories:MemoryReplay.sanitize(raw.memories),workshopMemories:WorkshopMemories.sanitize(raw.workshopMemories),vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,serviceHistory:validateServiceHistory(raw.serviceHistory),stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive'||x.kind==='journey').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather,DriveStories,EchoRoads,MemoryReplay,WorkshopMemories,ReleaseUX,SessionSaves};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather,DriveStories,EchoRoads,MemoryReplay,WorkshopMemories,ReleaseUX,SessionSaves,CrashRecovery};
 });
 
 </script>
@@ -3251,8 +3346,11 @@ function decorate(world,items){const out=[];for(const o of items){
  return out;
 }
 class PolishedRenderer extends R.Renderer{
- constructor(canvas,world){super(canvas,world);this.kind=this.gl?'WebGL2 / Coachwork + local reflections':'Canvas 3D compatibility';this.contextLost=false;this.contextEpoch=0;this.contextLosses=0;this.contextRecoveries=0;V.useLegacy=!this.gl;
- if(this.gl){this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.contextLost=true;this.contextLosses++;root.dispatchEvent(new CustomEvent('reborn-context-lost',{detail:{losses:this.contextLosses}}));});this.canvas.addEventListener('webglcontextrestored',()=>{try{this.initGL();this.resize();this.contextLost=false;this.contextRecoveries++;root.dispatchEvent(new CustomEvent('reborn-context-restored',{detail:{recoveries:this.contextRecoveries}}));}catch(e){this.error=e.message;root.dispatchEvent(new CustomEvent('reborn-context-failed',{detail:{message:e.message}}));}});}
+ constructor(canvas,world){super(canvas,world);this.kind=this.gl?'WebGL2 / Coachwork + local reflections':'Canvas 3D compatibility';this.contextLost=false;this.contextEpoch=this.contextEpoch||0;this.contextLosses=0;this.contextRecoveries=0;this.contextRecoveryPending=false;this.contextRecoveryError='';this.contextRecoveryStarted=0;V.useLegacy=!this.gl;
+ if(this.gl){
+  this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();if(!this.contextLost)this.contextLosses++;this.contextLost=true;this.contextRecoveryPending=false;this.contextRecoveryError='';root.dispatchEvent(new CustomEvent('reborn-context-lost',{detail:{losses:this.contextLosses}}));});
+  this.canvas.addEventListener('webglcontextrestored',()=>{try{this.contextLost=false;this.contextRecoveryPending=true;this.contextRecoveryStarted=performance.now();this.contextRecoveryError='';this.initGL(true);this.resize();root.dispatchEvent(new CustomEvent('reborn-context-rebuilding',{detail:{epoch:this.contextEpoch}}));}catch(e){this.failContextRecovery(e);}});
+ }
  }
  setWorld(world){
   const objects=R.buildWorld(world);
@@ -3260,15 +3358,24 @@ class PolishedRenderer extends R.Renderer{
   if(this.gl){this.initGL();this.resize();}
   else {if(!world.northBerwick)this.static=decorate(world,this.static).concat(root.RebornArt.streetSigns(world));this.decorated=true;}
  }
- releaseDisposeGL(){const gl=this.gl;if(!gl)return;
-  for(const batch of Object.values(this.batches||{})){if(batch.vao)gl.deleteVertexArray(batch.vao);if(batch.instances)gl.deleteBuffer(batch.instances);if(batch.vertices)gl.deleteBuffer(batch.vertices);}
-  for(const key of ['p','probeProgram','sky','shadowProgram','bloomProgram','postProgram']){if(this[key]?.p)gl.deleteProgram(this[key].p);this[key]=null;}
-  for(const key of ['envTex','studioTex','storyTex','atlasTex','townTex']){if(this[key])gl.deleteTexture(this[key]);this[key]=null;}
-  for(const target of [...Object.values(this.targets||{}),...(this.probeBuffers||[]),...(this.shadowTarget?[this.shadowTarget]:[])]){if(target.texture)gl.deleteTexture(target.texture);if(target.fbo)gl.deleteFramebuffer(target.fbo);if(target.depth)gl.deleteRenderbuffer(target.depth);}
-  if(this.msaa){gl.deleteFramebuffer(this.msaa.fbo);gl.deleteRenderbuffer(this.msaa.color);gl.deleteRenderbuffer(this.msaa.depth);}
+ releaseAbandonGL(){
+  this.p=this.probeProgram=this.sky=this.shadowProgram=this.bloomProgram=this.postProgram=null;
+  this.envTex=this.studioTex=this.storyTex=this.atlasTex=this.townTex=null;
   this.targets=null;this.probeBuffers=[];this.shadowTarget=null;this.msaa=null;this.batches={};
  }
- initGL(){const gl=this.gl;this.contextEpoch=(this.contextEpoch||0)+1;this.releaseDisposeGL();this.floatTarget=!!gl.getExtension('EXT_color_buffer_float');gl.getExtension('OES_texture_float_linear');this.p=program(gl,SCENE_VS,SCENE_FS);this.probeProgram=program(gl,SCENE_VS,PROBE_FS);this.probeState=new Q.ProbeState();this.probeBuffers=[this.createProbe(1),this.createProbe(1)];this.probeSize=1;this.sky=program(gl,FULL_VS,SKY_FS);this.shadowProgram=program(gl,SHADOW_VS,SHADOW_FS);this.bloomProgram=program(gl,FULL_VS,BLOOM_FS);this.postProgram=program(gl,FULL_VS,POST_FS);
+ releaseDisposeGL(abandon=false){const gl=this.gl;if(!gl)return;
+  let lost=abandon;try{lost=lost||gl.isContextLost();}catch{lost=true;}
+  if(lost){this.releaseAbandonGL();return;}
+  for(const batch of Object.values(this.batches||{})){if(batch.vao)gl.deleteVertexArray(batch.vao);if(batch.instances)gl.deleteBuffer(batch.instances);if(batch.vertices)gl.deleteBuffer(batch.vertices);}
+  for(const key of ['p','probeProgram','sky','shadowProgram','bloomProgram','postProgram']){if(this[key]?.p)gl.deleteProgram(this[key].p);}
+  for(const key of ['envTex','studioTex','storyTex','atlasTex','townTex'])if(this[key])gl.deleteTexture(this[key]);
+  for(const target of [...Object.values(this.targets||{}),...(this.probeBuffers||[]),...(this.shadowTarget?[this.shadowTarget]:[])]){if(target.texture)gl.deleteTexture(target.texture);if(target.fbo)gl.deleteFramebuffer(target.fbo);if(target.depth)gl.deleteRenderbuffer(target.depth);}
+  if(this.msaa){gl.deleteFramebuffer(this.msaa.fbo);gl.deleteRenderbuffer(this.msaa.color);gl.deleteRenderbuffer(this.msaa.depth);}
+  this.releaseAbandonGL();
+ }
+ completeContextRecovery(){if(!this.contextRecoveryPending)return;this.contextRecoveryPending=false;this.contextRecoveries++;this.contextRecoveryError='';root.dispatchEvent(new CustomEvent('reborn-context-restored',{detail:{recoveries:this.contextRecoveries,epoch:this.contextEpoch}}));}
+ failContextRecovery(error){this.contextLost=true;this.contextRecoveryPending=false;this.contextRecoveryError=String(error?.message||error||'Graphics resource rebuild failed');this.error=this.contextRecoveryError;root.dispatchEvent(new CustomEvent('reborn-context-failed',{detail:{message:this.contextRecoveryError}}));}
+ initGL(restoring=false){const gl=this.gl;this.contextEpoch=(this.contextEpoch||0)+1;this.releaseDisposeGL(restoring);this.floatTarget=!!gl.getExtension('EXT_color_buffer_float');gl.getExtension('OES_texture_float_linear');this.p=program(gl,SCENE_VS,SCENE_FS);this.probeProgram=program(gl,SCENE_VS,PROBE_FS);this.probeState=new Q.ProbeState();this.probeBuffers=[this.createProbe(1),this.createProbe(1)];this.probeSize=1;this.sky=program(gl,FULL_VS,SKY_FS);this.shadowProgram=program(gl,SHADOW_VS,SHADOW_FS);this.bloomProgram=program(gl,FULL_VS,BLOOM_FS);this.postProgram=program(gl,FULL_VS,POST_FS);
  if(!this.decorated){this.static=this.world.northBerwick?this.static:decorate(this.world,this.static).concat(root.RebornArt.streetSigns(this.world));this.studioObjects=root.RebornArt.studio();this.decorated=true;}
  this.batches={};this.lamps=this.static.filter(o=>o.y>6&&o.y<8&&o.surface?.[0]===M.LAMP);
  for(const[name,g]of Object.entries(R.geometries)){
@@ -3362,10 +3469,10 @@ class PolishedRenderer extends R.Renderer{
  if(!this.low||this.frameNumber%2===1){this.scenePass(this.targets.mirror,R.mul(this.vp,mirror),1);this.texture(0,this.targets.mirror.texture);gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);}
  this.scenePass(this.targets.main,this.vp,0);if(this.msaa&&!this.low){gl.bindFramebuffer(gl.READ_FRAMEBUFFER,this.msaa.fbo);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,this.targets.main.fbo);gl.blitFramebuffer(0,0,this.canvas.width,this.canvas.height,0,0,this.canvas.width,this.canvas.height,gl.COLOR_BUFFER_BIT,gl.NEAREST);}gl.disable(gl.DEPTH_TEST);gl.bindVertexArray(null);
  this.filter(this.targets.main,this.targets.bloom,[1/this.targets.main.w,1/this.targets.main.h],1);this.filter(this.targets.bloom,this.targets.blur,[1/this.targets.bloom.w,0],0);this.filter(this.targets.blur,this.targets.bloom,[0,1/this.targets.blur.h],0);
- gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,this.canvas.width,this.canvas.height);const p=this.postProgram;gl.useProgram(p.p);this.texture(0,this.targets.main.texture);this.texture(1,this.targets.bloom.texture);gl.uniform1i(p.u('uScene'),0);gl.uniform1i(p.u('uBloom'),1);gl.uniform2f(p.u('uPixel'),1/this.canvas.width,1/this.canvas.height);gl.uniform1f(p.u('uBloomPower'),(this.low||this.settings?.reducedMotion)?0:(this.presentation==='studio'?.13:.25));gl.uniform1f(p.u('uNight'),this.night);gl.uniform1f(p.u('uTime'),this.time||0);gl.drawArrays(gl.TRIANGLES,0,3);this.drawCalls++;
+ gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,this.canvas.width,this.canvas.height);const p=this.postProgram;gl.useProgram(p.p);this.texture(0,this.targets.main.texture);this.texture(1,this.targets.bloom.texture);gl.uniform1i(p.u('uScene'),0);gl.uniform1i(p.u('uBloom'),1);gl.uniform2f(p.u('uPixel'),1/this.canvas.width,1/this.canvas.height);gl.uniform1f(p.u('uBloomPower'),(this.low||this.settings?.reducedMotion)?0:(this.presentation==='studio'?.13:.25));gl.uniform1f(p.u('uNight'),this.night);gl.uniform1f(p.u('uTime'),this.time||0);gl.drawArrays(gl.TRIANGLES,0,3);this.drawCalls++;if(this.contextRecoveryPending)this.completeContextRecovery();
  }
  drawPlate(_car,overlay){if(this.gl){overlay.hidden=true;return;}super.drawPlate(_car,overlay);}
- diagnostics(){return {pipeline:this.kind,coachwork:'004 / continuous shoulder + closed rear face',localReflections:this.gl?{...this.probeState.diagnostics(),enabled:!this.low,size:this.low?0:this.probeSize,doubleBuffered:true}:null,presentation:this.presentation||'road',studioRig:this.studioRig||0,paintWet:this.presentation==='studio'?!!this.studioWet:this.rain>.1,storySigns:!!this.storyTex,normalHandedness:'corrected',cameraEye:[...this.eye],braking:!!this.brake,initializationError:this.error||null,antialiasing:this.msaa&&!this.low?this.msaa.samples+'x MSAA':'post-process',hdr:this.gl?this.floatTarget:false,wetReflections:!!this.gl,shadowMap:this.gl&&!this.low?'1024 PCF':'off',drawCalls:this.drawCalls,triangles:this.triangleCount||0,heroTriangles:this.carTriangleCount||0,instances:this.instanceCount||0,sprayParticles:this.spray?.length||0,contextLost:!!this.contextLost,contextEpoch:this.contextEpoch||0,contextLosses:this.contextLosses||0,contextRecoveries:this.contextRecoveries||0};}
+ diagnostics(){return {pipeline:this.kind,coachwork:'004 / continuous shoulder + closed rear face',localReflections:this.gl?{...this.probeState.diagnostics(),enabled:!this.low,size:this.low?0:this.probeSize,doubleBuffered:true}:null,presentation:this.presentation||'road',studioRig:this.studioRig||0,paintWet:this.presentation==='studio'?!!this.studioWet:this.rain>.1,storySigns:!!this.storyTex,normalHandedness:'corrected',cameraEye:[...this.eye],braking:!!this.brake,initializationError:this.error||null,antialiasing:this.msaa&&!this.low?this.msaa.samples+'x MSAA':'post-process',hdr:this.gl?this.floatTarget:false,wetReflections:!!this.gl,shadowMap:this.gl&&!this.low?'1024 PCF':'off',drawCalls:this.drawCalls,triangles:this.triangleCount||0,heroTriangles:this.carTriangleCount||0,instances:this.instanceCount||0,sprayParticles:this.spray?.length||0,contextLost:!!this.contextLost,contextRecoveryPending:!!this.contextRecoveryPending,contextRecoveryError:this.contextRecoveryError||null,contextEpoch:this.contextEpoch||0,contextLosses:this.contextLosses||0,contextRecoveries:this.contextRecoveries||0};}
 }
 R.Renderer=PolishedRenderer;R.Graphics={M,SCENE_VS,SCENE_FS,SKY_FS,POST_FS,PROBE_FS,decorate,atlasCanvas,envCanvas};
 })(globalThis);
@@ -3522,11 +3629,11 @@ function persist(){
  captureSessionSave();if(saveLoadBlocked){setUXSaveStatus(false);return false;}
  let result;try{result=sessionSave.write(JSON.stringify(save),JSON.stringify(director.progress));}catch{result=sessionSave.fail('unavailable');}
  storageAvailable=result.ok;if(result.ok){[rawStoredSave,rawStoredStory]=sessionSave.expected;}
- setUXSaveStatus(storageAvailable);sessionSaveNotice();return result.ok;
+ setUXSaveStatus(storageAvailable);sessionSaveNotice();if(result.ok&&typeof crashRecoveryAfterMainSave==='function')crashRecoveryAfterMainSave();return result.ok;
 }
 let renderer;
 try{renderer=new RebornRenderer.Renderer($('world'),C.createWorld());}catch(e){$('loading').hidden=true;$('fatal').hidden=false;$('fatal-message').textContent=e.message;return;}
-window.addEventListener('reborn-vehicle-model-ready',()=>{if(renderer.gl){try{renderer.initGL();renderer.resize();}catch(e){renderer.error=e.message;}}});
+window.addEventListener('reborn-vehicle-model-ready',()=>{if(renderer.gl&&!renderer.contextLost){try{renderer.initGL();renderer.resize();}catch(e){renderer.error=e.message;}}});
 renderer.night=settings.weather==='clear'?0:1;renderer.rain=settings.weather==='rain'?1:0;
 const sim=new C.Simulation(),blackwaterWorld=sim.world;sim.car.x=300;let northBerwickWorld=null;const audio=new RebornAudio();audio.enabled=settings.sound;
 let state='menu',selected='free',pausedFromMenu=false,accumulator=0,lastFrame=0,clock=0,uiClock=0,toastUntil=0,cameraStyle=0,cameraYaw=0,cameraEye=null,cameraTarget=null,lastHealth=100,focusBefore=null,lastInput={};
@@ -3941,7 +4048,7 @@ function refreshFaults(){for(const [id,meta] of Object.entries(COMPONENTS)){cons
 function wearPart(id,amount){const part=vehicle.parts[id];if(part)part.condition=C.clamp(part.condition-Math.max(0,amount),0,100);}
 function applyVehicleCondition(initial=false){const weakest=Math.min(vehicle.oil,vehicle.coolant,vehicle.battery),thermal=vehicle.engineTempC>105?C.clamp(1-(vehicle.engineTempC-105)/58,.48,1):1,clutch=effectiveFault('clutch'),bearing=effectiveFault('bearing'),alignment=effectiveFault('alignment'),hydraulic=effectiveFault('brakeHydraulics'),tireLeak=effectiveFault('tireLeak'),limp=vehicle.diagnostics.limpMode?.58:1;sim.car.tireGrip=(.62+.38*vehicle.tires/100)*(1-bearing*.08-alignment*.06-tireLeak*.12);sim.car.brakeEffect=(.42+.58*vehicle.brakes/100)*(1-hydraulic*.46);sim.car.enginePower=(vehicle.fuel>.02&&vehicle.battery>2?1:0)*(.72+.28*weakest/100)*thermal*(1-clutch*.38)*limp;sim.car.steeringBias=vehicle.diagnostics.pullDirection*alignment*.085;sim.car.fuelAvailable=vehicle.fuel>.02&&vehicle.battery>2;sim.car.engineTempC=vehicle.engineTempC;if(initial)sim.car.health=C.clamp(vehicle.body,0,100);}
 function conditionDrivingInput(raw){const adjusted={...raw};adjusted.steer=C.clamp((Number(adjusted.steer)||0)+(sim.car.steeringBias||0)*(1-Math.min(1,Math.abs(Number(adjusted.steer)||0))*.5),-1,1);return adjusted;}
-function beginTrip(mode){weatherObserveDistance=0;save.stats.sequence++;vehicle.diagnostics.startCycles++;wearPart('starter',.035+Math.max(0,35-vehicle.battery)*.0015);refreshFaults();const starter=faultSeverity('starter');if(starter){vehicle.battery=C.clamp(vehicle.battery-starter*2.4,0,100);notify(vehicle.faults.starter.discovered?'STARTER FAULT / CRANK DRAW HIGH':'SLOW CRANK / DIAGNOSIS NEEDED',2.8);}activeTrip={id:'drive-'+save.stats.sequence,mode,world:sim.world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',startedAt:new Date().toISOString(),startClock:clock,startSimTime:sim.time,startOdometer:vehicle.odometerMiles,startVehicle:vehicleSnapshot(),startRoad:'',roads:new Set(),maxMph:0};lastCarDistance=sim.car.distance;lastRoadName='';currentRoadName='';systemAlerts.clear();systemPersistClock=0;applyVehicleCondition(true);if(memoryState().diagnosticAudio)audio.diagnosticEvent?.('starter',faultSeverity('starter'));beginMemoryRecording(mode);}
+function beginTrip(mode){weatherObserveDistance=0;save.stats.sequence++;vehicle.diagnostics.startCycles++;wearPart('starter',.035+Math.max(0,35-vehicle.battery)*.0015);refreshFaults();const starter=faultSeverity('starter');if(starter){vehicle.battery=C.clamp(vehicle.battery-starter*2.4,0,100);notify(vehicle.faults.starter.discovered?'STARTER FAULT / CRANK DRAW HIGH':'SLOW CRANK / DIAGNOSIS NEEDED',2.8);}activeTrip={id:'drive-'+save.stats.sequence,mode,world:sim.world.northBerwick?'NORTH BERWICK, MAINE':'BLACKWATER COUNTY',startedAt:new Date().toISOString(),startClock:clock,startSimTime:sim.time,startOdometer:vehicle.odometerMiles,startVehicle:vehicleSnapshot(),startRoad:'',roads:new Set(),maxMph:0};lastCarDistance=sim.car.distance;lastRoadName='';currentRoadName='';systemAlerts.clear();systemPersistClock=0;applyVehicleCondition(true);if(memoryState().diagnosticAudio)audio.diagnosticEvent?.('starter',faultSeverity('starter'));beginMemoryRecording(mode);if(typeof crashRecoveryCheckpoint==='function')crashRecoveryCheckpoint('drive-start');}
 function finishTrip(reason='RETURNED TO GARAGE'){if(!activeTrip){persist();return null;}vehicle.body=C.clamp(sim.car.health,0,100);const seconds=Math.max(0,sim.time-activeTrip.startSimTime),miles=Math.max(0,vehicle.odometerMiles-activeTrip.startOdometer),end=vehicleSnapshot(),entry={id:activeTrip.id,kind:'drive',endedAt:new Date().toISOString(),mode:activeTrip.mode,world:activeTrip.world,reason,seconds,miles,roads:activeTrip.roads.size,startRoad:activeTrip.startRoad,endRoad:currentRoadName||lastRoadName,fuelUsed:Math.max(0,activeTrip.startVehicle.fuel-end.fuel),bodyLoss:activeTrip.startVehicle.body-end.body,maxMph:activeTrip.maxMph};finishMemoryRecording(entry);if(seconds>=4||miles>=.01){appendJournal(entry);save.stats.trips++;save.stats.totalMiles+=miles;}activeTrip=null;persist();return entry;}
 function recordRoadKnowledge(deltaM){if(!sim.world.northBerwick||deltaM<=0){if(!sim.world.northBerwick)currentRoadName='';return;}const near=C.nearestRoad(sim.world,sim.car.x,sim.car.z,34);if(!near||near.distance>(near.road.width||6)/2+7){currentRoadName='';return;}const name=String(near.road.name||'').trim();if(!name||name==='North Berwick road'){currentRoadName='';return;}currentRoadName=name;let entry=roadKnowledge[name],created=false;if(!entry){entry=roadKnowledge[name]={distanceM:0,entries:0,milestone:0,lastVisit:0};created=true;save.stats.roadsDiscovered=Object.keys(roadKnowledge).length;}if(name!==lastRoadName){entry.entries++;lastRoadName=name;markMemoryRoad(name);if(activeTrip){activeTrip.roads.add(name);if(!activeTrip.startRoad)activeTrip.startRoad=name;}if(created)notify('ROAD REMEMBERED / '+name.toUpperCase(),2.6);}entry.distanceM+=deltaM;entry.lastVisit=Date.now();const score=roadMemoryScore(entry),milestone=[100,75,50,25].find(level=>score>=level)||0;if(milestone>entry.milestone){entry.milestone=milestone;if(milestone>=25)notify(name.toUpperCase()+' / ROAD MEMORY '+milestone+'%',2.2);}}
 function systemWarning(id,condition,text){if(condition&&!systemAlerts.has(id)){systemAlerts.add(id);markMemory('warning',text);notify(text,3.2);}}
@@ -4101,15 +4208,27 @@ renderer.canvas.addEventListener('wheel',e=>{if(state!=='inspect')return;e.preve
 $('transform-button').addEventListener('click',()=>action('transform'));$('pulse-button').addEventListener('click',()=>action('pulse'));for(const b of document.querySelectorAll('[data-action="camera"]'))b.addEventListener('click',()=>action('camera'));
 for(const b of document.querySelectorAll('.sound-toggle'))b.addEventListener('click',()=>action('sound'));
 for(const [id,key] of [['auto-setting','autoThrottle'],['sound-setting','sound'],['weather-setting','weather'],['quality-setting','quality'],['motion-setting','reducedMotion']])$(id).addEventListener('change',e=>{settings[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;applySettings();persist();});
-function saveOnPageHide(){if(state!=='replay')vehicle.body=C.clamp(sim.car.health,0,100);persist();}
+function saveOnPageHide(event){if(state!=='replay')vehicle.body=C.clamp(sim.car.health,0,100);if(typeof crashRecoveryBeforeExit==='function')crashRecoveryBeforeExit(event);else persist();}
 window.addEventListener('pagehide',saveOnPageHide);window.addEventListener('blur',()=>{if(state==='play')pause();else if(state==='replay')pauseMemoryReplay();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pause();else if(document.hidden&&state==='replay')pauseMemoryReplay();else if(!document.hidden&&state==='play')acquireWake();});
 window.addEventListener('resize',()=>{renderer.resize();cameraEye=null;cameraTarget=null;resizeFX();if(touch&&innerHeight>innerWidth&&state==='play'){input.clear();pause();}});
 window.addEventListener('orientationchange',()=>{input.clear();if(touch&&innerHeight>innerWidth&&state==='play')pause();setTimeout(()=>{renderer.resize();resizeFX();},180);});
 function graphicsBackup(){try{return releaseSessionBackup();}catch(_e){return null;}}
-function graphicsFailure(message){ input.clear();if(state==='play')pause();else if(state==='replay')pauseMemoryReplay();persist(); $('fatal-message').textContent=message||'Graphics recovery failed. Export this session before reloading if you need a recovery copy.';$('fatal').hidden=false; let actions=$('graphics-recovery-actions');if(!actions){actions=document.createElement('div');actions.id='graphics-recovery-actions';actions.className='session-save-actions';const exportButton=document.createElement('button');exportButton.type='button';exportButton.className='secondary';exportButton.textContent='EXPORT CURRENT SESSION';exportButton.addEventListener('click',()=>{const backup=graphicsBackup();if(backup)releaseDownload(backup,'REBORN-graphics-recovery.json');});const reloadButton=document.createElement('button');reloadButton.type='button';reloadButton.className='primary';reloadButton.textContent='RELOAD GAME';reloadButton.addEventListener('click',()=>location.reload());actions.append(exportButton,reloadButton);$('fatal-message').after(actions);} actions.hidden=false; }
-window.addEventListener('reborn-context-lost',()=>{ const replayPlaying=state==='replay'&&memoryReplay&&!memoryReplay.paused&&!memoryReplay.finished;graphicsInterruption={state,replayPlaying,at:performance.now()};input.clear(); if(state==='play')pause();else if(state==='replay')pauseMemoryReplay();persist();notify('GRAPHICS INTERRUPTED / SESSION PAUSED SAFELY',10); });
-window.addEventListener('reborn-context-restored',()=>{cameraEye=null;cameraTarget=null;accumulator=0;lastFrame=0;const previous=graphicsInterruption;graphicsInterruption=null;if(previous){$('graphics-recovery-actions')?.setAttribute('hidden','');$('fatal').hidden=true;notify(previous.state==='replay'&&previous.replayPlaying?'GRAPHICS RESTORED / REPLAY PAUSED · PRESS PLAY':'GRAPHICS RESTORED / RESUME WHEN READY',6);}});
-window.addEventListener('reborn-context-failed',e=>graphicsFailure('Graphics recovery failed'+(e.detail?.message?': '+e.detail.message:'')+'. Export this session before reloading if needed.'));
+let graphicsRecoveryTimer=0;
+function clearGraphicsRecoveryTimer(){if(graphicsRecoveryTimer){clearTimeout(graphicsRecoveryTimer);graphicsRecoveryTimer=0;}}
+function graphicsFailure(message){
+ clearGraphicsRecoveryTimer();input.clear();if(state==='play')pause();else if(state==='replay')pauseMemoryReplay();
+ if(typeof crashRecoveryCheckpoint==='function')crashRecoveryCheckpoint('graphics-failure');persist();
+ $('fatal-message').textContent=message||'Graphics recovery failed. Export this session before reloading if you need a recovery copy.';$('fatal').hidden=false;
+ let actions=$('graphics-recovery-actions');if(!actions){actions=document.createElement('div');actions.id='graphics-recovery-actions';actions.className='session-save-actions';const exportButton=document.createElement('button');exportButton.type='button';exportButton.className='secondary';exportButton.textContent='EXPORT CURRENT SESSION';exportButton.addEventListener('click',()=>{const backup=graphicsBackup();if(backup)releaseDownload(backup,'REBORN-graphics-recovery.json');});const reloadButton=document.createElement('button');reloadButton.type='button';reloadButton.className='primary';reloadButton.textContent='RESTART GRAPHICS';reloadButton.addEventListener('click',()=>{if(typeof crashRecoveryCheckpoint==='function')crashRecoveryCheckpoint('graphics-restart');location.reload();});actions.append(exportButton,reloadButton);$('fatal-message').after(actions);}actions.hidden=false;
+}
+window.addEventListener('reborn-context-lost',()=>{
+ clearGraphicsRecoveryTimer();const replayPlaying=state==='replay'&&memoryReplay&&!memoryReplay.paused&&!memoryReplay.finished;graphicsInterruption={state,replayPlaying,at:performance.now()};input.clear();if(state==='play')pause();else if(state==='replay')pauseMemoryReplay();if(typeof crashRecoveryCheckpoint==='function')crashRecoveryCheckpoint('graphics-lost');persist();notify('GRAPHICS INTERRUPTED / SESSION PAUSED SAFELY',10);
+ graphicsRecoveryTimer=setTimeout(()=>{if(renderer.contextLost||renderer.contextRecoveryPending)graphicsFailure('Graphics did not recover in time. Your local interruption checkpoint is available before restarting graphics.');},12000);
+});
+window.addEventListener('reborn-context-rebuilding',()=>notify('GRAPHICS RETURNED / VERIFYING A CLEAN FRAME…',4));
+window.addEventListener('reborn-context-restored',()=>{clearGraphicsRecoveryTimer();cameraEye=null;cameraTarget=null;accumulator=0;lastFrame=0;const previous=graphicsInterruption;graphicsInterruption=null;if(previous){const actions=$('graphics-recovery-actions');if(actions)actions.hidden=true;$('fatal').hidden=true;notify(previous.state==='replay'&&previous.replayPlaying?'GRAPHICS RESTORED / REPLAY PAUSED · PRESS PLAY':'GRAPHICS RESTORED / RESUME WHEN READY',6);}});
+window.addEventListener('reborn-context-failed',e=>graphicsFailure('Graphics recovery failed'+(e.detail?.message?': '+e.detail.message:'')+'. Export this session before restarting graphics.'));
+
 document.addEventListener('keydown',e=>{
  if(e.key==='Tab'&&(state==='pause'||state==='result'||state==='story'||state==='journey')){
   const panel=state==='story'?$('story'):state==='pause'?$('pause'):state==='journey'?$('journey'):$('result'),elements=Array.from(panel.querySelectorAll('button,input,select')).filter(el=>!el.hidden&&!el.disabled&&el.offsetParent!==null);
@@ -4251,7 +4370,7 @@ function drawWeather(dt){if(townAvailable()&&weatherDirector){drawMaineWeather(d
 function updateBest(){if(save.bestRun)$('best-menu').textContent='LOCAL BEST '+formatTime(save.bestRun);}
 function frame(timestamp){
  try{
-  const rawDelta=lastFrame?Math.max(0,(timestamp-lastFrame)/1000):1/60;lastFrame=timestamp;const dt=Math.min(rawDelta,.075);clock+=dt;
+  const rawDelta=lastFrame?Math.max(0,(timestamp-lastFrame)/1000):1/60;lastFrame=timestamp;const dt=Math.min(rawDelta,.075);clock+=dt;if(typeof crashRecoveryTick==='function')crashRecoveryTick(dt);
   frameCounter++;fpsClock+=rawDelta;if(fpsClock>=1){fps=frameCounter/fpsClock;frameCounter=0;fpsClock=0;if(settings.quality==='auto'&&renderer.gl){lowFpsSeconds=fps<42?lowFpsSeconds+1:0;if(lowFpsSeconds>=3&&renderer.scale>.65){renderer.scale=Math.max(.65,renderer.scale-.1);renderer.resize();lowFpsSeconds=0;}}}
   // Poll controller button edges while paused too, so Start can resume.
   if(state!=='play'&&state!=='error')input.sample(sim.car,0,false);
@@ -4266,14 +4385,14 @@ function frame(timestamp){
    else $('damage-flash').style.opacity='0';lastHealth=sim.car.health;
   }else if(state==='menu'||state==='inspect'||state==='story'){sim.time+=dt;if(state==='inspect'){sim.car.modeBlend=C.approach(sim.car.modeBlend,sim.car.mode==='reborn'?1:0,3,dt);sim.car.rallyBlend=C.approach(sim.car.rallyBlend,sim.car.mode==='rally'?1:0,3,dt);}}
   const replaySound=state==='replay'&&memoryReplay?memoryReplay.sample():null;audio.update(sim.car,replaySound?{throttle:replaySound.throttle,brake:replaySound.brake}:lastInput,state==='play'||state==='replay'&&!memoryReplay?.paused&&!memoryReplay?.finished);updateDiagnosticAudio();updateEchoAudio();
-  if(state!=='play')sim.memoryProps=[];if(releaseRenderDue(timestamp)){updateCamera(dt);renderer.storyGoal=director.objective(sim)?.destination||passengerObjective()?.destination||null;renderer.update(sim,dt,weatherRenderSettings());renderer.render();renderer.drawPlate(sim.car,$('plate'));drawWeather(dt);updateWaypoint();}
+  if(state!=='play')sim.memoryProps=[];if(releaseRenderDue(timestamp)){updateCamera(dt);renderer.storyGoal=director.objective(sim)?.destination||passengerObjective()?.destination||null;if(!renderer.contextLost){try{renderer.update(sim,dt,weatherRenderSettings());renderer.render();renderer.drawPlate(sim.car,$('plate'));drawWeather(dt);updateWaypoint();}catch(renderError){if(renderer.contextRecoveryPending){renderer.failContextRecovery(renderError);graphicsFailure('The graphics device returned, but resource verification failed: '+renderError.message);return requestAnimationFrame(frame);}throw renderError;}}}
   uiClock+=dt;if(uiClock>=.10){uiClock=0;if(state==='play')updateHUD();}
   if(clock>toastUntil)$('toast').classList.remove('visible');if(releaseInitialized)releaseFlushNotifications();
- }catch(e){frameErrors.push(String(e));if(frameErrors.length===1){state='error';input.clear();input.blocked=true;$('fatal-message').textContent='The drive stopped safely: '+e.message;$('fatal').hidden=false;console.error(e);}return;}
+ }catch(e){if(typeof crashRecoveryCheckpoint==='function')crashRecoveryCheckpoint('fatal-frame');frameErrors.push(String(e));if(frameErrors.length===1){state='error';input.clear();input.blocked=true;$('fatal-message').textContent='The drive stopped safely: '+e.message;$('fatal').hidden=false;console.error(e);}return;}
  requestAnimationFrame(frame);
 }
 // Read-only diagnostics are useful for regression tests and issue reports. No remote endpoint.
-window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,release:releaseSnapshot(),graphics:{...(renderer.diagnostics?.()||{}),interruption:graphicsInterruption?{...graphicsInterruption}:null},story:director.snapshot(),town:townDirector?JSON.parse(JSON.stringify(townDirector.state)):null,weather:weatherSnapshot(),echoes:echoDirector?{...echoDirector.snapshot(sim.car),audioNodes:echoAudio?.nodes.length||0,audioLevel:echoAudio?.gain.gain.value||0}:null,passengers:passengerDirector?passengerDirector.snapshot():{state:save.journeys,active:null,objective:null},memories:memorySnapshot(),livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,serviceHistory:serviceHistory.length,activeFaults:activeFaults().map(([id,fault])=>({id,severity:fault.severity,discovered:fault.discovered})),activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
+window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,release:releaseSnapshot(),graphics:{...(renderer.diagnostics?.()||{}),interruption:graphicsInterruption?{...graphicsInterruption}:null},recovery:typeof crashRecoverySnapshot==='function'?crashRecoverySnapshot():null,story:director.snapshot(),town:townDirector?JSON.parse(JSON.stringify(townDirector.state)):null,weather:weatherSnapshot(),echoes:echoDirector?{...echoDirector.snapshot(sim.car),audioNodes:echoAudio?.nodes.length||0,audioLevel:echoAudio?.gain.gain.value||0}:null,passengers:passengerDirector?passengerDirector.snapshot():{state:save.journeys,active:null,objective:null},memories:memorySnapshot(),livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,serviceHistory:serviceHistory.length,activeFaults:activeFaults().map(([id,fault])=>({id,severity:fault.severity,discovered:fault.discovered})),activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
 $('input-caption').innerHTML=touch?'LANDSCAPE TOUCH · LEFT STICK = ARROW KEYS<br><span>Third person default · tap CAM for driver view.</span>':'WASD / ARROWS · CONTROLLER READY<br><span>Third person default · C changes camera.</span>';
 /* WORKSHOP_MEMORY_UI_BEGIN */
 // Optional driveway story inside the paused Workshop. No timers or repair gates.
@@ -4391,6 +4510,7 @@ function sessionSaveNotice(){
  const canRestore=status.canWrite&&status.reason!=='unavailable';
  if($('release-import-confirm'))$('release-import-confirm').disabled=!releaseImport||!canRestore;
  if($('release-reset-confirm'))$('release-reset-confirm').disabled=$('release-reset-text').value!=='RESET'||!canRestore;
+ if(typeof crashRecoveryRender==='function')crashRecoveryRender();
  const node=$('ux-save');if(node&&!sessionSave.last.ok){node.textContent=status.reason==='pending'?'CHECKING SAVE OWNERSHIP':status.reason==='other'?'OTHER TAB SAVING · SESSION ONLY':status.conflict?'NEWER STORED SAVE · SESSION ONLY':'SAVE UNAVAILABLE · EXPORT SESSION';node.dataset.error=String(problem);}
  document.body.dataset.saveSession=problem?'protected':'ready';
  $('pause-button').title=problem?'Save protected — pause to export this session':'Pause and settings';
@@ -4404,7 +4524,7 @@ function sessionReloadLatest(){
  // The button means discard this RAM session in favor of the stored pair. A
  // separate export action is always available first. No pagehide write follows.
  if(!confirm('Reload the stored game? Unsaved changes in this tab will be discarded. Export this session first to keep them.'))return;
- saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);if(typeof crashRecoveryClearCurrent==='function')crashRecoveryClearCurrent();sessionSave.release();location.reload();
 }
 function initSessionSaves(){
  const banner=document.createElement('section');banner.id='session-save-banner';banner.hidden=true;banner.setAttribute('aria-label','Save protection');
@@ -4422,6 +4542,126 @@ function initSessionSaves(){
 }
 
 /* SESSION_SAVE_UI_END */
+/* CRASH_RECOVERY_UI_BEGIN */
+// Build 020: local interrupted-session review. Nothing is restored automatically.
+const CR=C.CrashRecovery;
+const crashRecoveryId=CR.makeId();
+const crashRecoveryLocal=new CR.Journal(()=>localStorage,{id:crashRecoveryId});
+const crashRecoverySession=new CR.Journal(()=>sessionStorage,{id:crashRecoveryId});
+let crashRecoveryClock=0,crashRecoveryLast={ok:false,reason:'idle'},crashRecoveryCandidate=null;
+let crashRecoveryInitialized=false,crashRecoveryRestoring=false;
+
+function crashRecoveryBackup(){
+ captureSessionSave();
+ return {format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)};
+}
+function crashRecoveryRuntime(){
+ let road=currentRoadName||lastRoadName||'';
+ if(!road&&sim.world?.northBerwick){const near=C.nearestRoad(sim.world,sim.car.x,sim.car.z,45);road=near?.road?.name||'';}
+ return {world:sim.world?.northBerwick?'North Berwick, Maine':'Blackwater County',mode:state==='replay'?'replay':sim.mode||state,road,odometer:vehicle.odometerMiles,fuel:vehicle.fuel,activeTrip:!!activeTrip,recordingSeconds:memoryRecorder?.draft?.duration||0};
+}
+function crashRecoveryActive(){
+ return !!(activeTrip||memoryReplay||memoryRecorder?.draft||passengerDirector?.state?.active||echoDirector?.state?.active||['play','replay'].includes(state));
+}
+function crashRecoveryCheckpoint(reason='heartbeat'){
+ if(crashRecoveryRestoring)return {ok:false,reason:'restoring'};
+ let backup;try{backup=crashRecoveryBackup();}catch{return crashRecoveryLast={ok:false,reason:'invalid'};}
+ const value={backup,reason,state,build:C.VERSION,baseFingerprint:C.CrashRecovery.pairFingerprint(...sessionSave.expected),runtime:crashRecoveryRuntime()};
+ let result=crashRecoveryLocal.checkpoint(value),source='local';
+ if(!result.ok){result=crashRecoverySession.checkpoint(value);source='session';}
+ crashRecoveryLast={...result,source,at:Date.now()};
+ crashRecoveryRender();
+ return crashRecoveryLast;
+}
+function crashRecoveryAfterMainSave(){
+ if(crashRecoveryInitialized&&crashRecoveryActive())crashRecoveryCheckpoint('main-save');
+}
+function crashRecoveryClearCurrent(){
+ const a=crashRecoveryLocal.clear(),b=crashRecoverySession.clear();
+ crashRecoveryLast={ok:a||b,reason:a||b?'cleared':'unavailable',at:Date.now()};
+ crashRecoveryRender();return a||b;
+}
+function crashRecoveryRecords(){
+ const local=crashRecoveryLocal.list().map(record=>({record,source:'local'}));
+ const session=crashRecoverySession.list().map(record=>({record,source:'session'}));
+ const sourceById=new Map();for(const item of [...session,...local])sourceById.set(item.record.id,item.source);
+ return CR.candidates([...local,...session].map(item=>item.record),...sessionSave.expected,crashRecoveryId).map(record=>({...record,source:sourceById.get(record.id)||'local'}));
+}
+function crashRecoveryDiscard(record){
+ if(!record)return false;
+ // Remove both copies if a storage fallback left the same record in both stores.
+ const a=crashRecoveryLocal.discard(record.id),b=crashRecoverySession.discard(record.id);
+ return a||b;
+}
+function crashRecoveryCurrent(){
+ return crashRecoveryLocal.list(false).find(r=>r.id===crashRecoveryId)||crashRecoverySession.list(false).find(r=>r.id===crashRecoveryId)||null;
+}
+function crashRecoveryStoredFingerprint(){
+ try{const current=sessionSave.read();return CR.pairFingerprint(...current.pair);}catch{return '';}
+}
+function crashRecoveryCanRestore(record){
+ const status=sessionSave.status(),fingerprint=crashRecoveryStoredFingerprint();
+ return !!record&&status.canWrite&&!saveLoadBlocked&&fingerprint&&record.baseFingerprint===fingerprint;
+}
+function crashRecoveryWhen(ms){
+ const seconds=Math.max(0,Math.round((Date.now()-ms)/1000));
+ if(seconds<60)return seconds+' seconds ago';const minutes=Math.round(seconds/60);if(minutes<60)return minutes+' minutes ago';const hours=Math.round(minutes/60);return hours+' hours ago';
+}
+function crashRecoverySummary(record){
+ const r=record?.runtime||{},where=r.road||r.world||'the previous drive',odo=Number(r.odometer||record?.backup?.save?.vehicle?.odometerMiles||0).toFixed(1);
+ return 'Interrupted '+(record?.state||'session')+' · '+where+' · '+odo+' mi · '+crashRecoveryWhen(record.updatedAt)+'. Recovery returns persistent progress to the garage; it does not resume the exact road position.';
+}
+function crashRecoveryDownload(record=crashRecoveryCandidate){
+ if(!record)return false;releaseDownload(JSON.stringify(record.backup,null,2),'REBORN-interrupted-session-'+record.id+'.json');return true;
+}
+function crashRecoveryRender(){
+ if(!crashRecoveryInitialized)return;
+ const records=crashRecoveryRecords();crashRecoveryCandidate=records[0]||null;
+ const banner=$('crash-recovery-banner'),message=$('crash-recovery-message'),details=$('crash-recovery-details');
+ if(banner){banner.hidden=!crashRecoveryCandidate;if(crashRecoveryCandidate){details.textContent=crashRecoverySummary(crashRecoveryCandidate);const can=crashRecoveryCanRestore(crashRecoveryCandidate);$('crash-recovery-restore').disabled=!can;$('crash-recovery-restore').title=can?'Restore this reviewed local checkpoint':'Close other game tabs and ensure the stored game has not changed since this checkpoint';message.textContent=can?'Review, download, or restore this local checkpoint. Nothing changes until you choose.':sessionSave.status().canWrite?'Stored progress changed after this checkpoint. Download it for review; automatic overwrite is blocked.':'Another tab owns the stored save. Download this checkpoint or close the other tab before restoring.';}}
+ const current=crashRecoveryCurrent(),status=$('crash-recovery-current-status'),exportButton=$('crash-recovery-current-export');
+ if(status){status.textContent=current?'Local emergency checkpoint · '+crashRecoveryWhen(current.updatedAt)+' · '+(crashRecoveryLast.source==='session'?'temporary tab storage':'browser storage'):'No active interrupted-session checkpoint. One is created during a drive or replay.';exportButton.disabled=!current;}
+ if($('crash-recovery-count'))$('crash-recovery-count').textContent=records.length>1?records.length+' interrupted sessions found. The newest is shown.':'';
+}
+function crashRecoveryRestore(){
+ const record=crashRecoveryCandidate;if(!record)return;
+ if(!crashRecoveryCanRestore(record)){crashRecoveryRender();return;}
+ if(!confirm('Restore this interrupted session to the garage? The current stored game will be preserved as the pre-restore recovery copy.'))return;
+ crashRecoveryRestoring=true;
+ const result=releaseRestoreBackup(record.backup,{resultNode:'crash-recovery-message',beforeReload:()=>{crashRecoveryDiscard(record);crashRecoveryClearCurrent();}});
+ if(!result?.ok){crashRecoveryRestoring=false;crashRecoveryRender();}
+}
+function crashRecoveryTick(dt){
+ if(!crashRecoveryInitialized||!crashRecoveryActive()||crashRecoveryRestoring)return;
+ crashRecoveryClock+=Math.max(0,Number(dt)||0);if(crashRecoveryClock>=3){crashRecoveryClock=0;crashRecoveryCheckpoint('heartbeat');}
+}
+function crashRecoveryBeforeExit(event){
+ if(event?.persisted){crashRecoveryCheckpoint('bfcache');return false;}
+ const saved=persist();if(saved)crashRecoveryClearCurrent();else crashRecoveryCheckpoint('page-exit-unsaved');return saved;
+}
+function crashRecoverySnapshot(){
+ const records=crashRecoveryRecords(),current=crashRecoveryCurrent();
+ const small=record=>record?{id:record.id,updatedAt:record.updatedAt,reason:record.reason,state:record.state,baseMatches:record.baseFingerprint===crashRecoveryStoredFingerprint(),runtime:{...record.runtime}}:null;
+ return {id:crashRecoveryId,last:{...crashRecoveryLast,record:undefined},current:small(current),candidates:records.length,candidate:small(records[0])};
+}
+function initCrashRecovery(){
+ const banner=document.createElement('aside');banner.id='crash-recovery-banner';banner.className='crash-recovery-card';banner.hidden=true;banner.setAttribute('aria-label','Interrupted session recovery');
+ banner.innerHTML='<strong>INTERRUPTED SESSION FOUND</strong><p id="crash-recovery-details"></p><p id="crash-recovery-message" role="status" aria-live="polite"></p><p id="crash-recovery-count"></p><div class="crash-recovery-actions"><button id="crash-recovery-download" class="secondary" type="button">DOWNLOAD RECOVERY</button><button id="crash-recovery-restore" class="primary" type="button">RESTORE TO GARAGE</button><button id="crash-recovery-discard" class="quiet" type="button">KEEP STORED GAME</button></div>';
+ document.querySelector('.launch-panel').prepend(banner);
+ const panel=document.createElement('section');panel.id='crash-recovery-current';panel.className='crash-recovery-card crash-recovery-settings';panel.innerHTML='<strong>LOCAL INTERRUPTION RECOVERY</strong><p id="crash-recovery-current-status"></p><p>While a drive or replay is active, REBORN keeps one bounded local checkpoint for this tab. A normal successful exit removes it.</p><div class="crash-recovery-actions"><button id="crash-recovery-current-export" class="secondary" type="button">EXPORT CURRENT CHECKPOINT</button><button id="crash-recovery-checkpoint" class="secondary" type="button">CHECKPOINT NOW</button></div>';
+ document.querySelector('#pause .ux-settings-body').prepend(panel);
+ $('crash-recovery-download').addEventListener('click',()=>crashRecoveryDownload());
+ $('crash-recovery-restore').addEventListener('click',crashRecoveryRestore);
+ $('crash-recovery-discard').addEventListener('click',()=>{if(crashRecoveryCandidate&&confirm('Keep the current stored game and discard this interrupted-session checkpoint?')){crashRecoveryDiscard(crashRecoveryCandidate);crashRecoveryRender();}});
+ $('crash-recovery-current-export').addEventListener('click',()=>crashRecoveryDownload(crashRecoveryCurrent()));
+ $('crash-recovery-checkpoint').addEventListener('click',()=>crashRecoveryCheckpoint('manual'));
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&crashRecoveryActive())crashRecoveryCheckpoint('hidden');});
+ document.addEventListener('freeze',()=>crashRecoveryCheckpoint('freeze'));
+ window.addEventListener('pageshow',event=>{if(event.persisted){crashRecoveryClearCurrent();crashRecoveryClock=0;}crashRecoveryRender();});
+ crashRecoveryInitialized=true;crashRecoveryRender();
+}
+
+/* CRASH_RECOVERY_UI_END */
 /* RELEASE_UI_BEGIN */
 // Build 018 application adapter. State transitions, not CSS, own paused work.
 let releaseInitialized=false,releaseGroup='jetta',releaseRouter=null,releaseRoute=null;
@@ -4504,16 +4744,17 @@ function releaseShowDialog(kind){
 function releaseCloseDialog(){const d=$('release-dialog');if(d.open)d.close();releaseImport=null;$('release-import-confirm').disabled=true;$('release-import-file').value='';$('release-import-preview').textContent='';releaseDialogReturn?.focus?.focus?.();}
 function releaseSessionBackup(){captureSessionSave();return JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2);}
 function releaseDownload(text,name){const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function releaseRestoreBackup(value){
- if(!value)return;
- let check=sessionSave.check();if(!check.ok){$('release-dialog-result').textContent=check.message;sessionSaveNotice();return;}
+function releaseRestoreBackup(value,options={}){
+ const resultNode=$(options.resultNode||'release-dialog-result');
+ if(!value)return {ok:false,reason:'missing'};
+ let check=sessionSave.check();if(!check.ok){if(resultNode)resultNode.textContent=check.message;sessionSaveNotice();return check;}
  // Capture RAM for export, but do not overwrite the stored original merely to
  // prepare a restore. Preserve its exact raw pair, including absent/corrupt data.
  captureSessionSave();
  const previous={format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:check.pair[0],story:check.pair[1]};
  const result=sessionSave.write(JSON.stringify(value.save),JSON.stringify(S.validateProgress(value.story)),{key:'995.reborn.before-restore.v1',text:JSON.stringify(previous)});
- if(!result.ok){storageAvailable=false;$('release-dialog-result').textContent=result.message;sessionSaveNotice();return;}
- saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
+ if(!result.ok){storageAvailable=false;if(resultNode)resultNode.textContent=result.message;sessionSaveNotice();return result;}
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);try{options.beforeReload?.();}catch(_error){}sessionSave.release();location.reload();return result;
 }
 function releaseBuildRoute(){
  if(!uxDestination||!sim.world.northBerwick){releaseRoute=null;return;}
@@ -4585,7 +4826,7 @@ function initReleaseUX(){
 }
 
 /* RELEASE_UI_END */
-initDriveStoriesUI();initDriverUX();initWeatherUI();initEchoUI();initMemoryReplayUI();initWorkshopMemory();initReleaseUX();initSessionSaves();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
+initDriveStoriesUI();initDriverUX();initWeatherUI();initEchoUI();initMemoryReplayUI();initWorkshopMemory();initReleaseUX();initSessionSaves();initCrashRecovery();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
 if(location.protocol.startsWith('http')&&window.isSecureContext&&'serviceWorker'in navigator&&!document.body.dataset.standalone){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
 })();
 

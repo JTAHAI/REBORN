@@ -79,16 +79,17 @@ function releaseShowDialog(kind){
 function releaseCloseDialog(){const d=$('release-dialog');if(d.open)d.close();releaseImport=null;$('release-import-confirm').disabled=true;$('release-import-file').value='';$('release-import-preview').textContent='';releaseDialogReturn?.focus?.focus?.();}
 function releaseSessionBackup(){captureSessionSave();return JSON.stringify({format:'REBORN_BACKUP_V1',exportedAt:new Date().toISOString(),save:C.validateSave(save),story:S.validateProgress(director.progress)},null,2);}
 function releaseDownload(text,name){const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function releaseRestoreBackup(value){
- if(!value)return;
- let check=sessionSave.check();if(!check.ok){$('release-dialog-result').textContent=check.message;sessionSaveNotice();return;}
+function releaseRestoreBackup(value,options={}){
+ const resultNode=$(options.resultNode||'release-dialog-result');
+ if(!value)return {ok:false,reason:'missing'};
+ let check=sessionSave.check();if(!check.ok){if(resultNode)resultNode.textContent=check.message;sessionSaveNotice();return check;}
  // Capture RAM for export, but do not overwrite the stored original merely to
  // prepare a restore. Preserve its exact raw pair, including absent/corrupt data.
  captureSessionSave();
  const previous={format:'REBORN_RAW_RECOVERY',exportedAt:new Date().toISOString(),save:check.pair[0],story:check.pair[1]};
  const result=sessionSave.write(JSON.stringify(value.save),JSON.stringify(S.validateProgress(value.story)),{key:'995.reborn.before-restore.v1',text:JSON.stringify(previous)});
- if(!result.ok){storageAvailable=false;$('release-dialog-result').textContent=result.message;sessionSaveNotice();return;}
- saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);sessionSave.release();location.reload();
+ if(!result.ok){storageAvailable=false;if(resultNode)resultNode.textContent=result.message;sessionSaveNotice();return result;}
+ saveLoadBlocked=true;window.removeEventListener('pagehide',saveOnPageHide);try{options.beforeReload?.();}catch(_error){}sessionSave.release();location.reload();return result;
 }
 function releaseBuildRoute(){
  if(!uxDestination||!sim.world.northBerwick){releaseRoute=null;return;}

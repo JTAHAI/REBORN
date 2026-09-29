@@ -1,0 +1,12 @@
+.crash-recovery-card{border:1px solid rgba(238,190,126,.55);background:rgba(18,38,43,.94);padding:14px 16px;margin:0 0 12px;color:#dce7de;box-shadow:0 8px 28px #07141666}
+.crash-recovery-card>strong{display:block;color:#eebe7e;font-size:10px;letter-spacing:1.5px;margin-bottom:7px}
+.crash-recovery-card p{font-size:10px;line-height:1.55;margin:5px 0;color:#c3d0c7}
+.crash-recovery-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:stretch}
+.crash-recovery-actions button{min-height:44px;flex:1 1 150px}
+.crash-recovery-actions .primary{min-width:0;padding:10px 14px;font-size:9px;gap:8px}
+#crash-recovery-discard{align-self:center;min-height:44px}
+#crash-recovery-count:empty{display:none}
+.crash-recovery-settings{margin-top:0}
+body[data-state="menu"] #crash-recovery-banner{max-width:780px}
+@media(max-width:600px) and (orientation:portrait){#crash-recovery-banner{max-height:35vh;overflow:auto;padding:11px 12px}.crash-recovery-card p{font-size:9px}.crash-recovery-actions button{flex-basis:100%;font-size:8px}.crash-recovery-actions .quiet{font-size:10px}}
+@media(max-height:540px) and (orientation:landscape){#crash-recovery-banner{max-height:46vh;overflow:auto;padding:9px 11px;margin-bottom:7px}.crash-recovery-card>strong{font-size:8px}.crash-recovery-card p{font-size:8px;line-height:1.35;margin:3px 0}.crash-recovery-actions{margin-top:6px}.crash-recovery-actions button{min-height:36px;padding:6px 9px}}
