@@ -9,6 +9,7 @@ from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 import os,threading,tempfile,json
 from pathlib import Path
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
+from hub_helpers import hub_tab
 root=Path(__file__).resolve().parent.parent;site=root/'site-dist';out=Path(os.environ.get('REBORN_EVIDENCE',tempfile.mkdtemp(prefix='reborn-graphics-')));out.mkdir(parents=True,exist_ok=True)
 class H(SimpleHTTPRequestHandler):
  def __init__(self,*a,**k):super().__init__(*a,directory=str(site),**k)
@@ -68,7 +69,7 @@ try:
   try:page.wait_for_function("REBORN.snapshot().memories.state.draft && REBORN.snapshot().memories.state.draft.duration>=3.2",timeout=60000)
   finally:page.keyboard.up('ArrowUp')
   page.keyboard.press('Escape');page.locator('#garage').click();page.wait_for_function("REBORN.snapshot().appState==='menu'")
-  page.locator('#journey-open').click();page.locator('#ux-tab-memories').click();page.locator('[data-memory-action="replay"]').click();page.wait_for_function("REBORN.snapshot().appState==='replay'")
+  page.locator('#journey-open').click();hub_tab(page,'memories');page.locator('[data-memory-action="replay"]').click();page.wait_for_function("REBORN.snapshot().appState==='replay'")
   page.locator('#memory-replay-toggle').click();page.wait_for_function("REBORN.snapshot().memories.replay.paused===false")
   page.evaluate("document.getElementById('world').dispatchEvent(new Event('webglcontextlost',{cancelable:true}))")
   page.wait_for_function("REBORN.snapshot().graphics.contextLost===true && REBORN.snapshot().memories.replay.paused===true");t=page.evaluate('REBORN.snapshot().memories.replay.time');page.wait_for_timeout(400);assert abs(page.evaluate('REBORN.snapshot().memories.replay.time')-t)<.02
