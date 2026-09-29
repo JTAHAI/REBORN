@@ -1,0 +1,114 @@
+name: REBORN Build 020 recovery integrity
+on:
+  push:
+    branches: [chatgpt/reborn-pass11-crash-recovery]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [core, recovery, graphics, session, navigation, updates, release, ux, memory, workshop, weather, passengers, echoes, website]
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass11-evidence/screenshots
+      REBORN_EVIDENCE: /tmp/pass11-evidence/browser
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Build exact static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pass11-evidence
+          npm run build:site 2>&1 | tee /tmp/pass11-evidence/build.log
+      - name: Browser dependencies
+        if: matrix.gate != 'core'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Independent acceptance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            case '${{ matrix.gate }}' in
+              core) npm test; npm run validate:assets; npm run test:http; node tests/controls-acceptance.cjs; node tests/driving-behavior.cjs; node tests/readability-acceptance.cjs; node tests/vehicle-shell-acceptance.cjs; node tests/town-packaging.cjs; npm run test:site;;
+              recovery) npm run test:recovery:browser;;
+              graphics) npm run test:graphics:browser;;
+              session) npm run test:session:browser;;
+              navigation) npm run test:navigation:browser;;
+              updates) npm run test:updates:browser;;
+              release) npm run test:release:browser;;
+              ux) npm run test:ux;;
+              memory) npm run test:memory:browser;;
+              workshop) npm run test:workshop:browser;;
+              weather) npm run test:weather:browser;;
+              passengers) npm run test:stories:browser; npm run test:stories:packaged;;
+              echoes) npm run test:echo:browser;;
+              website) npm run test:site:browser;;
+            esac
+            git diff --exit-code
+          } 2>&1 | tee /tmp/pass11-evidence/results.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass11-${{ matrix.gate }}-evidence
+          path: /tmp/pass11-evidence/
+          retention-days: 7
+  packages:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Build twice and require byte-identical packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run package:site
+          cp packages/SHA256SUMS.txt /tmp/first-build.txt
+          npm run package:site
+          cmp /tmp/first-build.txt packages/SHA256SUMS.txt
+          npm run test:site
+          git diff --exit-code
+          cp site-dist/release.json packages/release.json
+          git rev-parse HEAD > packages/SOURCE-COMMIT.txt
+          git diff 201a628b4c9819385f9b90b74a0e0991aa0e5ae7 HEAD --stat > packages/CHANGES.txt
+          cat > packages/VERIFICATION.txt <<'TXT'
+          Build 020 packages were emitted only after all fourteen independent gates passed.
+          Every piped command in the gate workflow uses set -euo pipefail.
+          Native WEBGL_lose_context observation and deterministic production-event coverage are reported separately.
+          Chromium software rendering and touch emulation are not physical-device certification.
+          TXT
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass11-verified-packages
+          path: packages/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Export verified source history
+        run: git bundle create /tmp/reborn-pass11-verified-source.bundle --all
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass11-verified-source
+          path: /tmp/reborn-pass11-verified-source.bundle
+          retention-days: 3
