@@ -19,6 +19,12 @@ single-writer guard performs its own byte comparison before writing and retains 
 exact raw pre-restore copy. A second game tab remains playable and exportable but
 cannot use emergency recovery to bypass session-only save protection.
 
+The manual checkpoint/export controls are appended to the paused settings panel,
+so the established keyboard entry point remains the first ordinary setting. When
+save protection is active, the visible protected-session export remains the first
+focus target. This preserves the existing desktop and touch focus-loop contract
+while keeping recovery controls reachable at the end of the same dialog.
+
 Graphics context loss now stops all WebGL update/render calls until restoration.
 Invalid pre-loss GPU handles are abandoned instead of deleted through a lost
 context. Resources are rebuilt under a new generation and recovery is announced
