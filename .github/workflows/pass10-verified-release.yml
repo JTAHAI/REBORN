@@ -1,0 +1,123 @@
+name: REBORN Build 019 verified release
+on:
+  push:
+    branches: [chatgpt/reborn-pass10-final-verified]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [core, graphics, session, navigation, updates, release, ux, memory, workshop, weather, passengers, echoes, website]
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_SCREENSHOTS: /tmp/pass10-evidence/screenshots
+      REBORN_EVIDENCE: /tmp/pass10-evidence/browser
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Build complete website
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pass10-evidence
+          npm run build:site 2>&1 | tee /tmp/pass10-evidence/build.log
+      - if: matrix.gate != 'core'
+        name: Browser dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Independent acceptance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            case '${{ matrix.gate }}' in
+              core)
+                npm test
+                npm run validate:assets
+                npm run test:http
+                node tests/controls-acceptance.cjs
+                node tests/driving-behavior.cjs
+                node tests/readability-acceptance.cjs
+                node tests/vehicle-shell-acceptance.cjs
+                node tests/town-packaging.cjs
+                npm run test:site
+                ;;
+              graphics) npm run test:graphics:browser;;
+              session) npm run test:session:browser;;
+              navigation) npm run test:navigation:browser;;
+              updates) npm run test:updates:browser;;
+              release) npm run test:release:browser;;
+              ux) npm run test:ux;;
+              memory) npm run test:memory:browser;;
+              workshop) npm run test:workshop:browser;;
+              weather) npm run test:weather:browser;;
+              passengers) npm run test:stories:browser; npm run test:stories:packaged;;
+              echoes) npm run test:echo:browser;;
+              website) npm run test:site:browser;;
+            esac
+            git diff --exit-code
+          } 2>&1 | tee /tmp/pass10-evidence/results.log
+      - name: Record exact source
+        if: always()
+        shell: bash
+        run: |
+          git rev-parse HEAD > /tmp/pass10-evidence/SOURCE-COMMIT.txt
+          git write-tree > /tmp/pass10-evidence/SOURCE-TREE.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass10-verified-${{ matrix.gate }}-evidence
+          path: /tmp/pass10-evidence/
+          retention-days: 7
+  packages:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Rebuild twice and require identical complete packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run package:site
+          cp packages/SHA256SUMS.txt /tmp/first-build.txt
+          npm run package:site
+          cmp /tmp/first-build.txt packages/SHA256SUMS.txt
+          npm run test:site
+          git diff --exit-code
+          cp site-dist/release.json packages/release.json
+          git rev-parse HEAD > packages/SOURCE-COMMIT.txt
+          git write-tree > packages/SOURCE-TREE.txt
+          git diff b379b4d3f6884f9548855cf1798387003edcb39f HEAD --stat > packages/CHANGES.txt
+          git bundle create /tmp/reborn-pass10-verified-source.bundle --all
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass10-final-packages
+          path: packages/
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass10-final-source
+          path: /tmp/reborn-pass10-verified-source.bundle
+          retention-days: 3
