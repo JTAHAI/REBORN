@@ -1,0 +1,51 @@
+name: REBORN Pass 11 baseline graphics diagnosis
+on:
+  push:
+    branches: [chatgpt/reborn-pass11-drive-resume]
+    paths: [.github/workflows/pass11-graphics-diagnose.yml]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_EVIDENCE: /tmp/reborn-pass11-baseline
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 201a628b4c9819385f9b90b74a0e0991aa0e5ae7
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm run build:site
+      - name: Instrument the existing failing assertion
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/graphics-recovery-browser.py')
+          s=p.read_text()
+          old="restored=page.evaluate('REBORN.snapshot()');assert restored['appState']=='pause' and restored['graphics']['contextEpoch']>before['graphics']['contextEpoch'] and not errors"
+          new="restored=page.evaluate('REBORN.snapshot()');print('RESTORE_DIAGNOSTIC',json.dumps({'before':before,'paused':paused,'restored':restored,'errors':errors},default=str),flush=True);assert restored['appState']=='pause' and restored['graphics']['contextEpoch']>before['graphics']['contextEpoch'] and not errors"
+          assert old in s
+          p.write_text(s.replace(old,new))
+          PY
+      - run: |
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Reproduce Build 019 graphics restore failure with pipefail
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:graphics:browser 2>&1 | tee /tmp/reborn-pass11-baseline/diagnostic.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pass11-baseline-graphics-diagnostic
+          path: /tmp/reborn-pass11-baseline/
+          retention-days: 3
