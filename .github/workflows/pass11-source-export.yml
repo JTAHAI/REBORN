@@ -1,0 +1,23 @@
+name: REBORN Pass 11 source export
+on:
+  push:
+    branches: [chatgpt/reborn-pass11-drive-resume]
+    paths: [.github/workflows/pass11-source-export.yml]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export exact source and repository history
+        run: git bundle create /tmp/reborn-pass11-source.bundle --all
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pass11-source
+          path: /tmp/reborn-pass11-source.bundle
+          retention-days: 3
