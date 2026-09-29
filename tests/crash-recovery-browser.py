@@ -23,11 +23,12 @@ try:
   ctx=browser.new_context(viewport={'width':1100,'height':720},accept_downloads=True);ctx.add_init_script("if(!localStorage.getItem('995.reborn.save.v1'))localStorage.setItem('995.reborn.save.v1',JSON.stringify({version:1,vehicle:{odometerMiles:995,fuel:70},settings:{quality:'low',sound:false,tutorialSeen:true}}))")
   page=ctx.new_page();page.set_default_timeout(90000);page.goto(url);ready(page);page.locator('#drive').click();page.wait_for_function("REBORN.snapshot().appState==='play'")
   stored_at_start=page.evaluate("JSON.parse(localStorage.getItem('995.reborn.save.v1')).vehicle.odometerMiles")
+  initial_checkpoint=page.evaluate('REBORN.snapshot().recovery.current')
   page.keyboard.down('ArrowUp')
   try:
-   page.wait_for_function("REBORN.snapshot().recovery.current?.reason==='heartbeat' && REBORN.snapshot().recovery.current.runtime.odometer>"+str(stored_at_start),timeout=30000)
+   page.wait_for_function("REBORN.snapshot().recovery.current && REBORN.snapshot().recovery.current.updatedAt>"+str(initial_checkpoint['updatedAt'])+" && REBORN.snapshot().recovery.current.runtime.odometer>"+str(stored_at_start),timeout=30000)
   finally:page.keyboard.up('ArrowUp')
-  automatic=page.evaluate('REBORN.snapshot().recovery.current');assert automatic['runtime']['odometer']>stored_at_start;ok('active drive writes its automatic bounded heartbeat checkpoint')
+  automatic=page.evaluate('REBORN.snapshot().recovery.current');assert automatic['runtime']['odometer']>stored_at_start and automatic['updatedAt']>initial_checkpoint['updatedAt'];ok('active drive advances its automatic bounded interruption checkpoint')
   # Deliberately observe one normal main save first. That resets the eight-
   # second persistence clock. We can then create a short unsaved delta, pause,
   # and use the production CHECKPOINT NOW action without racing another save.
