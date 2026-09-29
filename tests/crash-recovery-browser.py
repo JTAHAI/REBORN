@@ -1,6 +1,6 @@
 """Build 020 interrupted-session checkpoint and explicit restore acceptance."""
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
-import os,threading,tempfile,json,time,socket,subprocess,urllib.request
+import os,threading,tempfile,json,time,signal
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parent.parent;site=root/'site-dist';out=Path(os.environ.get('REBORN_EVIDENCE',tempfile.mkdtemp(prefix='reborn-recovery-')));out.mkdir(parents=True,exist_ok=True)
@@ -16,10 +16,10 @@ def ready(page):
  if page.locator('#buttercup-continue').is_visible():page.locator('#buttercup-continue').click()
 try:
  with sync_playwright() as p:
-  # Expose a loopback DevTools endpoint so a separate Node process can crash
-  # the renderer without blocking Playwright's synchronous command channel.
-  probe=socket.socket();probe.bind(('127.0.0.1',0));debug_port=probe.getsockname()[1];probe.close()
-  browser=p.chromium.launch(executable_path=os.environ.get('REBORN_CHROMIUM') or None,headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--remote-allow-origins=*',f'--remote-debugging-port={debug_port}'])
+  # A single renderer makes the later OS-level crash deterministic without
+  # weakening the production page or routing the test through an app hook.
+  browser=p.chromium.launch(executable_path=os.environ.get('REBORN_CHROMIUM') or None,headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--renderer-process-limit=1'])
+  browser_cdp=browser.new_browser_cdp_session()
   ctx=browser.new_context(viewport={'width':1100,'height':720},accept_downloads=True);ctx.add_init_script("if(!localStorage.getItem('995.reborn.save.v1'))localStorage.setItem('995.reborn.save.v1',JSON.stringify({version:1,vehicle:{odometerMiles:995,fuel:70},settings:{quality:'low',sound:false,tutorialSeen:true}}))")
   page=ctx.new_page();page.set_default_timeout(90000);page.goto(url);ready(page);page.locator('#drive').click();page.wait_for_function("REBORN.snapshot().appState==='play'")
   stored_before=page.evaluate("JSON.parse(localStorage.getItem('995.reborn.save.v1')).vehicle.odometerMiles")
@@ -28,26 +28,18 @@ try:
    page.wait_for_function("REBORN.snapshot().recovery.current && REBORN.snapshot().recovery.current.runtime.odometer>"+str(stored_before),timeout=30000)
   finally:page.keyboard.up('ArrowUp')
   checkpoint=page.evaluate('REBORN.snapshot().recovery.current');assert checkpoint['runtime']['odometer']>stored_before;ok('active drive writes a bounded local checkpoint before the normal eight-second save interval')
-  # Crash the renderer process rather than allowing pagehide to clean the record.
-  # Page.crash never returns on some Chromium/Playwright combinations because its
-  # own target dies first. Send it through a separate raw-CDP WebSocket process,
-  # while this process listens for the real Playwright crash event.
-  deadline=time.monotonic()+10;target=None
-  while time.monotonic()<deadline and target is None:
-   try:
-    with urllib.request.urlopen(f'http://127.0.0.1:{debug_port}/json/list',timeout=2) as response:targets=json.load(response)
-    target=next((item for item in targets if item.get('type')=='page' and item.get('url')==page.url and item.get('webSocketDebuggerUrl')),None)
-   except Exception:pass
-   if target is None:time.sleep(.1)
-  if target is None:raise RuntimeError('Could not locate the game renderer through the loopback DevTools endpoint')
-  crash_script="""let sent=false;const ws=new WebSocket(process.argv[1]);const fail=setTimeout(()=>process.exit(2),5000);ws.addEventListener('open',()=>{sent=true;ws.send(JSON.stringify({id:1,method:'Page.crash'}))});ws.addEventListener('close',()=>{clearTimeout(fail);process.exit(sent?0:3)});ws.addEventListener('error',()=>process.exit(sent?0:3));"""
-  with page.expect_event('crash',timeout=15000):
-   crasher=subprocess.Popen(['node','-e',crash_script,target['webSocketDebuggerUrl']],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+  # Crash the actual renderer process rather than allowing pagehide to clean
+  # the record. SystemInfo reports operating-system process IDs; sample CPU time
+  # twice and terminate the active renderer while Playwright is already waiting
+  # for its native page crash event.
+  def renderers():
+   return {int(item['id']):float(item.get('cpuTime',0)) for item in browser_cdp.send('SystemInfo.getProcessInfo')['processInfo'] if item.get('type')=='renderer'}
+  first=renderers();page.wait_for_timeout(500);second=renderers()
+  common=set(first)&set(second)
+  if not common:raise RuntimeError('Chromium did not expose an active renderer process for the game page')
+  renderer=max(common,key=lambda pid:second[pid]-first[pid])
+  with page.expect_event('crash',timeout=15000):os.kill(renderer,signal.SIGKILL)
   report['actualPageCrash']=True
-  try:crash_out,crash_err=crasher.communicate(timeout=5)
-  except subprocess.TimeoutExpired:
-   crasher.kill();crash_out,crash_err=crasher.communicate();raise RuntimeError('Renderer crash helper did not exit after the crash event')
-  if crasher.returncode not in (0,None):raise RuntimeError(f'Renderer crash helper failed ({crasher.returncode}): {crash_err or crash_out}')
   # Keep the crashed Page object untouched. Closing it can itself block on a dead
   # renderer; the browser context is closed once the replacement page is done.
   fresh=ctx.new_page();fresh.set_default_timeout(90000);fresh.goto(url);ready(fresh)
