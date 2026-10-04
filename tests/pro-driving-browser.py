@@ -35,7 +35,7 @@ try:
   try:p.wait_for_function('REBORN.snapshot().car.speed>2',timeout=30000)
   finally:p.keyboard.up('ArrowUp')
   p.screenshot(path=str(OUT/'hometown-drive-running.png'));passed('Free Drive starts stationary, real keyboard input accelerates, connected itinerary guidance is visible')
-  p.keyboard.press('KeyP');p.wait_for_function("REBORN.snapshot().appState==='photo'");a=frozen(p);p.wait_for_timeout(650);assert frozen(p)==a
+  p.keyboard.press('F8');p.wait_for_function("REBORN.snapshot().appState==='photo'");a=frozen(p);p.wait_for_timeout(650);assert frozen(p)==a
   for ident,value in [('pro-photo-angle',70),('pro-photo-distance',6.5),('pro-photo-height',2)]:p.locator('#'+ident).evaluate('(e,v)=>{e.value=v;e.dispatchEvent(new Event("input",{bubbles:true}))}',value)
   p.screenshot(path=str(OUT/'photo-mode-desktop.png'))
   for ratio,name in [('1','square'),('1.7777777778','landscape')]:
@@ -44,7 +44,7 @@ try:
    file=OUT/('actual-game-photo-'+name+'.png');d.value.save_as(file);im=Image.open(file).convert('RGB');w,h=im.size;assert abs(w/h-float(ratio))<.015
    stats=ImageStat.Stat(im.crop((0,0,w,max(1,h-80))));assert max(stats.stddev)>12 and max(stats.mean)>15,(stats.mean,stats.stddev)
    report.setdefault('photos',[]).append({'file':file.name,'size':[w,h],'pixelStdDev':stats.stddev,'sha256':hashlib.sha256(file.read_bytes()).hexdigest()})
-  assert frozen(p)==a;p.keyboard.press('Escape');assert snapshot(p)['appState']=='pause';passed('Photo mode freezes vehicle/town/itinerary, exports actual square and landscape scene pixels, returns to pause')
+  assert frozen(p)==a;p.keyboard.press('KeyJ');assert snapshot(p)['appState']=='photo';p.keyboard.press('Escape');assert snapshot(p)['appState']=='pause';passed('Photo mode freezes vehicle/town/itinerary, exports actual square and landscape scene pixels, returns to pause')
   p.locator('#pro-drives-pause').click();assert p.locator('[data-start-tour="everyday"]').is_disabled();p.locator('#pro-drive-close').click()
   stored=json.loads(p.evaluate("localStorage.getItem('995.reborn.save.v1')"));assert stored['hometown']['active']['id']=='mill-main'
   p.reload();settled(p);p.locator('#buttercup-continue').click();p.locator('#pro-drives-menu').click();assert 'RESUME' in p.locator('[data-start-tour="mill-main"]').inner_text();p.locator('[data-start-tour="mill-main"]').click();p.wait_for_function("REBORN.snapshot().appState==='play'")
