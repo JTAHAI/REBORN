@@ -21,7 +21,7 @@
   ],
   "fullWebsite": "REBORN-PASS-31-RENDER-OPTIMIZER-FULL-WEBSITE.zip",
   "standalone": "REBORN-PASS-31-RENDER-OPTIMIZER-Standalone.zip",
-  "fullWebsiteSha256": "ff1c48e019208fc162a5f798369e2e68451e07237303989bd46c9c12ec973400",
+  "fullWebsiteSha256": "3da4b77140c8f1c06ee6a8e2929b5dd8afb5b1e0d096d02b75cd3846a7bc89c1",
   "standaloneSha256": "6fd615f8bc4795b36bcb97a0b750ea57746b17d49c30023698c234971f9914e0",
   "pushedToGitHub": true,
   "limits": "Local package verification only; not physical-device FPS certification, deployment, or storefront approval."
