@@ -1,0 +1,59 @@
+name: REBORN Pro foundation inspection
+on:
+  push:
+    branches: [chatgpt/reborn-pro-driving-pass23]
+    paths: [.github/workflows/pro-foundation.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 201a628b4c9819385f9b90b74a0e0991aa0e5ae7
+          fetch-depth: 0
+          persist-credentials: false
+      - run: |
+          mkdir -p /tmp/pro-foundation
+          git bundle create /tmp/pro-foundation/source.bundle --all
+          npm run build:site
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+      - name: Capture actual baseline, not a passing-test claim
+        run: |
+          python3 - <<'PY'
+          import json,threading
+          from pathlib import Path
+          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+          from playwright.sync_api import sync_playwright
+          class H(SimpleHTTPRequestHandler):
+           def __init__(self,*a,**k):super().__init__(*a,directory='site-dist',**k)
+           def log_message(self,*a):pass
+          server=ThreadingHTTPServer(('127.0.0.1',0),H);threading.Thread(target=server.serve_forever,daemon=True).start()
+          out=Path('/tmp/pro-foundation');report={};errors=[];messages=[]
+          with sync_playwright() as p:
+           browser=p.chromium.launch(headless=True,args=['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
+           page=browser.new_page(viewport={'width':1365,'height':820});page.set_default_timeout(60000)
+           page.on('pageerror',lambda e:errors.append(str(e)))
+           page.on('console',lambda e:messages.append(e.type+': '+e.text) if e.type in ['error','warning'] else None)
+           try:
+            page.goto(f'http://127.0.0.1:{server.server_port}/play/');page.wait_for_function('!!window.REBORN && REBORN.snapshot().release.mapReady')
+            if page.locator('#buttercup-continue').is_visible():page.locator('#buttercup-continue').click()
+            page.screenshot(path=str(out/'baseline-title.png'))
+            page.locator('#drive').click();page.wait_for_timeout(1500);page.screenshot(path=str(out/'baseline-drive.png'));report['before']=page.evaluate('REBORN.snapshot()')
+            page.evaluate("window.__lose=document.getElementById('world').getContext('webgl2').getExtension('WEBGL_lose_context');window.__lose.loseContext()")
+            page.wait_for_timeout(800);report['lost']=page.evaluate('REBORN.snapshot()')
+            page.evaluate('window.__lose.restoreContext()');page.wait_for_timeout(1800);report['restored']=page.evaluate('REBORN.snapshot()');page.screenshot(path=str(out/'baseline-restored.png'))
+           except Exception as e:report['probeError']=str(e)
+           finally:
+            report['pageErrors']=errors;report['console']=messages;(out/'baseline.json').write_text(json.dumps(report,indent=2));browser.close()
+          server.shutdown()
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pro-foundation
+          path: /tmp/pro-foundation/
+          retention-days: 7
