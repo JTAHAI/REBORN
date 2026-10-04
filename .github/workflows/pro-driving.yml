@@ -1,0 +1,124 @@
+name: REBORN Pro driving acceptance
+on:
+  push:
+    branches: [chatgpt/reborn-pro-driving-pass23]
+    paths: [.github/workflows/pro-driving.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Integrate engine source, preserve canonical assets
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/pro-core-apply.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          new='0.29.0-hometown-drives-p032'
+          names=['package.json','tools/bundle.cjs','tools/build-site.cjs','tools/package-site.cjs','website-game-shell/dedication.html']
+          for name in names:
+           p=Path(name);s=p.read_text().replace('0.16.0-graphics-recovery-p019',new).replace('BUILD 019','BUILD 032').replace('Build 019','Build 032').replace('PASS-10-GRAPHICS-RECOVERY','PASS-23-HOMETOWN-DRIVES');p.write_text(s)
+          p=Path('tools/build-site.cjs');s=p.read_text().replace(",...files(path.join(root,'website'))",'').replace('pass:10,','pass:23,');p.write_text(s)
+          p=Path('tools/service-worker.template.js');p.write_text(p.read_text().replace('pass10-','pass23-'))
+          for p in Path('tests').iterdir():
+           if p.suffix in ['.cjs','.py','.js']:
+            s=p.read_text().replace('0.16.0-graphics-recovery-p019',new)
+            if p.name in ['website-browser.py','service-worker-navigation-browser.py']:s=s.replace('pass10-','pass23-').replace('pass09-','pass23-').replace('pass08-navfix1-','pass23-navfix1-')
+            if p.name=='website-package.py':s=s.replace("release['pass']==10","release['pass']==23")
+            p.write_text(s)
+          p=Path('package.json');d=json.loads(p.read_text());d['scripts']['test:pro:browser']='python3 tests/pro-driving-browser.py';p.write_text(json.dumps(d,indent=2)+'\n')
+          PY
+          npm run build
+          git diff --exit-code -- assets legacy
+          git diff --check
+          git config user.name ChatGPT
+          git config user.email chatgpt@users.noreply.github.com
+          git add index.html dist/index.html src/driver-ux.js src/release-ux.js package.json tools tests website-game-shell/dedication.html
+          git commit -m 'Integrate hometown itineraries, real photo mode and safe graphics recovery into Build 032'
+          git push origin HEAD:refs/heads/chatgpt/reborn-pro-driving-engine
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  verify:
+    needs: source
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [core, pro, ux, session, navigation, updates, release, memory, workshop, weather, passengers, echoes, website]
+    env:
+      REBORN_BROWSER_DRIVER: playwright
+      REBORN_BROWSER_LOW: '1'
+      REBORN_EVIDENCE: /tmp/pro-evidence/browser
+      REBORN_SCREENSHOTS: /tmp/pro-evidence/screenshots
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.source.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - run: mkdir -p /tmp/pro-evidence && npm run build:site
+      - if: matrix.gate != 'core'
+        run: |
+          python3 -m pip install playwright==1.57.0 pillow
+          python3 -m playwright install --with-deps chromium
+          python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("REBORN_CHROMIUM="+p.chromium.executable_path)' >> "$GITHUB_ENV"
+      - name: Acceptance with failure propagation
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            case '${{ matrix.gate }}' in
+              core) npm test; npm run validate:assets; npm run test:http; npm run test:site;;
+              pro) npm run test:pro:browser;;
+              ux) npm run test:ux;;
+              session) npm run test:session:browser;;
+              navigation) npm run test:navigation:browser;;
+              updates) npm run test:updates:browser;;
+              release) npm run test:release:browser;;
+              memory) npm run test:memory:browser;;
+              workshop) npm run test:workshop:browser;;
+              weather) npm run test:weather:browser;;
+              passengers) npm run test:stories:browser; npm run test:stories:packaged;;
+              echoes) npm run test:echo:browser;;
+              website) npm run test:site:browser;;
+            esac
+          } 2>&1 | tee /tmp/pro-evidence/results.log
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: reborn-pro-${{ matrix.gate }}-evidence
+          path: /tmp/pro-evidence/
+          retention-days: 7
+  inspect-source:
+    needs: source
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.source.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - run: |
+          mkdir -p /tmp/pro-source
+          git archive --format=tar HEAD | gzip -n > /tmp/pro-source/source.tar.gz
+          git rev-parse HEAD > /tmp/pro-source/SOURCE-COMMIT.txt
+          npm run build:site
+          cp site-dist/release.json /tmp/pro-source/release.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: reborn-pro-integrated-source
+          path: /tmp/pro-source/
+          retention-days: 7
