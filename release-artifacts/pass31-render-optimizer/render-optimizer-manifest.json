@@ -1,0 +1,14 @@
+{
+  "title": "99½ REBORN Render Optimizer Kit",
+  "build": "Build 040 / Pass 31",
+  "version": "0.37.0-render-optimizer-p040",
+  "cacheTag": "f31render40",
+  "scope": "desktop/mobile render budget, shadow cadence, bloom cadence, probe cadence and LOD diagnostics",
+  "localOnly": true,
+  "telemetry": false,
+  "certification": "not physical-device FPS certification",
+  "shortcuts": {
+    "openInGame": "Y",
+    "touchButton": "RENDER"
+  }
+}
