@@ -3,6 +3,7 @@
 This GitHub branch records the pushed Pass 31 source notes, manifest, checklist, local report script, and verification/checksum metadata. The downloadable binary ZIP artifacts were created in ChatGPT and are not committed to Git as large binary release blobs.
 
 Branch: chatgpt/reborn-pass31-render-optimizer
+Commit: 4ad5a7924af1fbac499cbec2307279d6919f3cf3
 Runtime: 0.37.0-render-optimizer-p040
 
 Deployable artifacts:
