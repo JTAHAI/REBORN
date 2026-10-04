@@ -25,7 +25,7 @@ for f in site.rglob('*.html'):
   if not target.is_file():errors.append((str(f.relative_to(site)),url))
 assert not errors,errors
 release=json.loads((site/'release.json').read_text());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-assert release['pass']==10 and release['remainingPasses']==0
+assert release['pass']==23 and release['remainingPasses']==0
 assert sha(site/'play/index.html')==release['packagedPlayIndexSha256']
 assert sha(site/'play/index.html')==sha(game/'index.html')
 assert sha(site/'play/assets/worlds/north-berwick/world.json')==release['northBerwickWorldSha256']

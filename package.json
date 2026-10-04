@@ -1,6 +1,6 @@
 {
   "name": "99-5-reborn",
-  "version": "0.16.0-graphics-recovery-p019",
+  "version": "0.29.0-hometown-drives-p032",
   "private": true,
   "description": "99\u00bd REBORN static WebGL2 living-car and hometown driving game",
   "scripts": {
@@ -24,6 +24,7 @@
     "test:updates:browser": "python3 tests/update-safety-browser.py",
     "test:navigation:browser": "python3 tests/service-worker-navigation-browser.py",
     "test:session:browser": "python3 tests/session-saves-browser.py",
-    "test:graphics:browser": "python3 tests/graphics-recovery-browser.py"
+    "test:graphics:browser": "python3 tests/graphics-recovery-browser.py",
+    "test:pro:browser": "python3 tests/pro-driving-browser.py"
   }
 }

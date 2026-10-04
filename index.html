@@ -305,6 +305,24 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
 .session-save-actions button{min-height:44px;flex:1 1 160px;white-space:normal}
 
 /* RELEASE_CSS_END */
+/* PRO_DRIVING_CSS_BEGIN */
+/* New gameplay surfaces, scoped so the original activities keep their layouts. */
+#pro-drive-dialog{color:#edf2ed;background:linear-gradient(140deg,#15262f,#0a151d);border:1px solid #577078;border-radius:18px;width:min(1100px,94vw);max-height:92dvh;padding:clamp(16px,3vw,32px);overflow:auto;box-shadow:0 25px 90px #0009}
+#pro-drive-dialog::backdrop,#pro-graphics-dialog::backdrop{background:#02080dd9;backdrop-filter:blur(6px)}
+#pro-drive-dialog header{display:flex;align-items:start;justify-content:space-between;gap:20px}#pro-drive-dialog h2{font:500 clamp(29px,4vw,44px)/1.15 Georgia,serif;margin:10px 0}#pro-drive-dialog header p{color:#b2c7ca;margin:4px 0}
+#pro-drive-dialog small{color:#e6bf88;font-size:10px;letter-spacing:1.6px}#pro-route-status{font-size:14px;color:#bad0d1;line-height:1.6;margin:22px 0}#pro-route-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pro-route-card{min-width:0;display:flex;flex-direction:column;padding:20px;background:#13252dcc;border:1px solid #38535e;border-radius:12px}.pro-route-card h3{font:500 26px/1.2 Georgia,serif;margin:12px 0 18px}.pro-route-card canvas{width:100%;height:auto;border-radius:7px}.pro-route-card p{font-size:14px;line-height:1.65;color:#becfd1}.pro-route-card .pro-route-meta{font-size:10px;letter-spacing:.8px;color:#e7bc80}.pro-route-stops{font-size:12px!important;min-height:60px}.pro-route-card .pro-badge{color:#8fdbcc;font-size:12px;flex:1}.pro-route-card button{min-height:48px;width:100%;font-size:11px;white-space:normal}.pro-route-card button:disabled{opacity:.42;cursor:not-allowed}
+#pro-drive-dialog footer{margin-top:24px;border-top:1px solid #334953;padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px}#pro-drive-dialog footer strong{font-size:11px;letter-spacing:1px;color:#d1e6dd}#pro-drive-dialog footer p{font-size:11px;color:#9bb0b6;line-height:1.6;margin:0;width:100%}#pro-drive-dialog button{min-height:44px}
+#intro .launch-row{display:flex;flex-wrap:wrap}#intro .launch-row p{flex:1}#pro-drives-menu{min-height:46px;font-size:11px;padding:12px 18px;border:1px solid #ad9068;white-space:normal}#pro-photo-button{font-size:9px;width:53px}
+#pro-photo[hidden],#pro-graphics-dialog:not([open]){display:none!important}#pro-photo{position:fixed;inset:0;z-index:150;color:#eff3ed;pointer-events:none;background:linear-gradient(180deg,#020a1099,transparent 28%,transparent 58%,#020a10c9)}#pro-photo-stage{position:absolute;inset:0;pointer-events:auto;touch-action:none;cursor:grab}#pro-photo-stage:active{cursor:grabbing}#pro-photo>header{position:absolute;top:max(24px,env(safe-area-inset-top));left:max(26px,env(safe-area-inset-left));right:26px;pointer-events:none;text-shadow:0 2px 6px #000}#pro-photo>header small{font-size:11px;letter-spacing:2px;color:#ecc994}#pro-photo h2{font:500 clamp(24px,3vw,37px)/1.1 Georgia,serif;margin:8px 0}#pro-photo header p{font-size:12px;margin:8px 0;color:#d6e4df}
+#pro-photo-controls{position:absolute;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(1050px,calc(100% - 40px));display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;gap:15px;padding:18px 24px;background:#101d25f2;border:1px solid #6c7f7e;border-radius:14px;pointer-events:auto;box-sizing:border-box;max-height:50dvh;overflow:auto}#pro-photo-controls label{font-size:11px;letter-spacing:.6px;display:flex;flex-direction:column;gap:7px;color:#c5d8d6;min-width:0}#pro-photo-controls input[type=range]{width:100%;min-height:28px;accent-color:#ecc38a}#pro-photo-controls select{background:#20343d;color:#eef4ef;border:1px solid #556d73;border-radius:5px;min-height:38px;padding:5px;max-width:100%;font:12px system-ui}#pro-photo-controls .pro-check{flex-direction:row;align-items:center;grid-column:1 / 3;min-height:44px}#pro-photo-controls .pro-check input{accent-color:#ecc38a;width:18px;height:18px}.pro-photo-actions{grid-column:3 / 5;display:flex;justify-content:end;gap:10px}#pro-photo-controls button{min-height:44px;font-size:11px;padding:10px 16px}#pro-photo-status{grid-column:1 / -1;font:11px/1.4 system-ui;color:#abd6cf}
+body[data-state=photo] #weather-fx,body[data-state=photo] #plate,body[data-state=photo] #ux-driving-tip,body[data-state=photo] #rotate-device,body[data-state=photo] #waypoint{display:none!important}
+#pro-graphics-dialog{width:min(540px,calc(100vw - 32px));padding:24px;box-sizing:border-box;color:#e7f0eb;background:#11212b;border:1px solid #d2b386;border-radius:14px;max-height:90dvh;overflow:auto}#pro-graphics-dialog h2{font:500 30px/1.2 Georgia,serif;margin:12px 0}#pro-graphics-dialog p{font:14px/1.6 system-ui;color:#c0d0d2}#pro-graphics-dialog small{color:#edc690;letter-spacing:1px}#pro-graphics-actions{display:flex;gap:10px;flex-wrap:wrap}#pro-graphics-dialog button{min-height:46px;font-size:11px;padding:12px;white-space:normal}
+@media(max-width:1000px){#pro-photo-button{display:none!important}#intro .launch-row #pro-drives-menu{flex:1 0 100%;min-height:40px}#intro .launch-row>.quiet{flex:1}#pro-route-list{gap:10px}.pro-route-card{padding:14px}.pro-route-card h3{font-size:22px}}
+@media(max-width:700px){#pro-route-list{grid-template-columns:1fr}#pro-drive-dialog{max-height:94dvh}#pro-drive-dialog header p{font-size:13px}.pro-route-stops{min-height:0}#pro-photo-controls{grid-template-columns:1fr 1fr;padding:14px;gap:8px;bottom:12px;width:calc(100% - 24px);max-height:51dvh}.pro-photo-actions{grid-column:1 / -1;justify-content:stretch}.pro-photo-actions button{flex:1}#pro-photo-controls .pro-check{grid-column:1 / -1}#pro-photo header p{max-width:290px;line-height:1.5}#pro-photo header{top:18px!important;left:18px!important}#intro .launch-row #pro-drives-menu{grid-column:1 / -1}}
+@media(max-height:520px) and (orientation:landscape){#intro .launch-row{gap:6px}#intro .launch-row #pro-drives-menu{flex:0 1 190px;font-size:10px;min-height:40px;padding:8px}#intro .launch-row>.quiet{flex:1}#pro-photo-controls{right:10px;left:auto;transform:none;top:10px;bottom:10px;width:245px;max-height:none;grid-template-columns:1fr 1fr;padding:12px;gap:7px}#pro-photo-controls .pro-check{grid-column:1 / -1;font-size:10px;min-height:32px}.pro-photo-actions{grid-column:1 / -1;flex-wrap:wrap}.pro-photo-actions button{flex:1;min-height:42px;padding:8px}#pro-photo>header{right:270px}#pro-photo>header h2{font-size:25px}#pro-photo>header p{font-size:11px;max-width:330px}#pro-photo-stage{right:264px}#pro-photo-controls input[type=range]{min-height:24px}#pro-photo-controls select{min-height:34px;font-size:10px}}
+
+/* PRO_DRIVING_CSS_END */
 </style>
 </head>
 <body data-standalone="true">
@@ -319,7 +337,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
 <section id="intro" class="screen" aria-label="Main menu" hidden>
  <header class="topline">
   <div class="brand"><b>99½</b><span>REBORN</span></div>
-  <div class="buildtag"><i></i> PLAYABLE PRE-ALPHA <span>/ 014 · PASSENGER DRIVES</span></div>
+  <div class="buildtag"><i></i> PLAYABLE PRE-ALPHA <span>/ 032 · HOMETOWN DRIVES</span></div>
   <button class="quiet sound-toggle" aria-label="Toggle sound">SOUND ON <span>◖))</span></button>
  </header>
  <div class="intro-copy">
@@ -339,7 +357,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
   </div>
   <div class="launch-row"><button id="drive" class="primary">TAKE THE WHEEL <span>→</span></button><p id="input-caption">WASD / ARROWS · CONTROLLER READY<br><span>No account. No ads. Just drive.</span></p><button id="inspect-car" class="quiet">INSPECT THE JETTA ↗</button><button id="journey-open" class="quiet">JETTA STATUS / DIAGNOSTICS ↗</button><button id="intro-help" class="quiet">CONTROLS & SETTINGS ↗</button></div>
  </div>
- <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 019 <i>/</i> MEMORY REPLAY</span></footer>
+ <footer class="intro-footer"><span id="map-credit">NORTH BERWICK, MAINE <i>/</i> DRIVER-EYE RECONSTRUCTION · OPEN DATA + ATTRIBUTED REFERENCES</span><a href="assets/vehicles/jetta-mkiv/CREDITS.md" target="_blank" rel="license noopener">MK IV MODEL · szymonpasterczyk734 · CC BY 4.0</a><span>BUILD 032 <i>/</i> MEMORY REPLAY</span></footer>
 </section>
 <section id="hud" class="screen" aria-label="Driving HUD" hidden>
  <output id="town-clock" aria-label="Fictional town time" hidden></output><button id="town-interact" class="secondary" type="button" hidden>F · ROADSIDE INTERACTION</button>
@@ -421,7 +439,7 @@ body.touch #hud #echo-strip[data-incident=true],body.touch[data-roadside=true] #
   else root.RebornCore = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  const VERSION = '0.16.0-graphics-recovery-p019';
+  const VERSION = '0.29.0-hometown-drives-p032';
   const DT = 1 / 120;
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -1896,16 +1914,81 @@ const ReleaseUX = (() => {
 })();
 
   /* RELEASE_CORE_END */
+  /* HOMETOWN_DRIVES_BEGIN */
+// SPDX-License-Identifier: CPAL-1.0
+// Optional, unhurried itineraries. No network, payments, wall-clock deadlines or auto-driving.
+const HometownDrives = (() => {
+ 'use strict';
+ const ROUTES = Object.freeze([
+  Object.freeze({id:'mill-main',title:'Mill & Main',tag:'THE HEART OF TOWN',description:'A little history. Familiar corners. Take the Jetta around the town center.',stops:['town-office-police','olde-woolen-mill','hurd-manor','fire-department'],badge:'Main Street Regular'}),
+  Object.freeze({id:'everyday',title:'The Everyday Loop',tag:'THE GOOD KIND OF ORDINARY',description:'The places that make a town yours. Coffee, groceries, and absolutely no hurry.',stops:['north-berwick-crossing','allards-market','hannaford','aroma-joes'],badge:'The Familiar Way'}),
+  Object.freeze({id:'long-way',title:'The Long Way Home',tag:'A FEW MORE MILES',description:'Leave the center behind, find the outer roads, and bring Buttercup home.',stops:['noble-high-school','riverside-farm-stand','pratt-whitney','town-office-police'],badge:'Every Road Remembers'})
+ ]);
+ const IDS=ROUTES.map(r=>r.id),PLACES=new Set(ROUTES.flatMap(r=>r.stops));
+ const finite=(n,f,min=0,max=1e7)=>typeof n==='number'&&Number.isFinite(n)?Math.max(min,Math.min(max,n)):f;
+ const cleanPoint=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.z)?{x:p.x,z:p.z}:null;
+ function defaults(){return {version:1,active:null,completed:{},visited:[]};}
+ function sanitize(raw){
+  const s=defaults();if(!raw||typeof raw!=='object')return s;
+  s.visited=Array.from(new Set(Array.isArray(raw.visited)?raw.visited.filter(x=>PLACES.has(x)):[])).slice(0,15);
+  for(const id of IDS){const item=Object.prototype.hasOwnProperty.call(raw.completed||{},id)?raw.completed[id]:null;if(item&&typeof item==='object')s.completed[id]={runs:Math.floor(finite(item.runs,1,1,9999)),distanceM:finite(item.distanceM,0),seconds:finite(item.seconds,0)};}
+  const a=raw.active,r=ROUTES.find(r=>r.id===a?.id);
+  if(r&&Number.isInteger(a.index)&&a.index>=0&&a.index<r.stops.length)s.active={id:r.id,index:a.index,distanceM:finite(a.distanceM,0),seconds:finite(a.seconds,0)};
+  return s;
+ }
+ function catalog(world,router){
+  const byId=new Map((world.landmarks||[]).map(x=>[x.id,x]));
+  return ROUTES.map(route=>{
+   let from=world.spawn,total=0,valid=true;const stops=[];
+   for(const id of route.stops){
+    const place=byId.get(id),path=place?router.route(from,place):null;
+    if(!path?.ok){valid=false;break;}
+    const road=path.segments.at(-1)?.road||router.roads[router.nearest(place)?.road]?.name||'Mapped road';
+    const p={id,name:place.name,x:path.destination.x,z:path.destination.z,road,approachM:path.approachM};
+    stops.push(p);total+=path.distanceM;from=p;
+   }
+   return {...route,stops,distanceM:total,available:valid&&stops.length===route.stops.length};
+  });
+ }
+ class Director{
+  constructor(raw,routes){this.state=sanitize(raw);this.routes=routes||[];this.dwell=0;this.last=null;}
+  route(){return this.routes.find(r=>r.id===this.state.active?.id)||null;}
+  goal(){const r=this.route();return r?.stops[this.state.active.index]||null;}
+  begin(id){const r=this.routes.find(r=>r.id===id);if(!r?.available)return false;if(this.state.active&&this.state.active.id!==id)return false;if(!this.state.active)this.state.active={id,index:0,distanceM:0,seconds:0};this.last=null;this.dwell=0;return true;}
+  end(){this.state.active=null;this.last=null;this.dwell=0;}
+  resetContinuity(){this.last=null;this.dwell=0;}
+  tick(dt,car,running,onRoad){
+   const a=this.state.active,goal=this.goal();if(!a||!goal)return null;
+   if(!running||!cleanPoint(car)||!Number.isFinite(dt)||dt<=0||dt>.1){this.resetContinuity();return null;}
+   const speed=Number.isFinite(car.speed)?Math.abs(car.speed):Math.hypot(car.vx||0,car.vz||0);
+   const delta=this.last?Math.hypot(car.x-this.last.x,car.z-this.last.z):0;
+   const jumped=delta>Math.max(4,speed*dt+2);this.last={x:car.x,z:car.z};a.seconds=Math.min(1e7,a.seconds+dt);
+   if(!jumped)a.distanceM=Math.min(1e7,a.distanceM+delta);
+   const near=Math.hypot(car.x-goal.x,car.z-goal.z)<=18;
+   this.dwell=near&&speed<=3.6&&onRoad&&!jumped?this.dwell+dt:0;
+   if(this.dwell<.65)return null;
+   this.dwell=0;if(!this.state.visited.includes(goal.id))this.state.visited.push(goal.id);
+   const route=this.route();a.index++;
+   if(a.index<route.stops.length)return {type:'stop',place:goal.name,index:a.index,total:route.stops.length};
+   const prev=this.state.completed[a.id],result={type:'complete',title:route.title,badge:route.badge,id:a.id,distanceM:a.distanceM,seconds:a.seconds};
+   this.state.completed[a.id]={runs:Math.min(9999,(prev?.runs||0)+1),distanceM:a.distanceM,seconds:a.seconds};this.end();return result;
+  }
+  snapshot(){return {state:sanitize(this.state),goal:this.goal()?{...this.goal()}:null,dwell:this.dwell,catalog:this.routes.map(r=>({id:r.id,title:r.title,available:r.available,stops:r.stops.length,distanceM:r.distanceM,badge:r.badge}))};}
+ }
+ return Object.freeze({ROUTES,defaults,sanitize,catalog,Director});
+})();
+
+  /* HOMETOWN_DRIVES_END */
   function validateSave(raw){
-    const defaults={version:1,bestRun:null,settings:{sound:true,autoThrottle:false,weather:'clear',quality:'auto',reducedMotion:false,...driverPreferences()},town:Town.defaults(),climate:MaineWeather.defaults(),journeys:DriveStories.defaults(),echoes:EchoRoads.defaults(),memories:MemoryReplay.defaults(),workshopMemories:WorkshopMemories.defaults(),vehicle:defaultVehicle(),roadKnowledge:{},journal:[],serviceHistory:[],stats:{trips:0,totalMiles:0,roadsDiscovered:0,sequence:0}};
+    const defaults={version:1,bestRun:null,settings:{sound:true,autoThrottle:false,weather:'clear',quality:'auto',reducedMotion:false,...driverPreferences()},town:Town.defaults(),climate:MaineWeather.defaults(),journeys:DriveStories.defaults(),echoes:EchoRoads.defaults(),memories:MemoryReplay.defaults(),workshopMemories:WorkshopMemories.defaults(),hometown:HometownDrives.defaults(),vehicle:defaultVehicle(),roadKnowledge:{},journal:[],serviceHistory:[],stats:{trips:0,totalMiles:0,roadsDiscovered:0,sequence:0}};
     if(!raw||typeof raw!=='object'||raw.version!==1)return defaults;
     const s=raw.settings||{},knowledge=validateRoadKnowledge(raw.roadKnowledge),journal=validateJournal(raw.journal),stats=raw.stats&&typeof raw.stats==='object'?raw.stats:{};
     return {version:1,bestRun:Number.isFinite(raw.bestRun)&&raw.bestRun>0&&raw.bestRun<3600?raw.bestRun:null,settings:{
       sound:typeof s.sound==='boolean'?s.sound:true,autoThrottle:typeof s.autoThrottle==='boolean'?s.autoThrottle:false,
       weather:['clear','rain','night'].includes(s.weather)?s.weather:'clear',quality:['auto','high','low'].includes(s.quality)?s.quality:'auto',reducedMotion:!!s.reducedMotion,...driverPreferences(s)},
-      town:Town.sanitize(raw.town),climate:MaineWeather.sanitize(raw.climate,Town.now(Town.sanitize(raw.town)),Town.sanitize(raw.town).seed),journeys:DriveStories.sanitize(raw.journeys),echoes:EchoRoads.sanitize(raw.echoes),memories:MemoryReplay.sanitize(raw.memories),workshopMemories:WorkshopMemories.sanitize(raw.workshopMemories),vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,serviceHistory:validateServiceHistory(raw.serviceHistory),stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive'||x.kind==='journey').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
+      town:Town.sanitize(raw.town),climate:MaineWeather.sanitize(raw.climate,Town.now(Town.sanitize(raw.town)),Town.sanitize(raw.town).seed),journeys:DriveStories.sanitize(raw.journeys),echoes:EchoRoads.sanitize(raw.echoes),memories:MemoryReplay.sanitize(raw.memories),workshopMemories:WorkshopMemories.sanitize(raw.workshopMemories),hometown:HometownDrives.sanitize(raw.hometown),vehicle:validateVehicle(raw.vehicle),roadKnowledge:knowledge,journal,serviceHistory:validateServiceHistory(raw.serviceHistory),stats:{trips:Math.floor(finite(stats.trips,journal.filter(x=>x.kind==='drive'||x.kind==='journey').length,0,1e7)),totalMiles:finite(stats.totalMiles,journal.reduce((sum,x)=>sum+x.miles,0),0,1e9),roadsDiscovered:Object.keys(knowledge).length,sequence:Math.floor(finite(stats.sequence,journal.length,0,1e9))}};
   }
-  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather,DriveStories,EchoRoads,MemoryReplay,WorkshopMemories,ReleaseUX,SessionSaves};
+  return {VERSION,DT,MODES,ROUTE,clamp,lerp,approach,angle,dist,rng,SpatialHash,createWorld,createNorthBerwickWorld,roadAt,nearestRoad,surfaceAt,regionAt,createCar,changeMode,stepCar,resolveWorld,damage,nearestNode,findPath,segmentCircle,lineBlocked,Simulation,defaultVehicle,validateSave,Town,MaineWeather,DriveStories,EchoRoads,MemoryReplay,WorkshopMemories,ReleaseUX,SessionSaves,HometownDrives};
 });
 
 </script>
@@ -3251,8 +3334,8 @@ function decorate(world,items){const out=[];for(const o of items){
  return out;
 }
 class PolishedRenderer extends R.Renderer{
- constructor(canvas,world){super(canvas,world);this.kind=this.gl?'WebGL2 / Coachwork + local reflections':'Canvas 3D compatibility';this.contextLost=false;this.contextEpoch=0;this.contextLosses=0;this.contextRecoveries=0;V.useLegacy=!this.gl;
- if(this.gl){this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.contextLost=true;this.contextLosses++;root.dispatchEvent(new CustomEvent('reborn-context-lost',{detail:{losses:this.contextLosses}}));});this.canvas.addEventListener('webglcontextrestored',()=>{try{this.initGL();this.resize();this.contextLost=false;this.contextRecoveries++;root.dispatchEvent(new CustomEvent('reborn-context-restored',{detail:{recoveries:this.contextRecoveries}}));}catch(e){this.error=e.message;root.dispatchEvent(new CustomEvent('reborn-context-failed',{detail:{message:e.message}}));}});}
+ constructor(canvas,world){super(canvas,world);this.kind=this.gl?'WebGL2 / Coachwork + local reflections':'Canvas 3D compatibility';this.contextLost=false;this.contextEpoch=this.contextEpoch||1;this.contextLosses=0;this.contextRecoveries=0;V.useLegacy=!this.gl;
+ if(this.gl){this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.contextLost=true;this.contextLosses++;root.dispatchEvent(new CustomEvent('reborn-context-lost',{detail:{losses:this.contextLosses}}));});this.canvas.addEventListener('webglcontextrestored',()=>{try{this.releaseForgetGL();this.initGL();this.resize();this.contextLost=false;this.contextRecoveries++;root.dispatchEvent(new CustomEvent('reborn-context-restored',{detail:{recoveries:this.contextRecoveries}}));}catch(e){this.error=e.message;root.dispatchEvent(new CustomEvent('reborn-context-failed',{detail:{message:e.message}}));}});}
  }
  setWorld(world){
   const objects=R.buildWorld(world);
@@ -3260,6 +3343,7 @@ class PolishedRenderer extends R.Renderer{
   if(this.gl){this.initGL();this.resize();}
   else {if(!world.northBerwick)this.static=decorate(world,this.static).concat(root.RebornArt.streetSigns(world));this.decorated=true;}
  }
+ releaseForgetGL(){for(const key of ['p','probeProgram','sky','shadowProgram','bloomProgram','postProgram','envTex','studioTex','storyTex','atlasTex','townTex'])this[key]=null;this.targets=null;this.probeBuffers=[];this.shadowTarget=null;this.msaa=null;this.batches={};}
  releaseDisposeGL(){const gl=this.gl;if(!gl)return;
   for(const batch of Object.values(this.batches||{})){if(batch.vao)gl.deleteVertexArray(batch.vao);if(batch.instances)gl.deleteBuffer(batch.instances);if(batch.vertices)gl.deleteBuffer(batch.vertices);}
   for(const key of ['p','probeProgram','sky','shadowProgram','bloomProgram','postProgram']){if(this[key]?.p)gl.deleteProgram(this[key].p);this[key]=null;}
@@ -3301,7 +3385,7 @@ class PolishedRenderer extends R.Renderer{
  canvasTexture(canvas,repeat){const gl=this.gl,t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,canvas);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,repeat?gl.REPEAT:gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.generateMipmap(gl.TEXTURE_2D);return t;}
  remoteTexture(url,fallback='#777777'){const gl=this.gl,epoch=this.contextEpoch,t=gl.createTexture(),c=document.createElement('canvas');c.width=c.height=2;const x=c.getContext('2d');x.fillStyle=fallback;x.fillRect(0,0,2,2);gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);const image=new Image();image.decoding='async';image.onload=()=>{try{if(this.contextLost||epoch!==this.contextEpoch||!gl.isTexture(t))return;gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.generateMipmap(gl.TEXTURE_2D);}catch(_e){}};image.src=url;return t;}
  createTarget(w,h,depth=false){const gl=this.gl,fbo=gl.createFramebuffer(),texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,this.floatTarget?gl.RGBA16F:gl.RGBA,w,h,0,gl.RGBA,this.floatTarget?gl.HALF_FLOAT:gl.UNSIGNED_BYTE,null);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,texture,0);let z=null;if(depth){z=gl.createRenderbuffer();gl.bindRenderbuffer(gl.RENDERBUFFER,z);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT24,w,h);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,z);}if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw new Error('Scene framebuffer unavailable');return{fbo,texture,depth:z,w,h};}
- resize(){if(!this.gl)return super.resize();const w=this.canvas.clientWidth||innerWidth,h=this.canvas.clientHeight||innerHeight;this.w=w;this.h=h;const budget=this.qualityHint==='high'?2400000:this.qualityHint==='low'?600000:1400000;const dpr=Math.min(devicePixelRatio||1,this.qualityHint==='high'?1.5:1.25,Math.sqrt(budget/(w*h)))*this.scale;this.canvas.width=Math.max(1,Math.round(w*dpr));this.canvas.height=Math.max(1,Math.round(h*dpr));this.proj=R.perspective((h>w?65:58)*Math.PI/180,w/h,.12,1800);
+ resize(){if(!this.gl)return super.resize();if(this.gl.isContextLost())return;const w=this.canvas.clientWidth||innerWidth,h=this.canvas.clientHeight||innerHeight;this.w=w;this.h=h;const budget=this.qualityHint==='high'?2400000:this.qualityHint==='low'?600000:1400000;const dpr=Math.min(devicePixelRatio||1,this.qualityHint==='high'?1.5:1.25,Math.sqrt(budget/(w*h)))*this.scale;this.canvas.width=Math.max(1,Math.round(w*dpr));this.canvas.height=Math.max(1,Math.round(h*dpr));this.proj=R.perspective((h>w?65:58)*Math.PI/180,w/h,.12,1800);
  if(this.gl&&this.p){const gl=this.gl;if(this.msaa){gl.deleteFramebuffer(this.msaa.fbo);gl.deleteRenderbuffer(this.msaa.color);gl.deleteRenderbuffer(this.msaa.depth);this.msaa=null;}if(this.targets)for(const t of Object.values(this.targets)){gl.deleteTexture(t.texture);gl.deleteFramebuffer(t.fbo);if(t.depth)gl.deleteRenderbuffer(t.depth);}const cw=this.canvas.width,ch=this.canvas.height;this.targets={main:this.createTarget(cw,ch,true),mirror:this.createTarget(Math.max(1,Math.round(cw*.5)),Math.max(1,Math.round(ch*.5)),true),bloom:this.createTarget(Math.max(1,Math.round(cw*.25)),Math.max(1,Math.round(ch*.25))),blur:this.createTarget(Math.max(1,Math.round(cw*.25)),Math.max(1,Math.round(ch*.25)))};// Resolve a multisampled render target before tone mapping. This prevents metallic edges sparkling.
  const format=this.floatTarget?gl.RGBA16F:gl.RGBA8,supported=gl.getInternalformatParameter(gl.RENDERBUFFER,format,gl.SAMPLES),samples=(this.qualityHint==='low'||(this.qualityHint==='auto'&&this.scale<.85))?0:(this.qualityHint==='high'?Math.min(4,supported?.[0]||0):(Array.from(supported||[]).includes(2)?2:Math.min(4,supported?.[0]||0)));
  if(samples>1){const fbo=gl.createFramebuffer(),color=gl.createRenderbuffer(),depth=gl.createRenderbuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.bindRenderbuffer(gl.RENDERBUFFER,color);gl.renderbufferStorageMultisample(gl.RENDERBUFFER,samples,format,cw,ch);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.RENDERBUFFER,color);gl.bindRenderbuffer(gl.RENDERBUFFER,depth);gl.renderbufferStorageMultisample(gl.RENDERBUFFER,samples,gl.DEPTH_COMPONENT24,cw,ch);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,depth);if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)===gl.FRAMEBUFFER_COMPLETE)this.msaa={fbo,color,depth,samples};else{gl.deleteFramebuffer(fbo);gl.deleteRenderbuffer(color);gl.deleteRenderbuffer(depth);}}
@@ -3512,7 +3596,7 @@ const touch=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0;
 document.body.classList.toggle('touch',touch);
 let save,hadSave=false,storageAvailable=true,saveLoadBlocked=false,rawStoredSave=null,rawStoredStory=null,storedPairRead=false,releaseWorldError='';
 try{rawStoredSave=localStorage.getItem(STORAGE);rawStoredStory=localStorage.getItem(STORY_STORAGE);storedPairRead=true;hadSave=!!rawStoredSave;const parsed=rawStoredSave?JSON.parse(rawStoredSave):null;if(rawStoredSave&&(!parsed||parsed.version!==1))saveLoadBlocked=true;save=C.validateSave(parsed);if(rawStoredStory)JSON.parse(rawStoredStory);}catch(_e){save=save||C.validateSave(null);storageAvailable=false;saveLoadBlocked=!!rawStoredSave||!!rawStoredStory;}
-if(!hadSave){save.settings.weather='rain';save.settings.autoThrottle=false;save.settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;}
+if(!hadSave){save.settings.weather='clear';save.climate.mode='clear';save.settings.autoThrottle=false;save.settings.reducedMotion=matchMedia('(prefers-reduced-motion:reduce)').matches;}
 const sessionSave=new C.SessionSaves.Guard(()=>localStorage,STORAGE,STORY_STORAGE,rawStoredSave,rawStoredStory,storedPairRead);
 const settings=save.settings;let vehicle=save.vehicle,roadKnowledge=save.roadKnowledge,driveJournal=save.journal,serviceHistory=save.serviceHistory;let storyData=null;try{storyData=JSON.parse(localStorage.getItem(STORY_STORAGE)||'null');}catch(_e){}
 // Touch must always begin at rest: the stick supplies the same four directions as arrow keys.
@@ -3526,7 +3610,7 @@ function persist(){
 }
 let renderer;
 try{renderer=new RebornRenderer.Renderer($('world'),C.createWorld());}catch(e){$('loading').hidden=true;$('fatal').hidden=false;$('fatal-message').textContent=e.message;return;}
-window.addEventListener('reborn-vehicle-model-ready',()=>{if(renderer.gl){try{renderer.initGL();renderer.resize();}catch(e){renderer.error=e.message;}}});
+window.addEventListener('reborn-vehicle-model-ready',()=>{if(renderer.gl&&!renderer.contextLost&&!renderer.gl.isContextLost()){try{renderer.initGL();renderer.resize();}catch(e){renderer.error=e.message;}}});
 renderer.night=settings.weather==='clear'?0:1;renderer.rain=settings.weather==='rain'?1:0;
 const sim=new C.Simulation(),blackwaterWorld=sim.world;sim.car.x=300;let northBerwickWorld=null;const audio=new RebornAudio();audio.enabled=settings.sound;
 let state='menu',selected='free',pausedFromMenu=false,accumulator=0,lastFrame=0,clock=0,uiClock=0,toastUntil=0,cameraStyle=0,cameraYaw=0,cameraEye=null,cameraTarget=null,lastHealth=100,focusBefore=null,lastInput={};
@@ -3973,7 +4057,7 @@ function showState(){
  document.body.dataset.state=state;
  renderer.presentation=(state==='menu'||state==='inspect'||state==='story'||(state==='journey'&&journeyReturnState!=='play')||(state==='pause'&&pausedFromMenu))?'studio':'road';
  if(state!=='play')$('radio').hidden=true;
- updateDriverState();releaseUpdateState();
+ updateDriverState();releaseUpdateState();proSyncState();
 }
 async function tryFullscreen(){
  if(!touch)return;
@@ -4008,7 +4092,7 @@ async function loadNorthBerwick(){
   const nextWeather=new C.MaineWeather.Director(save.climate,nextWorld,nextTown.state);
   const nextPassenger=new C.DriveStories.Director(save.journeys,nextWorld);
   const nextEcho=new C.EchoRoads.Director(save.echoes,nextWorld);if(nextPassenger.state.active)nextEcho.end();
-  northBerwickWorld=nextWorld;townDirector=nextTown;weatherDirector=nextWeather;passengerDirector=nextPassenger;echoDirector=nextEcho;
+  northBerwickWorld=nextWorld;townDirector=nextTown;weatherDirector=nextWeather;passengerDirector=nextPassenger;echoDirector=nextEcho;proWorldReady();
   save.town=nextTown.state;save.climate=nextWeather.state;save.journeys=nextPassenger.state;save.echoes=nextEcho.state;
   sim.townDirector=nextTown;sim.weatherDirector=nextWeather;sim.echoDirector=nextEcho;renderEchoPanel(true);renderMemoryPanel(true);
   $('free-drive-caption').textContent='Your car. Your North Berwick roads.';
@@ -4029,7 +4113,7 @@ function start(mode=selected,chapterIndex=null){
  selected=mode;state='play';accumulator=0;input.clear();cameraYaw=sim.car.yaw;cameraEye=null;cameraTarget=null;renderer.skids=[];renderer.particles=[];beginTrip(mode);lastHealth=sim.car.health;
  if(resumingPassenger){positionForPassengerStart(passengerDirector.state.active.id,true);lastPassengerDistance=sim.car.distance;passengerDirector.resume();}
  else if(mode==='free'&&!Number.isInteger(chapterIndex)&&echoDirector?.state.active&&echoDirector.state.lastPosition){Object.assign(sim.car,echoDirector.state.lastPosition,{vx:0,vz:0,forwardSpeed:0,lateralSpeed:0});}
- showState();audio.enabled=settings.sound;audio.start();tryFullscreen();acquireWake();
+ showState();if(proGoal())proSyncGoal();audio.enabled=settings.sound;audio.start();tryFullscreen();acquireWake();
  notify(resumingPassenger?'PASSENGER DRIVE RESUMED / '+passengerDirector.story().title.toUpperCase():mode==='arena'?'REBORN ARMED / E TO PULSE':mode==='pursuit'?'THREE UNITS / BREAK THEIR LINE OF SIGHT':mode==='run'?'HARBOR RUN / 150 SECONDS':'WELCOME BACK, JUSTIN.',3);
  updateHUD();
 }
@@ -4042,7 +4126,7 @@ function pause(){
  const firstFocusable=Array.from(panel.querySelectorAll('input:not([disabled]),select:not([disabled]),button:not([disabled])')).find(el=>el.offsetParent!==null&&!el.hidden&&el.tabIndex>=0&&!el.closest('[inert]'));
  if(firstFocusable)firstFocusable.focus();
 }
-function resume(){if(state!=='pause')return;state=pausedFromMenu?'menu':'play';input.clear();accumulator=0;showState();if(focusBefore?.focus)focusBefore.focus();if(state==='play'){audio.start();acquireWake();}}
+function resume(){if(state!=='pause'||renderer.contextLost||document.querySelector('dialog[open]'))return;state=pausedFromMenu?'menu':'play';input.clear();accumulator=0;showState();if(focusBefore?.focus)focusBefore.focus();if(state==='play'){audio.start();acquireWake();}}
 function action(name){
  if(document.querySelector('dialog[open]'))return;
  if(state==='replay'){if(name==='pause')exitMemoryReplay();return;}
@@ -4155,6 +4239,7 @@ function consumeEvents(){
  }
 }
 function updateCamera(dt){
+ if(state==='photo'){proPhotoCamera();return;}
  if(state==='replay'&&updateMemoryReplayCamera(dt))return;
  const c=sim.car,portrait=renderer.h>renderer.w;
  if(state==='inspect'){
@@ -4238,10 +4323,10 @@ function updateHUD(){
  const echo=echoObjective();if(echo&&!passenger&&!storyObjective){title=echo.title;detail=echo.detail;progress=echo.progress;}
  $('objective').textContent=title;$('objective-detail').textContent=detail;$('mission-progress').querySelector('span').style.width=(progress*100)+'%';
  if(touch&&input.padConnected)document.body.classList.remove('touch');else document.body.classList.toggle('touch',touch);
- updateDriverHUD();updateWeatherHUD();updatePassengerHUD();updateEchoHUD();updateMemoryHUD();releaseUpdateHUD();drawMap();
+ updateDriverHUD();updateWeatherHUD();updatePassengerHUD();updateEchoHUD();updateMemoryHUD();releaseUpdateHUD();proHUD();drawMap();
 }
 function updateWaypoint(){
- const cp=sim.mode==='run'&&sim.mission.status==='active'?C.ROUTE[sim.mission.checkpoint]:director.objective(sim)?.destination||passengerObjective()?.destination||echoObjective()?.destination;
+ const cp=sim.mode==='run'&&sim.mission.status==='active'?C.ROUTE[sim.mission.checkpoint]:director.objective(sim)?.destination||passengerObjective()?.destination||echoObjective()?.destination||proGoal()||(sim.world.northBerwick?uxDestination:null);
  if(!cp||state!=='play'){ $('waypoint').hidden=true;return; }
  const p=renderer.project(cp.x,6.5,cp.z);$('waypoint').hidden=!p;if(p){$('waypoint').style.left=C.clamp(p.x,35,renderer.w-35)+'px';$('waypoint').style.top=C.clamp(p.y,150,renderer.h-175)+'px';$('waypoint').querySelector('span').textContent=Math.round(C.dist(sim.car,cp))+' m';}
 }
@@ -4251,6 +4336,7 @@ function drawWeather(dt){if(townAvailable()&&weatherDirector){drawMaineWeather(d
 function updateBest(){if(save.bestRun)$('best-menu').textContent='LOCAL BEST '+formatTime(save.bestRun);}
 function frame(timestamp){
  try{
+  if(renderer.contextLost){input.clear();input.blocked=true;lastFrame=timestamp;accumulator=0;requestAnimationFrame(frame);return;}
   const rawDelta=lastFrame?Math.max(0,(timestamp-lastFrame)/1000):1/60;lastFrame=timestamp;const dt=Math.min(rawDelta,.075);clock+=dt;
   frameCounter++;fpsClock+=rawDelta;if(fpsClock>=1){fps=frameCounter/fpsClock;frameCounter=0;fpsClock=0;if(settings.quality==='auto'&&renderer.gl){lowFpsSeconds=fps<42?lowFpsSeconds+1:0;if(lowFpsSeconds>=3&&renderer.scale>.65){renderer.scale=Math.max(.65,renderer.scale-.1);renderer.resize();lowFpsSeconds=0;}}}
   // Poll controller button edges while paused too, so Start can resume.
@@ -4260,20 +4346,20 @@ function frame(timestamp){
   }else if(state==='play'&&!releaseReadingPause()){
    accumulator=Math.min(accumulator+dt,.12);let steps=0;
    while(accumulator>=C.DT&&steps<15&&state==='play'&&!releaseReadingPause()){
-    lastInput=conditionDrivingInput(input.sample(sim.car,C.DT,settings.autoThrottle));if(state!=='play')break;if(townDirector?.enabled)lastInput=townDirector.constrainInput(lastInput,sim.car);applyVehicleCondition();applyWeatherRoad(C.DT);sim.step(lastInput,C.DT,!townAvailable()&&settings.weather==='rain');tickLivingCar(C.DT,lastInput);tickTown(C.DT);tickPassengerStories(C.DT);tickEcho(C.DT);tickMemoryGhost(C.DT);sim.memoryProps=memoryGhostProps();director.tick(C.DT,sim);accumulator-=C.DT;steps++;consumeEvents();
+    lastInput=conditionDrivingInput(input.sample(sim.car,C.DT,settings.autoThrottle));if(state!=='play')break;if(townDirector?.enabled)lastInput=townDirector.constrainInput(lastInput,sim.car);applyVehicleCondition();applyWeatherRoad(C.DT);sim.step(lastInput,C.DT,!townAvailable()&&settings.weather==='rain');tickLivingCar(C.DT,lastInput);tickTown(C.DT);tickPassengerStories(C.DT);tickEcho(C.DT);proTick(C.DT);tickMemoryGhost(C.DT);sim.memoryProps=memoryGhostProps();director.tick(C.DT,sim);accumulator-=C.DT;steps++;consumeEvents();
    }
    if(sim.car.health<lastHealth-.5){markMemory('impact','Body impact');audio.event('hit');$('damage-flash').style.opacity=settings.reducedMotion?'0':'.7';}
    else $('damage-flash').style.opacity='0';lastHealth=sim.car.health;
   }else if(state==='menu'||state==='inspect'||state==='story'){sim.time+=dt;if(state==='inspect'){sim.car.modeBlend=C.approach(sim.car.modeBlend,sim.car.mode==='reborn'?1:0,3,dt);sim.car.rallyBlend=C.approach(sim.car.rallyBlend,sim.car.mode==='rally'?1:0,3,dt);}}
   const replaySound=state==='replay'&&memoryReplay?memoryReplay.sample():null;audio.update(sim.car,replaySound?{throttle:replaySound.throttle,brake:replaySound.brake}:lastInput,state==='play'||state==='replay'&&!memoryReplay?.paused&&!memoryReplay?.finished);updateDiagnosticAudio();updateEchoAudio();
-  if(state!=='play')sim.memoryProps=[];if(releaseRenderDue(timestamp)){updateCamera(dt);renderer.storyGoal=director.objective(sim)?.destination||passengerObjective()?.destination||null;renderer.update(sim,dt,weatherRenderSettings());renderer.render();renderer.drawPlate(sim.car,$('plate'));drawWeather(dt);updateWaypoint();}
+  if(state!=='play')sim.memoryProps=[];if(releaseRenderDue(timestamp)){updateCamera(dt);renderer.storyGoal=director.objective(sim)?.destination||passengerObjective()?.destination||proGoal()||null;renderer.update(sim,state==='photo'?0:dt,weatherRenderSettings());renderer.render();renderer.drawPlate(sim.car,$('plate'));drawWeather(dt);updateWaypoint();}
   uiClock+=dt;if(uiClock>=.10){uiClock=0;if(state==='play')updateHUD();}
   if(clock>toastUntil)$('toast').classList.remove('visible');if(releaseInitialized)releaseFlushNotifications();
  }catch(e){frameErrors.push(String(e));if(frameErrors.length===1){state='error';input.clear();input.blocked=true;$('fatal-message').textContent='The drive stopped safely: '+e.message;$('fatal').hidden=false;console.error(e);}return;}
  requestAnimationFrame(frame);
 }
 // Read-only diagnostics are useful for regression tests and issue reports. No remote endpoint.
-window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,release:releaseSnapshot(),graphics:{...(renderer.diagnostics?.()||{}),interruption:graphicsInterruption?{...graphicsInterruption}:null},story:director.snapshot(),town:townDirector?JSON.parse(JSON.stringify(townDirector.state)):null,weather:weatherSnapshot(),echoes:echoDirector?{...echoDirector.snapshot(sim.car),audioNodes:echoAudio?.nodes.length||0,audioLevel:echoAudio?.gain.gain.value||0}:null,passengers:passengerDirector?passengerDirector.snapshot():{state:save.journeys,active:null,objective:null},memories:memorySnapshot(),livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,serviceHistory:serviceHistory.length,activeFaults:activeFaults().map(([id,fault])=>({id,severity:fault.severity,discovered:fault.discovered})),activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
+window.REBORN=Object.freeze({version:C.VERSION,snapshot:()=>({...sim.snapshot(),appState:state,camera:cameraNames[cameraStyle],renderer:renderer.kind,fps:Math.round(fps),resolutionScale:renderer.scale,storageAvailable,pro:proSnapshot(),release:releaseSnapshot(),graphics:{...(renderer.diagnostics?.()||{}),interruption:graphicsInterruption?{...graphicsInterruption}:null},story:director.snapshot(),town:townDirector?JSON.parse(JSON.stringify(townDirector.state)):null,weather:weatherSnapshot(),echoes:echoDirector?{...echoDirector.snapshot(sim.car),audioNodes:echoAudio?.nodes.length||0,audioLevel:echoAudio?.gain.gain.value||0}:null,passengers:passengerDirector?passengerDirector.snapshot():{state:save.journeys,active:null,objective:null},memories:memorySnapshot(),livingCar:{vehicle:{...vehicle},roads:Object.keys(roadKnowledge).length,journal:driveJournal.length,serviceHistory:serviceHistory.length,activeFaults:activeFaults().map(([id,fault])=>({id,severity:fault.severity,discovered:fault.discovered})),activeTrip:activeTrip?{mode:activeTrip.mode,roads:activeTrip.roads.size,maxMph:activeTrip.maxMph}:null},inspection:{focus:inspectFocus,distance:inspectDistance},errors:[...frameErrors]}),settings:()=>({...settings})});
 $('input-caption').innerHTML=touch?'LANDSCAPE TOUCH · LEFT STICK = ARROW KEYS<br><span>Third person default · tap CAM for driver view.</span>':'WASD / ARROWS · CONTROLLER READY<br><span>Third person default · C changes camera.</span>';
 /* WORKSHOP_MEMORY_UI_BEGIN */
 // Optional driveway story inside the paused Workshop. No timers or repair gates.
@@ -4360,7 +4446,7 @@ function initDriverUX(){
  canvas.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='=')changeMapZoom(1);else if(e.key==='-')changeMapZoom(-1);else if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&uxMapView){const step=100/uxMapView.scale;uxMapCenter={x:uxMapView.centerX+(e.key==='ArrowRight'?step:e.key==='ArrowLeft'?-step:0),z:uxMapView.centerZ+(e.key==='ArrowUp'?step:e.key==='ArrowDown'?-step:0)};clampMapCenter();drawExpandedMap();}else return;e.preventDefault();e.stopPropagation();});
  window.addEventListener('resize',()=>{if(state==='map')drawExpandedMap();});
  const mini=$('minimap');mini.tabIndex=0;mini.setAttribute('role','button');mini.setAttribute('aria-label','Open paused road map. M.');mini.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();openMap();}});
- document.addEventListener('keydown',e=>{const id={map:'map-overlay',journey:'journey',town:'town-dialog',pause:'pause',story:'story',result:'result','passenger-result':'passenger-result','passenger-exit':'passenger-exit'}[state];if(!id)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();if(state==='map')closeMap();else if(state==='journey')closeJourney();else if(state==='town')closeTown();else if(state==='pause')resume();else if(state==='story')$('story-back').click();else if(state==='passenger-exit')cancelPassengerExit();else if(state==='passenger-result')$('passenger-result-close').click();else garage();return;}if(e.key==='Tab'){const controls=Array.from($(id).querySelectorAll('button:not([disabled]),input:not([disabled]),select,[tabindex="0"]')).filter(x=>x.offsetParent!==null&&!x.hidden&&x.tabIndex>=0&&!x.disabled);if(!controls.length)return;const first=controls[0],last=controls.at(-1);if(!$(id).contains(document.activeElement)){first.focus();e.preventDefault();e.stopImmediatePropagation();}else if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault();e.stopImmediatePropagation();}else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault();e.stopImmediatePropagation();}}},true);
+ document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]'))return;const id={map:'map-overlay',journey:'journey',town:'town-dialog',pause:'pause',story:'story',result:'result','passenger-result':'passenger-result','passenger-exit':'passenger-exit'}[state];if(!id)return;if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();if(state==='map')closeMap();else if(state==='journey')closeJourney();else if(state==='town')closeTown();else if(state==='pause')resume();else if(state==='story')$('story-back').click();else if(state==='passenger-exit')cancelPassengerExit();else if(state==='passenger-result')$('passenger-result-close').click();else garage();return;}if(e.key==='Tab'){const controls=Array.from($(id).querySelectorAll('button:not([disabled]),input:not([disabled]),select,[tabindex="0"]')).filter(x=>x.offsetParent!==null&&!x.hidden&&x.tabIndex>=0&&!x.disabled);if(!controls.length)return;const first=controls[0],last=controls.at(-1);if(!$(id).contains(document.activeElement)){first.focus();e.preventDefault();e.stopImmediatePropagation();}else if(e.shiftKey&&document.activeElement===first){last.focus();e.preventDefault();e.stopImmediatePropagation();}else if(!e.shiftKey&&document.activeElement===last){first.focus();e.preventDefault();e.stopImmediatePropagation();}}},true);
  for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{$('drive').setAttribute('aria-label','Take the wheel: '+uxModeNames[b.dataset.mode]);});
 }
 function clampMapCenter(){if(!uxMapCenter)return;const b=sim.world.bounds;uxMapCenter.x=C.clamp(uxMapCenter.x,b.minX,b.maxX);uxMapCenter.z=C.clamp(uxMapCenter.z,b.minZ,b.maxZ);}
@@ -4375,6 +4461,202 @@ function drawDriverMapLabels(ctx,p,world,w,h,pad){
 }
 
 /* DRIVER_UX_END */
+/* PRO_DRIVING_UI_BEGIN */
+// SPDX-License-Identifier: CPAL-1.0
+// Application adapter: tours and photo mode share the existing simulation and guarded save.
+const PD=C.HometownDrives;
+let proDirector=null,proPhoto=null,proInitialized=false,proRouteClock=0,proPhotoURL=null,proPhotoBusy=false;
+let proCaptureCount=0,proLastCompletion=null;
+function proEligible(){return !!northBerwickWorld&&sim.world===northBerwickWorld&&sim.mode==='free'&&!director.active&&!passengerDirector?.state.active&&!echoDirector?.state.active;}
+function proConflict(){return passengerDirector?.state.active?'Finish or end the passenger drive first.':echoDirector?.state.active?'End Echo Roads first; your progress will remain.':director.active?'Return to the garage before choosing a hometown drive.':'';}
+function proWorldReady(){
+ if(!northBerwickWorld)return;
+ const router=new C.ReleaseUX.Router(northBerwickWorld);
+ proDirector=new PD.Director(save.hometown,PD.catalog(northBerwickWorld,router));save.hometown=proDirector.state;
+ if(proInitialized)proRenderTours();
+}
+function proGoal(){return proEligible()?proDirector?.goal():null;}
+function proSyncGoal(){
+ const g=proGoal();if(!g)return;
+ uxDestination={...g,proTour:true};uxLastWorld=sim.world;releaseBuildRoute();$('ux-clear-pin').disabled=false;proRouteClock=0;
+}
+function proClearPin(){if(uxDestination?.proTour){uxDestination=null;releaseRoute=null;$('ux-clear-pin').disabled=true;releaseDescribeRoute();}}
+function proTick(dt){
+ if(!proDirector)return;
+ const event=proDirector.tick(dt,sim.car,proEligible()&&state==='play',!!C.roadAt(sim.world,sim.car.x,sim.car.z,2));
+ if(event){
+  save.hometown=proDirector.state;markMemory('place',event.type==='stop'?event.place:event.title);
+  if(event.type==='complete'){proLastCompletion=event;proClearPin();notify('DRIVE COMPLETE · '+event.badge.toUpperCase(),6);}
+  else{proSyncGoal();notify('PLACE REMEMBERED · '+event.place.toUpperCase(),4);}
+  persist();proRenderTours();
+ }
+ if(proGoal()){
+  proRouteClock+=dt;
+  if(proRouteClock>=5){proRouteClock=0;const progress=C.ReleaseUX.routeProgress(releaseRoute,sim.car);if(!releaseRoute?.ok||progress?.offRoute)proSyncGoal();}
+ }
+}
+function proHUD(){
+ const g=proGoal(),r=proDirector?.route(),a=proDirector?.state.active;
+ if(!g||!r||!a)return;
+ const d=Math.hypot(g.x-sim.car.x,g.z-sim.car.z);
+ $('chapter-kicker').hidden=false;$('chapter-kicker').textContent='HOMETOWN DRIVE · '+(a.index+1)+' / '+r.stops.length;
+ $('objective').textContent=r.title;
+ $('objective-detail').textContent=g.name+' · '+(d<20?'EASE BELOW 8 MPH TO REMEMBER THIS PLACE':Math.round(d)+' m to the road approach');
+ $('mission-progress').querySelector('span').style.width=(a.index/r.stops.length*100)+'%';
+}
+function proOpenTours(){
+ if(!proInitialized||state==='error'||renderer.contextLost||state==='photo')return;
+ if(state==='replay'){notify('EXIT THE REPLAY BEFORE CHOOSING A DRIVE');return;}
+ if(state==='play')pause();
+ if(!['menu','pause'].includes(state)){notify('OPEN HOMETOWN DRIVES FROM THE GARAGE OR PAUSE MENU');return;}
+ proRenderTours();$('pro-drive-dialog').showModal();$('pro-drive-close').focus();input.clear();
+}
+function proRenderTours(){
+ if(!proInitialized)return;
+ const list=$('pro-route-list');list.replaceChildren();
+ const current=proDirector?.state||save.hometown,active=current?.active,conflict=proConflict();
+ $('pro-route-status').textContent=conflict||(!proDirector?'North Berwick is loading. Try again in a moment.':active?'Your itinerary is remembered. Resume the next stop, or end it to choose another.':'Three drives. No countdown. Reach each road approach and slow down to remember it.');
+ $('pro-tour-cancel').hidden=!active;
+ for(const route of proDirector?.routes||[]){
+  const done=current.completed[route.id],own=active?.id===route.id;
+  const card=document.createElement('article');card.className='pro-route-card';card.dataset.route=route.id;
+  const kicker=document.createElement('small');kicker.textContent=route.tag;
+  const title=document.createElement('h3');title.textContent=route.title;
+  const desc=document.createElement('p');desc.textContent=route.description;
+  const meta=document.createElement('p');meta.className='pro-route-meta';meta.textContent=route.stops.length+' PLACES · '+(route.distanceM/1609.344).toFixed(1)+' MI FROM THE USUAL START';
+  const preview=document.createElement('canvas');preview.width=580;preview.height=170;preview.setAttribute('aria-label',route.title+' stop preview, not a navigation map');
+  const stops=document.createElement('p');stops.className='pro-route-stops';stops.textContent=route.stops.map(x=>x.name.replace('North Berwick ','')).join(' → ');
+  const badge=document.createElement('p');badge.className='pro-badge';badge.textContent=done?'✓ '+route.badge+' · '+done.runs+' completed':own?'IN PROGRESS · NEXT STOP '+(active.index+1):'REMEMBER THE DRIVE · '+route.badge;
+  const button=document.createElement('button');button.className=own?'primary':'secondary';button.type='button';button.dataset.startTour=route.id;button.textContent=own?'RESUME THIS ITINERARY':done?'DRIVE IT AGAIN':'START THIS DRIVE';button.disabled=!!conflict||!route.available||!!active&&!own;
+  button.addEventListener('click',()=>proBeginTour(route.id));
+  card.append(kicker,title,preview,desc,meta,stops,badge,button);list.append(card);proRoutePreview(preview,route);
+ }
+ $('pro-tour-record').textContent=Object.keys(current?.completed||{}).length+' / 3 DRIVES REMEMBERED · '+(current?.visited?.length||0)+' DISTINCT PLACES';
+}
+function proRoutePreview(canvas,route){
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#0c1b24';ctx.fillRect(0,0,canvas.width,canvas.height);
+ if(!route.stops.length)return;
+ const points=[northBerwickWorld.spawn,...route.stops],xs=points.map(p=>p.x),zs=points.map(p=>p.z),minX=Math.min(...xs),minZ=Math.min(...zs),maxX=Math.max(...xs),maxZ=Math.max(...zs),s=Math.min(520/Math.max(1,maxX-minX),122/Math.max(1,maxZ-minZ));
+ const project=p=>[canvas.width/2+(p.x-(minX+maxX)/2)*s,canvas.height/2+(p.z-(minZ+maxZ)/2)*s];
+ ctx.lineWidth=1;ctx.strokeStyle='#25414e';ctx.beginPath();for(const r of northBerwickWorld.roads){const a=project({x:r.x1,z:r.z1}),b=project({x:r.x2,z:r.z2});ctx.moveTo(...a);ctx.lineTo(...b);}ctx.stroke();
+ ctx.setLineDash([5,5]);ctx.strokeStyle='#dcb57c';ctx.lineWidth=2;ctx.beginPath();points.forEach((p,i)=>{const xy=project(p);i?ctx.lineTo(...xy):ctx.moveTo(...xy);});ctx.stroke();ctx.setLineDash([]);
+ points.forEach((p,i)=>{const[x,y]=project(p);ctx.fillStyle=i?'#e7bf83':'#7fd4ca';ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#10212a';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(i||'S',x,y);});
+}
+function proBeginTour(id){
+ const conflict=proConflict();if(conflict||!proDirector){$('pro-route-status').textContent=conflict||'Town still loading.';return;}
+ if(!proDirector.begin(id))return;
+ $('pro-drive-dialog').close();save.hometown=proDirector.state;
+ if(!proEligible()||state==='menu'||pausedFromMenu)start('free');else if(state==='pause')resume();
+ if(state!=='play')return;
+ proDirector.resetContinuity();proSyncGoal();persist();proHUD();notify(proDirector.route().title.toUpperCase()+' · FOLLOW THE GOLD ROUTE',4);
+}
+function proEndTour(){proDirector?.end();save.hometown=proDirector?.state||PD.defaults();proClearPin();persist();proRenderTours();}
+function proPhotoCamera(){
+ if(!proPhoto)return;
+ const p=proPhoto,a=p.angle,d=p.distance,target=[sim.car.x,.85,sim.car.z];
+ renderer.setCamera([sim.car.x+Math.sin(a)*d,p.height,sim.car.z+Math.cos(a)*d],target);
+}
+function proOpenPhoto(){
+ if(!['play','pause','inspect','replay'].includes(state)||renderer.contextLost||document.querySelector('dialog[open]'))return;
+ if(state==='pause'&&pausedFromMenu){notify('INSPECT THE JETTA OR START A DRIVE TO TAKE A PHOTO');return;}
+ if(state==='replay')pauseMemoryReplay();
+ proPhoto={from:state,angle:sim.car.yaw+Math.PI*.75,distance:7.2,height:2.4,presentation:renderer.presentation,focus:document.activeElement};
+ state='photo';input.clear();accumulator=0;showState();renderer.presentation=proPhoto.presentation;proPhotoControls();$('pro-photo-export').focus();
+}
+function proPhotoControls(){
+ if(!proPhoto)return;
+ $('pro-photo-angle').value=Math.round(proPhoto.angle*180/Math.PI)%360;
+ $('pro-photo-distance').value=proPhoto.distance;$('pro-photo-height').value=proPhoto.height;
+}
+function proClosePhoto(interrupted=false){
+ if(!proPhoto)return;const previous=proPhoto;proPhoto=null;
+ state=previous.from==='play'?'pause':previous.from;pausedFromMenu=false;input.clear();accumulator=0;lastFrame=0;cameraEye=null;cameraTarget=null;showState();
+ if(state==='pause'){$('resume').textContent='BACK TO THE ROAD';$('resume').focus();}
+ else previous.focus?.focus?.();
+ if(interrupted&&state==='inspect'){state='pause';showState();}
+}
+function proCapturePhoto(){
+ if(!proPhoto||renderer.contextLost||proPhotoBusy)return;
+ proPhotoBusy=true;const button=$('pro-photo-export');button.disabled=true;$('pro-photo-status').textContent='Capturing the actual game frame…';
+ try{
+  proPhotoCamera();renderer.storyGoal=null;renderer.update(sim,0,weatherRenderSettings());renderer.render();
+  const source=renderer.canvas,ratio=Number($('pro-photo-ratio').value),w=source.width,h=source.height;
+  let sw=w,sh=h;if(w/h>ratio)sw=Math.floor(h*ratio);else sh=Math.floor(w/ratio);
+  const output=document.createElement('canvas');output.width=sw;output.height=sh;const x=output.getContext('2d');
+  x.drawImage(source,(w-sw)/2,(h-sh)/2,sw,sh,0,0,sw,sh);
+  if($('pro-photo-caption').checked){const size=Math.max(12,Math.round(sw/65));x.fillStyle='rgba(5,14,20,.76)';x.fillRect(0,sh-size*3.6,sw,size*3.6);x.fillStyle='#edc68d';x.font='600 '+size+'px sans-serif';x.fillText('99½ REBORN  /  '+(sim.world.northBerwick?'NORTH BERWICK, MAINE':'BUTTERCUP'),size,sh-size*1.8);x.fillStyle='#dae6e3';x.font=Math.max(10,size*.8)+'px sans-serif';x.fillText('In loving memory — Buttercup, Justin Tahai\'s 99.5 mkIV',size,sh-size*.6);}
+  output.toBlob(blob=>{
+   proPhotoBusy=false;button.disabled=false;
+   if(!blob){$('pro-photo-status').textContent='Capture unavailable. Try a smaller view.';return;}
+   if(proPhotoURL)URL.revokeObjectURL(proPhotoURL);proPhotoURL=URL.createObjectURL(blob);
+   const a=document.createElement('a');a.href=proPhotoURL;a.download='REBORN-North-Berwick-'+new Date().toISOString().replace(/[:.]/g,'-')+'.png';a.click();proCaptureCount++;
+   $('pro-photo-status').textContent=sw+' × '+sh+' PNG saved. Only this frame was exported; no save data or location access.';
+  },'image/png');
+ }catch(e){proPhotoBusy=false;button.disabled=false;$('pro-photo-status').textContent='Photo export failed: '+e.message;}
+}
+function proSyncState(){
+ if(!proInitialized)return;
+ $('pro-photo').hidden=state!=='photo';if(state==='photo')$('hud').hidden=true;
+ $('pro-photo-button').hidden=!['play','pause'].includes(state);
+ const interrupted=renderer.contextLost||!!graphicsInterruption;
+ if(interrupted){input.blocked=true;$('pro-photo-button').disabled=true;}else $('pro-photo-button').disabled=false;
+ if(state!=='play')proDirector?.resetContinuity();
+}
+function proSnapshot(){return {hometown:proDirector?.snapshot()||{state:save.hometown},photo:{active:state==='photo',captures:proCaptureCount},build:32};}
+function initProDrive(){
+ document.querySelector('.launch-row').insertAdjacentHTML('beforeend','<button id="pro-drives-menu" class="secondary" type="button">HOMETOWN DRIVES ↗</button>');
+ document.querySelector('#pause .modal-buttons').insertAdjacentHTML('beforeend','<button id="pro-drives-pause" class="secondary" type="button">H · HOMETOWN DRIVES</button><button id="pro-photo-pause" class="secondary" type="button">P · PHOTO MODE</button>');
+ document.querySelector('.hud-right').insertAdjacentHTML('afterbegin','<button id="pro-photo-button" class="square" type="button" aria-label="Open photo mode. P" title="Photo mode · P">PHOTO</button>');
+ document.body.insertAdjacentHTML('beforeend',`<dialog id="pro-drive-dialog" aria-labelledby="pro-drive-title"><header><div><small>99½ REBORN / NORTH BERWICK</small><h2 id="pro-drive-title">Take the long way.</h2><p>Not every drive needs a finish line.</p></div><button id="pro-drive-close" class="secondary" type="button">CLOSE</button></header><p id="pro-route-status" role="status"></p><div id="pro-route-list"></div><footer><strong id="pro-tour-record"></strong><button id="pro-tour-cancel" class="quiet" type="button" hidden>END THIS ITINERARY</button><p>In-game roadside approaches from the bundled map, not visitor directions or access permission. Starting a drive never adds a countdown or takes the wheel away.</p></footer></dialog>
+ <section id="pro-photo" aria-label="Photo mode, simulation paused" hidden><div id="pro-photo-stage" aria-hidden="true"></div><header><small>99½ REBORN / PHOTO MODE</small><h2>A moment worth keeping.</h2><p>Simulation paused. Drag the scene to orbit. Your car and progress stay put.</p></header><div id="pro-photo-controls" role="group" aria-label="Photo controls"><label>Orbit<input id="pro-photo-angle" type="range" min="-360" max="360" step="1"></label><label>Distance<input id="pro-photo-distance" type="range" min="3.5" max="18" step=".1"></label><label>Height<input id="pro-photo-height" type="range" min=".6" max="7" step=".1"></label><label>Frame<select id="pro-photo-ratio"><option value="1.7777777778">16:9 / Landscape</option><option value="1">1:1 / Square</option><option value="2.39">2.39:1 / Cinema</option></select></label><label class="pro-check"><input id="pro-photo-caption" type="checkbox" checked> Dedication caption</label><div class="pro-photo-actions"><button id="pro-photo-export" class="primary" type="button">SAVE PNG</button><button id="pro-photo-close" class="secondary" type="button">BACK · ESC</button></div><output id="pro-photo-status" role="status">Photos are local downloads, not uploads.</output></div></section>`);
+ for(const id of ['pro-drives-menu','pro-drives-pause'])$(id).addEventListener('click',proOpenTours);
+ for(const id of ['pro-photo-button','pro-photo-pause'])$(id).addEventListener('click',proOpenPhoto);
+ $('pro-drive-close').addEventListener('click',()=>$('pro-drive-dialog').close());$('pro-drive-dialog').addEventListener('cancel',()=>input.clear());
+ $('pro-tour-cancel').addEventListener('click',proEndTour);$('pro-photo-close').addEventListener('click',()=>proClosePhoto());$('pro-photo-export').addEventListener('click',proCapturePhoto);
+ for(const [id,key]of [['pro-photo-angle','angle'],['pro-photo-height','height'],['pro-photo-distance','distance']])$(id).addEventListener('input',e=>{if(proPhoto)proPhoto[key]=Number(e.target.value)*(key==='angle'?Math.PI/180:1);});
+ const stage=$('pro-photo-stage');let drag=null;
+ stage.addEventListener('pointerdown',e=>{if(!proPhoto)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY};stage.setPointerCapture(e.pointerId);e.preventDefault();});
+ stage.addEventListener('pointermove',e=>{if(!proPhoto||drag?.id!==e.pointerId)return;proPhoto.angle-=(e.clientX-drag.x)*.008;proPhoto.height=C.clamp(proPhoto.height+(e.clientY-drag.y)*.015,.6,7);drag.x=e.clientX;drag.y=e.clientY;proPhotoControls();});
+ for(const name of ['pointerup','pointercancel','lostpointercapture'])stage.addEventListener(name,()=>drag=null);
+ document.addEventListener('keydown',e=>{
+  if(state==='photo'){
+   if(e.code==='Escape'){e.preventDefault();e.stopImmediatePropagation();proClosePhoto();return;}
+   if(e.code==='Tab'){const all=[...$('pro-photo-controls').querySelectorAll('button,input,select')].filter(x=>!x.disabled);const i=all.indexOf(document.activeElement);if(i<0||e.shiftKey&&i===0||!e.shiftKey&&i===all.length-1){e.preventDefault();(e.shiftKey?all.at(-1):all[0]).focus();}return;}
+  }
+  if(e.repeat||e.ctrlKey||e.altKey||e.metaKey||e.target?.matches?.('input,textarea,select,[contenteditable=true]')||document.querySelector('dialog[open]'))return;
+  if(e.code==='KeyP'&&['play','pause','inspect','replay'].includes(state)){e.preventDefault();e.stopImmediatePropagation();proOpenPhoto();}
+  if(e.code==='KeyH'&&['play','pause','menu'].includes(state)){e.preventDefault();e.stopImmediatePropagation();proOpenTours();}
+ },true);
+ window.addEventListener('pagehide',()=>{if(proPhotoURL)URL.revokeObjectURL(proPhotoURL);});
+ document.body.insertAdjacentHTML('beforeend',`<dialog id="pro-graphics-dialog" aria-labelledby="pro-graphics-title"><small>99½ REBORN / GRAPHICS RECOVERY</small><h2 id="pro-graphics-title">Your drive is paused.</h2><p id="pro-graphics-message"></p><p>Reload reopens the stored game, not this exact moment. A session-only tab should export first. No browser data is cleared.</p><div id="pro-graphics-actions"><button id="pro-graphics-export" class="secondary" type="button">EXPORT THIS SESSION</button><button id="pro-graphics-reload" class="secondary" type="button">RESTART GAME…</button><button id="pro-graphics-continue" class="primary" type="button" hidden>CONTINUE PAUSED</button></div></dialog>`);
+ $('pro-graphics-export').addEventListener('click',()=>releaseDownload(releaseSessionBackup(),'REBORN-graphics-session.json'));
+ $('pro-graphics-reload').addEventListener('click',sessionReloadLatest);
+ $('pro-graphics-continue').addEventListener('click',()=>{if(!renderer.contextLost){$('pro-graphics-dialog').close();input.clear();showState();}});
+ $('pro-graphics-dialog').addEventListener('cancel',e=>{if(renderer.contextLost)e.preventDefault();input.clear();});
+ window.addEventListener('reborn-context-lost',proGraphicsLost);
+ window.addEventListener('reborn-context-restored',proGraphicsRestored);
+ window.addEventListener('reborn-context-failed',proGraphicsLost);
+ proInitialized=true;proRenderTours();
+}
+function proGraphicsLost(){
+ if(!proInitialized)return;
+ if(proPhoto)proClosePhoto(true);
+ input.clear();input.blocked=true;accumulator=0;
+ const dialog=$('pro-graphics-dialog');
+ for(const other of document.querySelectorAll('dialog[open]'))if(other!==dialog)other.close();
+ $('pro-graphics-title').textContent='Your drive is paused.';
+ $('pro-graphics-message').textContent='The browser interrupted its graphics context. Nothing continues driving behind the blank frame. Wait for recovery, or export this session before restarting.';
+ $('pro-graphics-continue').hidden=true;
+ if(!dialog.open)dialog.showModal();$('pro-graphics-export').focus();
+}
+function proGraphicsRestored(){
+ if(!proInitialized)return;
+ $('pro-graphics-title').textContent='Graphics restored.';
+ $('pro-graphics-message').textContent='The renderer has rebuilt its resources. Your drive or replay stays paused. Close this panel when ready; resume manually.';
+ $('pro-graphics-continue').hidden=false;
+}
+
+/* PRO_DRIVING_UI_END */
 /* SESSION_SAVE_UI_BEGIN */
 // Build 018: save ownership is independent of driving, inputs and story clocks.
 function captureSessionSave(){
@@ -4466,7 +4748,7 @@ function releaseQueueNotification(text,duration){
  if(!busy)return false;if(!releaseNotifications.some(n=>n.text===text)){releaseNotifications.push({text:String(text).slice(0,280),duration:Math.min(6,Math.max(1,duration))});if(releaseNotifications.length>8)releaseNotifications.shift();}return true;
 }
 function releaseFlushNotifications(){if(state!=='play'||!releaseNotifications.length||clock<toastUntil||passengerDirector?.state.active?.prompt||!$('passenger-dialogue')?.hidden)return;const next=releaseNotifications.shift();$('toast').textContent=next.text;$('toast').classList.add('visible');toastUntil=clock+next.duration;}
-function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable&&sessionSave.status().canWrite;}
+function releaseSafeUpdate(){return !graphicsInterruption&&!proDirector?.state.active&&(state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable&&sessionSave.status().canWrite;}
 function releaseReadingPause(){
  const active=state==='play'&&!!passengerDirector?.state.active?.prompt&&!$('passenger-choice')?.hidden;
  // The smallest screens and enlarged text use an explicit reading pause. It is
@@ -4546,12 +4828,12 @@ function releaseLeaveMap(){
  journeyReturnState=v.journey;state=v.state;input.clear();accumulator=0;showState();if(state==='journey')$('hub-map-open').focus();return true;
 }
 function releaseRenderDue(timestamp){
- if(document.hidden){releaseSkippedFrames++;return false;}
- const cap=(state==='play'||state==='replay'||state==='inspect')?60:20;
+ if(document.hidden||renderer.contextLost){releaseSkippedFrames++;return false;}
+ const cap=state==='photo'?30:(state==='play'||state==='replay'||state==='inspect')?60:20;
  if(timestamp-releaseRenderStamp<1000/cap-1){releaseSkippedFrames++;return false;}
  releaseRenderStamp=timestamp;releaseRenderFrames++;return true;
 }
-function releaseSnapshot(){return {build:18,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,saveSession:sessionSaveStatus(),staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
+function releaseSnapshot(){return {build:32,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,saveSession:sessionSaveStatus(),staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
 function initReleaseUX(){
  const chrome=document.querySelector('.ux-hub-chrome')||document.querySelector('.journey-header'),tabs=document.querySelector('.ux-tabs');
  const nav=document.createElement('nav');nav.className='hub-primary';nav.setAttribute('aria-label','Main game sections');nav.innerHTML=Object.entries(hubGroups).map(([id,g])=>'<button type="button" data-hub-group="'+id+'" aria-pressed="false">'+g.label+'</button>').join('');tabs.before(nav);
@@ -4585,7 +4867,7 @@ function initReleaseUX(){
 }
 
 /* RELEASE_UI_END */
-initDriveStoriesUI();initDriverUX();initWeatherUI();initEchoUI();initMemoryReplayUI();initWorkshopMemory();initReleaseUX();initSessionSaves();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
+initDriveStoriesUI();initDriverUX();initWeatherUI();initEchoUI();initMemoryReplayUI();initWorkshopMemory();initReleaseUX();initSessionSaves();initProDrive();applySettings();updateCameraChoice();resizeFX();updateBest();updateStoryMenu();updateInspect();updateJourneyPanel();applyVehicleCondition(true);showState();$('loading').hidden=true;loadNorthBerwick();requestAnimationFrame(frame);
 if(location.protocol.startsWith('http')&&window.isSecureContext&&'serviceWorker'in navigator&&!document.body.dataset.standalone){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
 })();
 

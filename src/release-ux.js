@@ -41,7 +41,7 @@ function releaseQueueNotification(text,duration){
  if(!busy)return false;if(!releaseNotifications.some(n=>n.text===text)){releaseNotifications.push({text:String(text).slice(0,280),duration:Math.min(6,Math.max(1,duration))});if(releaseNotifications.length>8)releaseNotifications.shift();}return true;
 }
 function releaseFlushNotifications(){if(state!=='play'||!releaseNotifications.length||clock<toastUntil||passengerDirector?.state.active?.prompt||!$('passenger-dialogue')?.hidden)return;const next=releaseNotifications.shift();$('toast').textContent=next.text;$('toast').classList.add('visible');toastUntil=clock+next.duration;}
-function releaseSafeUpdate(){return (state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable&&sessionSave.status().canWrite;}
+function releaseSafeUpdate(){return !graphicsInterruption&&!proDirector?.state.active&&(state==='menu'||state==='pause'||state==='journey'&&journeyReturnState!=='play')&&!passengerDirector?.state.active&&!echoDirector?.state.active&&!memoryReplay&&!saveLoadBlocked&&storageAvailable&&sessionSave.status().canWrite;}
 function releaseReadingPause(){
  const active=state==='play'&&!!passengerDirector?.state.active?.prompt&&!$('passenger-choice')?.hidden;
  // The smallest screens and enlarged text use an explicit reading pause. It is
@@ -121,12 +121,12 @@ function releaseLeaveMap(){
  journeyReturnState=v.journey;state=v.state;input.clear();accumulator=0;showState();if(state==='journey')$('hub-map-open').focus();return true;
 }
 function releaseRenderDue(timestamp){
- if(document.hidden){releaseSkippedFrames++;return false;}
- const cap=(state==='play'||state==='replay'||state==='inspect')?60:20;
+ if(document.hidden||renderer.contextLost){releaseSkippedFrames++;return false;}
+ const cap=state==='photo'?30:(state==='play'||state==='replay'||state==='inspect')?60:20;
  if(timestamp-releaseRenderStamp<1000/cap-1){releaseSkippedFrames++;return false;}
  releaseRenderStamp=timestamp;releaseRenderFrames++;return true;
 }
-function releaseSnapshot(){return {build:18,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,saveSession:sessionSaveStatus(),staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
+function releaseSnapshot(){return {build:32,safeToUpdate:releaseSafeUpdate(),queuedNotifications:releaseNotifications.length,hubGroup:releaseGroup,readingPaused:releaseChoiceHeld,textScale:settings.textScale||1,mapReady:!!northBerwickWorld,saveProtected:saveLoadBlocked,route:releaseRoute?{ok:releaseRoute.ok,segments:releaseRoute.segments?.length||0,distanceM:releaseRoute.distanceM||0,profile:releaseRoute.profile,reason:releaseRoute.reason}:null,renderedFrames:releaseRenderFrames,skippedRenderFrames:releaseSkippedFrames,renderCandidates:renderer.releaseCandidateCount||0,saveSession:sessionSaveStatus(),staticObjects:renderer.static?.length||0,renderBufferAllocations:renderer.releaseBufferAllocations||0};}
 function initReleaseUX(){
  const chrome=document.querySelector('.ux-hub-chrome')||document.querySelector('.journey-header'),tabs=document.querySelector('.ux-tabs');
  const nav=document.createElement('nav');nav.className='hub-primary';nav.setAttribute('aria-label','Main game sections');nav.innerHTML=Object.entries(hubGroups).map(([id,g])=>'<button type="button" data-hub-group="'+id+'" aria-pressed="false">'+g.label+'</button>').join('');tabs.before(nav);

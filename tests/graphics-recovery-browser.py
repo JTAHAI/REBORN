@@ -14,7 +14,7 @@ try:
  with sync_playwright() as p:
   browser=p.chromium.launch(executable_path=os.environ.get('REBORN_CHROMIUM') or None,headless=True,args=['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
   c=browser.new_context(viewport={'width':1100,'height':720});page=c.new_page();page.set_default_timeout(90000);errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-  page.goto(url);page.wait_for_function("window.REBORN?.version==='0.16.0-graphics-recovery-p019'")
+  page.goto(url);page.wait_for_function("window.REBORN?.version==='0.29.0-hometown-drives-p032'")
   if page.locator('#buttercup-continue').is_visible():page.locator('#buttercup-continue').click()
   page.locator('#drive').click();page.wait_for_function("REBORN.snapshot().appState==='play'")
   ext=page.evaluate("()=>{const gl=document.getElementById('world').getContext('webgl2');window.__rebornLose=gl?.getExtension('WEBGL_lose_context');return !!window.__rebornLose}")
