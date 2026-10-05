@@ -1,0 +1,69 @@
+{
+  "pass": 33,
+  "build": "Build 042",
+  "version": "0.39.0-thermal-governor-p042",
+  "fullWebsite": "REBORN-PASS-33-THERMAL-GOVERNOR-FULL-WEBSITE.zip",
+  "standalone": "REBORN-PASS-33-THERMAL-GOVERNOR-Standalone.zip",
+  "fullWebsiteSha256": "62534b8f22f5e45ffa97fca286a25262481cd1859e1a9e3dc5eaee8e98fd7ac1",
+  "standaloneSha256": "d0fedf8523f05bcbea1f6d0662ea7ddd8217277317d3ad1c78a8568120fda53c",
+  "checks": [
+    {
+      "name": "full website ZIP exists",
+      "ok": true
+    },
+    {
+      "name": "standalone ZIP exists",
+      "ok": true
+    },
+    {
+      "name": "thermal governor route included",
+      "ok": true
+    },
+    {
+      "name": "thermal governor manifest included",
+      "ok": true
+    },
+    {
+      "name": "thermal governor checklist included",
+      "ok": true
+    },
+    {
+      "name": "thermal governor script included",
+      "ok": true
+    },
+    {
+      "name": "play version updated",
+      "ok": true
+    },
+    {
+      "name": "thermal runtime patch present",
+      "ok": true
+    },
+    {
+      "name": "service worker cache updated",
+      "ok": true
+    },
+    {
+      "name": "service worker caches thermal governor",
+      "ok": true
+    },
+    {
+      "name": "homepage links thermal governor",
+      "ok": true
+    },
+    {
+      "name": "launch check validates thermal governor",
+      "ok": true
+    },
+    {
+      "name": "standalone includes thermal governor js",
+      "ok": true
+    },
+    {
+      "name": "new JS syntax check passed",
+      "ok": true
+    }
+  ],
+  "pushedToGitHub": false,
+  "limits": "Local package verification only; not physical-device FPS or thermal certification, deployment, or storefront approval."
+}
