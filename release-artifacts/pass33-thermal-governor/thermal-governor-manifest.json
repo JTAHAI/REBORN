@@ -1,0 +1,16 @@
+{
+  "name": "99\u00bd REBORN Thermal Governor Kit",
+  "version": "0.39.0-thermal-governor-p042",
+  "build": "Build 042 / Pass 33",
+  "route": "/thermal-governor/",
+  "playRoute": "/play/?build=f33thermal42",
+  "standaloneZip": "REBORN-PASS-33-THERMAL-GOVERNOR-Standalone.zip",
+  "features": [
+    "mobile thermal score and stepped frame caps",
+    "desktop heavy-scene pacing guard",
+    "graphics recovery 20 FPS safety cap",
+    "local in-game Thermal Governor report",
+    "no telemetry or backend"
+  ],
+  "status": "local static package only; not physical-device thermal/FPS certification"
+}
