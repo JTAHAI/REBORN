@@ -1,0 +1,24 @@
+{
+  "name": "99\u00bd REBORN Frame Pacer Kit",
+  "version": "0.38.0-frame-pacer-p041",
+  "build": "Build 041",
+  "pass": 32,
+  "route": "/frame-pacer/",
+  "gameRoute": "/play/",
+  "standaloneZip": "REBORN-PASS-32-FRAME-PACER-Standalone.zip",
+  "features": [
+    "adaptive frame cap for mobile auto quality",
+    "desktop heavy-scene pacing",
+    "graphics recovery cooldown cap",
+    "frame jitter diagnostics",
+    "in-game Frame Pacer overlay",
+    "local JSON report export",
+    "no telemetry"
+  ],
+  "claims": {
+    "noTelemetry": true,
+    "localOnly": true,
+    "notPhysicalDeviceCertification": true,
+    "notBenchmarkCertification": true
+  }
+}
