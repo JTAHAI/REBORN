@@ -1,0 +1,123 @@
+{
+  "build": "Build 041",
+  "pass": 32,
+  "version": "0.38.0-frame-pacer-p041",
+  "result": "passed",
+  "checks": [
+    {
+      "name": "full site root exists",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "frame pacer route included",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "frame pacer manifest included",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "frame pacer checklist included",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "frame pacer script included",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "play version updated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime frame pacer patch present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "release snapshot exposes frame pacer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker cache updated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker caches frame pacer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "launch check validates frame pacer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "release json version updated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "release json pass updated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "http /",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /frame-pacer/",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /frame-pacer/frame-pacer-manifest.json",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /frame-pacer/frame-pacer-checklist.md",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /launch-check/",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /launch-check/app.js",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /play/release.json",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /play/sw.js",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "http /downloads/REBORN-PASS-32-FRAME-PACER-Standalone.zip",
+      "ok": true,
+      "detail": "ok"
+    }
+  ],
+  "notes": [
+    "Local static package verification only",
+    "No physical-device FPS/thermal certification",
+    "No telemetry or backend added"
+  ]
+}
