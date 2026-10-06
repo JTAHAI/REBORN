@@ -1,0 +1,16 @@
+{
+  "name": "99½ REBORN Battery Governor",
+  "build": "Build 043 / Pass 34",
+  "version": "0.40.0-battery-governor-p043",
+  "features": [
+    "idle-aware frame cap",
+    "parked mobile 20 fps cap",
+    "coast mobile 24 fps cap",
+    "weather FX stride reduction while idle",
+    "local Battery Status API report when available",
+    "no telemetry"
+  ],
+  "hotkey": "B",
+  "script": "/play/battery-governor.js",
+  "status": "local static package; not physical-device battery certification"
+}
