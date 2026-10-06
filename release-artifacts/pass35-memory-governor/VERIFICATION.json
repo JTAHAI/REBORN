@@ -1,0 +1,31 @@
+{
+  "build": "Build 044",
+  "pass": 35,
+  "version": "0.41.0-memory-governor-p044",
+  "fullWebsite": "REBORN-PASS-35-MEMORY-GOVERNOR-FULL-WEBSITE.zip",
+  "standalone": "REBORN-PASS-35-MEMORY-GOVERNOR-Standalone.zip",
+  "fullWebsiteSha256": "95d2cf607a9a61c96dcab7a26235ae8c7557be43f1e5077b8f8dbd38b77261e2",
+  "standaloneSha256": "a39985b70d8668676ef5ad2eb89abf4d495bd8ad69af4b7f1fdc3e1a406205f9",
+  "pushedToGitHub": true,
+  "branch": "chatgpt/reborn-pass35-memory-governor",
+  "checks": [
+    "full website ZIP exists",
+    "standalone ZIP exists",
+    "memory governor route included",
+    "memory manifest included",
+    "memory checklist included",
+    "memory governor script cached",
+    "play version updated",
+    "memory runtime patch present",
+    "weather FX memory divider present",
+    "service worker cache updated",
+    "service worker caches memory governor",
+    "launch check validates memory governor",
+    "homepage links to memory governor",
+    "release json updated",
+    "standalone includes memory governor js",
+    "standalone release json updated",
+    "new JS syntax check passed"
+  ],
+  "limits": "Local package verification only; not physical-device memory, FPS, battery or thermal certification, deployment, or storefront approval."
+}

@@ -1,0 +1,15 @@
+{
+  "build": "Build 044",
+  "pass": 35,
+  "version": "0.41.0-memory-governor-p044",
+  "route": "/memory-governor/",
+  "features": [
+    "memory pressure scoring",
+    "mobile memory trim/protect frame caps",
+    "weather FX memory divider",
+    "local Memory Governor overlay",
+    "local JSON memory report",
+    "no telemetry or backend"
+  ],
+  "limits": "Local static package; not physical-device memory or FPS certification."
+}
